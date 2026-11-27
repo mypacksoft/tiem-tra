@@ -295,6 +295,7 @@
 </div>
 <div class="ov hidden" id="hubOv"><div class="card hubcard">
   <div class="hubhead" id="hubHead"></div>
+  <div id="restockBanner" style="display:none; background:#fff3d6; border:1.5px solid #ecc96a; border-radius:12px; padding:9px 12px; margin:0 0 8px; font-size:12.5px; font-weight:700; color:#8a6a1a; line-height:1.4;">⏸️ <b>Hết đồ — tạm dừng bán.</b> Mua thêm nguyên liệu ở dưới rồi bấm <b>▶ Bán tiếp</b>, hoặc <b>Kết ca</b> nếu muốn nghỉ.</div>
   <div class="hubtabs" id="hubTabs"></div>
   <div class="hubbody" id="hubBody"></div>
   <button class="bigbtn" id="hubGo">Mở cửa</button>
@@ -983,8 +984,8 @@
   }
   function startDayLoop(){ stopSlotLoop(); var last=performance.now();
     function tick(now){ if(phase!=="serve"){ slotRaf=null; return; } var dt=(now-last)/1000; last=now; if(dt>0.25)dt=0.25;
-      if(st.stock.cup>0){ soldOutFlag=false; }
-      else if(!closing && !midShift && !soldOutFlag){ soldOutFlag=true; openRestock(); warn("Hết ly rồi — nhập thêm để bán tiếp, hoặc Kết ca."); return; }
+      if(canMakeBasic()){ soldOutFlag=false; }
+      else if(!closing && !midShift && !soldOutFlag){ soldOutFlag=true; openRestock(true); return; }
       if(!closing){ clockMin+=dt*GMPS; if(clockMin>=CLOSE){ clockMin=CLOSE; closing=true; $("dayState").textContent="Ngày "+st.day+" · Dọn quán"; updateChips(); }
         $("clock").textContent=fmtClock(clockMin); spawnAcc+=dt;
         while(pendingSpawns>0 && spawnAcc>=spawnInt){ if(hasEmpty() && canMakeBasic()){ placeCustomer(); pendingSpawns--; renderSlots(); updateChips(); spawnAcc-=spawnInt*(0.6+Math.random()*0.8); } else { break; } } }
@@ -1061,11 +1062,12 @@
     else { var price=drinkPrice(o); st.money+=price; dayRev+=price; daySuccess++; daySales[o.tea]=(daySales[o.tea]||0)+1; popTxt("🧑‍🍳 +"+kstr(price),"#4e8f44"); adjustRep(0.01); if(last){ addReview(o,4); slots[i]=null; } }
     if(slots[i])slots[i].staff=0; updateTop(); renderSlots(); updateChips(); maybeEnd(); }
   function maybeEnd(){ if(closing && slots.every(function(s){return !s;})) endDay(); else saveGame(); }
-  function openRestock(){ if(phase!=="serve"||midShift)return; stopSlotLoop(); clearInterval(staffTimer); midShift=true;
-    $("setOv").classList.add("hidden"); openHub("kho"); $("hubGo").textContent="▶ Bán tiếp"; $("hubEndShift").style.display=""; $("hubOv").classList.remove("hidden"); }
-  function resumeShift(){ midShift=false; $("hubGo").textContent="Mở cửa"; $("hubEndShift").style.display="none"; $("hubOv").classList.add("hidden");
+  function openRestock(auto){ if(phase!=="serve"||midShift)return; stopSlotLoop(); clearInterval(staffTimer); midShift=true;
+    $("setOv").classList.add("hidden"); openHub("kho"); $("hubGo").textContent="▶ Bán tiếp"; $("hubEndShift").style.display="";
+    $("restockBanner").style.display = auto? "block":"none"; $("hubOv").classList.remove("hidden"); }
+  function resumeShift(){ midShift=false; $("hubGo").textContent="Mở cửa"; $("hubEndShift").style.display="none"; $("restockBanner").style.display="none"; $("hubOv").classList.add("hidden");
     if(phase==="serve"){ staffSlot=-1; renderSlots(); updateChips(); startDayLoop(); } }
-  function endShift(){ midShift=false; $("hubGo").textContent="Mở cửa"; $("hubEndShift").style.display="none"; $("hubOv").classList.add("hidden");
+  function endShift(){ midShift=false; $("hubGo").textContent="Mở cửa"; $("hubEndShift").style.display="none"; $("restockBanner").style.display="none"; $("hubOv").classList.add("hidden");
     closing=true; for(var i=0;i<MAXSLOTS;i++){ slots[i]=null; } endDay(); }
   function addReview(o,stars){ st.revCount++; var c=pick(REVIEWS[stars]||REVIEWS[3]);
     st.reviews.unshift({name:o.name,ava:o.ava,fk:o.fk,fb:o.fb,stars:stars,text:c}); if(st.reviews.length>12)st.reviews.pop(); }

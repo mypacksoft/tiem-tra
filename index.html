@@ -97,7 +97,7 @@
   .plaque{display:inline-block; background:linear-gradient(#bd8e5e,#a3764b); color:#fff5e6; border:1.5px solid #875c37; border-radius:8px; padding:3px 11px; font-size:10px; font-weight:800; letter-spacing:.6px; text-transform:uppercase; box-shadow:0 2px 0 #7a5331, inset 0 1px 0 rgba(255,255,255,.28); white-space:nowrap; text-shadow:0 1px 1px rgba(90,55,25,.4);}
   .cHint{color:#8a7250; text-transform:none; letter-spacing:0; font-weight:700; font-size:10px;}
   .cTeaRow{padding-bottom:7px; border-bottom:4px solid; border-image:linear-gradient(90deg,#d9b98c,#c79e6e,#d9b98c) 1; border-radius:0 0 4px 4px;}
-  .cTeaRow{display:flex; gap:8px; align-items:stretch;}
+  .cTeaRow{display:flex; gap:8px; align-items:flex-start;}
   .cups{display:flex; flex-direction:column; gap:5px; flex:none;}
   .cups .opt{padding:6px 8px; min-width:56px;}
   .teaBar{flex:1; display:grid; grid-template-columns:repeat(3,1fr); gap:5px;}
@@ -113,6 +113,10 @@
   .opt.soldout span,.opt.soldout .dn{text-decoration:line-through;}
   .opt.soldout::after{content:"Hết"; position:absolute; top:2px; left:4px; font-size:8px; font-weight:800; color:#d1564e; background:#f6dcd9; border-radius:6px; padding:0 4px; text-decoration:none;}
   .addRow{display:flex; gap:7px; align-items:stretch;}
+  .lvlRow{display:flex; gap:5px;}
+  .lvlb{flex:1; border:1.5px solid var(--line); background:#fffdf8; border-radius:10px; padding:8px 2px; font-weight:800; font-size:12px; color:var(--ink); cursor:pointer; line-height:1.1;}
+  .lvlb.on{border-color:var(--pink); background:var(--pinkbg); box-shadow:0 0 0 2px rgba(184,90,110,.2); color:var(--pink);}
+  .lvlb:active{transform:scale(.95);}
   .tray2{flex:1; background:#fffdf8; border:1.5px solid var(--line); border-radius:12px; padding:4px 6px 5px; display:flex; flex-direction:column; gap:3px; align-items:center;}
   .tray2 .t2l{font-size:10px; font-weight:800; color:var(--dim);}
   .tray2 .t2c{display:flex; align-items:center; gap:5px;}
@@ -246,11 +250,10 @@
       <div class="trayGrid" id="optTop"></div>
     </div>
     <div class="cboard">
-      <div class="addRow">
-        <div class="tray2"><span class="t2l">🍬 Đường</span><div class="t2c"><button class="lvBtn" id="sugDn">−</button><span class="lvVal" id="sugVal">50%</span><button class="lvBtn" id="sugUp">+</button></div></div>
-        <div class="tray2"><span class="t2l">🧊 Đá</span><div class="t2c"><button class="lvBtn" id="iceDn">−</button><span class="lvVal" id="iceVal">Vừa</span><button class="lvBtn" id="iceUp">+</button></div></div>
-        <button class="bucket" id="clearBtn" title="Đổ bỏ ly, pha lại">🪣<span>Đổ bỏ</span></button>
-      </div>
+      <div class="cLabel"><span class="plaque">🍬 Đường</span><button class="bucket" id="clearBtn" title="Đổ bỏ ly, pha lại" style="margin-left:auto">🪣<span>Đổ bỏ</span></button></div>
+      <div class="lvlRow" id="sugRow"></div>
+      <div class="cLabel" style="margin-top:7px"><span class="plaque">🧊 Đá</span></div>
+      <div class="lvlRow" id="iceRow"></div>
     </div>
   </div>
 </div>
@@ -486,7 +489,7 @@
     SIZES.forEach(function(z){ var b=document.createElement("div"); b.className="opt"; b.setAttribute("data-k",z.k);
       b.innerHTML=cupStackSVG(z.k, z.k==="L")+'<span>'+z.k+'</span>'+(z.extra?'<span class="px">+'+z.extra+'k</span>':'<span class="px">&nbsp;</span>');
       b.onclick=function(){ if(phase!=="serve")return; sel.size=z.k; sel.fill=0; sel.poured=false; au(); sTap(); markSel(); renderCup(); updatePour(); }; s.appendChild(b); });
-    renderTeaOpts(); renderTopOpts();
+    renderTeaOpts(); renderTopOpts(); buildLevels();
   }
   function cupStackSVG(letter,big){
     var W=big?32:27, H=40, topW=big?24:20, x0=(W-topW)/2, rimY=4, cupH=big?18:15, inset=4;
@@ -535,10 +538,15 @@
     var light=(tp.k==="white");
     return S+ballSVG(9,13,3.1,tp.color,light)+ballSVG(15,13.5,3.1,tp.color,light)+ballSVG(21,13,3.1,tp.color,light)+ballSVG(27,13.3,3.1,tp.color,light)+ballSVG(12,9.5,2.9,tp.color,light)+ballSVG(18,9.5,2.9,tp.color,light)+ballSVG(24,9.5,2.9,tp.color,light)+'</svg>';
   }
+  function buildLevels(){
+    var sr=$("sugRow"); if(sr){ sr.innerHTML=""; SUGAR.forEach(function(s,i){ var b=document.createElement("button"); b.className="lvlb"; b.setAttribute("data-sug",i); b.textContent=s.l; b.onclick=function(){ if(phase!=="serve")return; sel.sugar=i; au(); sTap(); markSel(); }; sr.appendChild(b); }); }
+    var ir=$("iceRow"); if(ir){ ir.innerHTML=""; ICE.forEach(function(c,i){ var b=document.createElement("button"); b.className="lvlb"; b.setAttribute("data-ice",i); b.textContent=c.s; b.onclick=function(){ if(phase!=="serve")return; sel.ice=i; au(); sTap(); markSel(); }; ir.appendChild(b); }); }
+  }
   function markSel(){
     [["optSize",sel.size],["optTea",sel.tea],["optTop",sel.top]].forEach(function(pr){ var box=$(pr[0]);
       for(var i=0;i<box.children.length;i++){ box.children[i].classList.toggle("sel", box.children[i].getAttribute("data-k")===pr[1]); } });
-    $("sugVal").textContent=SUGAR[sel.sugar].l; $("iceVal").textContent=ICE[sel.ice].s;
+    var sr=$("sugRow"); if(sr){ for(var s2=0;s2<sr.children.length;s2++) sr.children[s2].classList.toggle("on", +sr.children[s2].getAttribute("data-sug")===sel.sugar); }
+    var ir=$("iceRow"); if(ir){ for(var i2=0;i2<ir.children.length;i2++) ir.children[i2].classList.toggle("on", +ir.children[i2].getAttribute("data-ice")===sel.ice); }
   }
   function updatePour(){ var el=$("pourHint"); if(!el)return;
     var cupOk=st.stock.cup>=1, teaOk=sel.tea?teaQ(sel.tea)>=teaUse(sel.size||"M")-1e-9:true;
@@ -564,10 +572,7 @@
   function stopPour(){ if(!pouring)return; pouring=false; if(pourRaf){cancelAnimationFrame(pourRaf);pourRaf=null;} updatePour(); }
   document.addEventListener("pointerup",function(){ stopPour(); });
   document.addEventListener("gesturestart",function(e){ e.preventDefault(); });
-  $("sugDn").onclick=function(){ if(phase!=="serve")return; sel.sugar=clamp(sel.sugar-1,0,4); sTap(); markSel(); };
-  $("sugUp").onclick=function(){ if(phase!=="serve")return; sel.sugar=clamp(sel.sugar+1,0,4); sTap(); markSel(); };
-  $("iceDn").onclick=function(){ if(phase!=="serve")return; sel.ice=clamp(sel.ice-1,0,3); sTap(); markSel(); };
-  $("iceUp").onclick=function(){ if(phase!=="serve")return; sel.ice=clamp(sel.ice+1,0,3); sTap(); markSel(); };
+  buildLevels();
   $("clearBtn").onclick=function(){ if(phase!=="serve")return; resetSel(); sTap(); markSel(); renderCup(); updatePour(); };
   function resetSel(){ sel={size:null,tea:null,top:"none",sugar:2,ice:2,fill:0,poured:false}; }
 

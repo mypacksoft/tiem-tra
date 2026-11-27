@@ -96,12 +96,19 @@
   .cLabel{display:flex; align-items:center; gap:7px; margin-bottom:7px; flex-wrap:wrap;}
   .plaque{display:inline-block; background:linear-gradient(#bd8e5e,#a3764b); color:#fff5e6; border:1.5px solid #875c37; border-radius:8px; padding:3px 11px; font-size:10px; font-weight:800; letter-spacing:.6px; text-transform:uppercase; box-shadow:0 2px 0 #7a5331, inset 0 1px 0 rgba(255,255,255,.28); white-space:nowrap; text-shadow:0 1px 1px rgba(90,55,25,.4);}
   .cHint{color:#8a7250; text-transform:none; letter-spacing:0; font-weight:700; font-size:10px;}
-  .cTeaRow{padding-bottom:7px; border-bottom:4px solid; border-image:linear-gradient(90deg,#d9b98c,#c79e6e,#d9b98c) 1; border-radius:0 0 4px 4px;}
-  .cTeaRow{display:flex; flex-direction:column; gap:7px;}
-  .cups{display:flex; flex-direction:row; gap:6px;}
-  .cups .opt{flex:1; padding:5px 8px;}
-  .teaBar{flex:1; display:grid; grid-template-columns:repeat(3,1fr); gap:5px;}
-  .teaBar .opt{padding:5px 2px; touch-action:none; position:relative;}
+  .qtRow{display:flex; gap:7px; align-items:stretch;}
+  .cups{flex:none; display:flex; flex-direction:row; gap:4px;}
+  .cups .opt{padding:4px 5px; min-width:46px;}
+  .teaScroll{flex:1; min-width:0; overflow-x:auto; scrollbar-width:none; padding-bottom:5px; border-bottom:4px solid; border-image:linear-gradient(90deg,#d9b98c,#c79e6e,#d9b98c) 1; border-radius:0 0 4px 4px;}
+  .teaScroll::-webkit-scrollbar{display:none;}
+  .teaBar{display:flex; gap:5px; width:max-content; min-width:100%;}
+  .teaBar .opt{flex:0 0 auto; width:66px; padding:5px 2px; touch-action:none; position:relative;}
+  .machine{flex:none; width:38px; display:flex; align-items:center; justify-content:center;}
+  .plRow{display:flex; gap:8px; align-items:stretch;}
+  .woodBoard{flex:none; width:70px; background:linear-gradient(#caa06a,#b08650); border:2px solid #8a6238; border-radius:10px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; color:#fff6e8; font-weight:800; font-size:11px; text-align:center; box-shadow:inset 0 0 0 3px rgba(255,240,220,.18), 0 2px 5px rgba(120,80,45,.2); text-shadow:0 1px 1px rgba(90,55,25,.5); padding:4px;}
+  .woodBoard b{font-size:14px; font-family:"Baloo 2";}
+  .trayGrid{flex:1; display:grid; grid-template-columns:repeat(3,1fr); gap:5px;}
+  .bottleRow{display:flex; gap:6px; justify-content:center; margin-top:8px; padding-top:6px; border-top:1px dashed #e3d2b0;}
   .teaBar .opt.sel{border-color:var(--teal); background:#e3f3ef; box-shadow:0 0 0 2px rgba(63,170,154,.25);}
   .teaBar .opt .dn{font-size:10.5px; line-height:1.05;}
   .teaBar .opt.pouring{border-color:var(--teal); background:#d4efe9; transform:scale(.97);}
@@ -239,21 +246,26 @@
   </div>
   <div id="counter">
     <div class="cboard">
-      <div class="cLabel"><span class="plaque">🫖 Quầy trà</span><span class="cHint">chọn ly rồi GIỮ bình trà để rót</span></div>
-      <div class="cTeaRow">
+      <div class="cLabel"><span class="plaque">🫖 Quầy trà</span><span class="cHint">chọn ly rồi GIỮ bình để rót</span></div>
+      <div class="qtRow">
         <div class="cups" id="optSize"></div>
-        <div class="teaBar" id="optTea"></div>
+        <div class="teaScroll"><div class="teaBar" id="optTea"></div></div>
+        <div class="machine" id="machine" aria-hidden="true"></div>
       </div>
     </div>
     <div class="cboard">
-      <div class="cLabel"><span class="plaque">🧋 Khay topping</span></div>
-      <div class="trayGrid" id="optTop"></div>
+      <div class="cLabel"><span class="plaque">🧋 Pha ly — topping</span></div>
+      <div class="plRow">
+        <div class="woodBoard"><span>Lấy ly</span><b>M / L</b></div>
+        <div class="trayGrid" id="optTop"></div>
+      </div>
     </div>
     <div class="cboard">
-      <div class="cLabel"><span class="plaque">🍬 Đường</span><button class="bucket" id="clearBtn" title="Đổ bỏ ly, pha lại" style="margin-left:auto">🪣<span>Đổ bỏ</span></button></div>
+      <div class="cLabel"><span class="plaque">🍬 Nước đường</span><button class="bucket" id="clearBtn" title="Đổ bỏ ly, pha lại" style="margin-left:auto">🪣<span>Đổ bỏ</span></button></div>
       <div class="lvlRow" id="sugRow"></div>
-      <div class="cLabel" style="margin-top:7px"><span class="plaque">🧊 Đá</span></div>
+      <div class="cLabel" style="margin-top:7px"><span class="plaque">🧊 Đá viên</span></div>
       <div class="lvlRow" id="iceRow"></div>
+      <div class="bottleRow" id="bottleRow" aria-hidden="true"></div>
     </div>
   </div>
 </div>
@@ -490,6 +502,8 @@
       b.innerHTML=cupStackSVG(z.k, z.k==="L")+'<span>'+z.k+'</span>'+(z.extra?'<span class="px">+'+z.extra+'k</span>':'<span class="px">&nbsp;</span>');
       b.onclick=function(){ if(phase!=="serve")return; sel.size=z.k; sel.fill=0; sel.poured=false; au(); sTap(); markSel(); renderCup(); updatePour(); }; s.appendChild(b); });
     renderTeaOpts(); renderTopOpts(); buildLevels();
+    var mc=$("machine"); if(mc)mc.innerHTML=machineSVG();
+    var br=$("bottleRow"); if(br)br.innerHTML=["#e58aa0","#f0b24d","#9ac46a","#c58cd8","#e8853c"].map(function(c){return bottleSVG(c);}).join("");
   }
   function cupStackSVG(letter,big){
     var W=big?32:27, H=40, topW=big?24:20, x0=(W-topW)/2, rimY=4, cupH=big?18:15, inset=4;
@@ -512,6 +526,20 @@
       +'<rect x="24.4" y="19.4" width="1.9" height="3.2" rx="0.9" fill="#8a949b"/>'
       +'<rect x="23.6" y="14.6" width="1.6" height="3.2" rx="0.8" fill="#aab2b8"/></svg>';
   }
+  function machineSVG(){ return '<svg viewBox="0 0 36 48" width="36" height="46" aria-hidden="true">'
+    +'<rect x="4" y="3" width="28" height="40" rx="5" fill="#e9dcc4" stroke="#c7b088" stroke-width="1.6"/>'
+    +'<rect x="7" y="6" width="22" height="13" rx="2.5" fill="#5b4636"/>'
+    +'<circle cx="12" cy="12.5" r="1.8" fill="#ff9d4d"/><circle cx="18" cy="12.5" r="1.8" fill="#8fd17a"/><circle cx="24" cy="12.5" r="1.8" fill="#7ab6ff"/>'
+    +'<rect x="9" y="23" width="18" height="5" rx="2.5" fill="#b89a6a"/>'
+    +'<rect x="16" y="28" width="4" height="8" fill="#b89a6a"/>'
+    +'<rect x="11" y="36" width="14" height="4" rx="2" fill="#cbb89a"/>'
+    +'<rect x="13.5" y="31" width="9" height="6" rx="2" fill="#fffdf8" stroke="#dcc8a4" stroke-width="1"/></svg>'; }
+  function bottleSVG(color){ return '<svg viewBox="0 0 16 36" width="15" height="34" aria-hidden="true">'
+    +'<rect x="6" y="1" width="4" height="4" rx="1.2" fill="#c9b48c"/>'
+    +'<rect x="5" y="4.5" width="6" height="3" rx="1" fill="#b89a6a"/>'
+    +'<rect x="3.2" y="7" width="9.6" height="26" rx="3.4" fill="#fffdf8" stroke="#dcc8a4" stroke-width="1"/>'
+    +'<rect x="4.6" y="16" width="6.8" height="16" rx="2.8" fill="'+color+'"/>'
+    +'<rect x="5.4" y="9.5" width="5.2" height="4" rx="1.4" fill="#fff" opacity=".7"/></svg>'; }
   function renderTeaOpts(){ var t=$("optTea"); t.innerHTML="";
     unlockedTeas().forEach(function(te){ var b=document.createElement("div"); b.className="opt disp"; b.setAttribute("data-k",te.k);
       b.innerHTML=dispenserSVG(te.color)+'<span class="trayq">'+teaQ(te.k).toFixed(1)+'L</span><span class="dn">'+te.name+'</span>';

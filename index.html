@@ -1081,7 +1081,7 @@
     if(phase==="serve"){ staffSlot=-1; renderSlots(); updateChips(); startDayLoop(); } }
   function endShift(){ midShift=false; $("hubGo").textContent="Mở cửa"; $("hubEndShift").style.display="none"; $("restockBanner").style.display="none"; $("hubOv").classList.add("hidden");
     closing=true; for(var i=0;i<MAXSLOTS;i++){ slots[i]=null; } endDay(); }
-  var REVIEW_CHANCE={1:0.6,2:0.42,3:0.12,4:0.16,5:0.45};
+  var REVIEW_CHANCE={1:0.45,2:0.3,3:0.1,4:0.14,5:0.4};
   function addReview(o,stars){ st.custTotal=(st.custTotal||0)+1;
     if(Math.random() > (REVIEW_CHANCE[stars]||0.2)) return;
     st.revCount++; var c=pick(REVIEWS[stars]||REVIEWS[3]);

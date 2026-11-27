@@ -2,10 +2,10 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>TIỆM TRÀ NHỎ — Pha trà sữa cực vui</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+<title>TIỆM TRÀ NHỎ — Pha trà sữa &amp; quản lý quán</title>
 <meta name="theme-color" content="#fde3ea">
-<meta name="description" content="Game pha trà sữa cozy: khách gọi món, bạn chọn ly, pha trà, thêm topping rồi giao ly. Nhanh tay kẻo khách bỏ đi!">
+<meta name="description" content="Game pha trà sữa cozy: rót trà tới vạch, thêm đường đá topping theo đơn, nhập kho, thuê nhân viên và mở rộng quán. Có review khách và món đặc biệt.">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -20,119 +20,162 @@
   :root{
     --cream:#fdf4e7; --cream2:#f7ead3; --ink:#5b4636; --dim:#a98f77;
     --pink:#f06a97; --pink2:#ff9ab8; --pinkbg:#fde3ea; --green:#6bbf6a; --line:#e7d7bd;
-    --card:#fffdf8; --gold:#f5b50a;
+    --card:#fffdf8; --gold:#f5b50a; --red:#e2574e;
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
   html,body{margin:0; height:100%; overflow:hidden; background:var(--pinkbg); color:var(--ink);
     font-family:"Be Vietnam Pro",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; user-select:none;}
   .display{font-family:"Baloo 2","Be Vietnam Pro",sans-serif;}
-  #wrap{position:fixed; inset:0; display:flex; flex-direction:column; max-width:520px; margin:0 auto;
-    background:var(--cream); box-shadow:0 0 60px rgba(180,120,90,.25);}
+  #wrap{position:fixed; inset:0; display:flex; flex-direction:column; max-width:520px; margin:0 auto; background:var(--cream); box-shadow:0 0 60px rgba(180,120,90,.25);}
+  #awn{height:14px; flex:none; background:repeating-linear-gradient(90deg,var(--pink) 0 24px,#fff 24px 48px);}
 
-  /* awning */
-  #awn{height:16px; flex:none; background:repeating-linear-gradient(90deg,var(--pink) 0 26px,#fff 26px 52px);}
-
-  /* top bar */
-  #top{flex:none; display:flex; align-items:center; gap:8px; padding:8px 12px; background:var(--card); border-bottom:2px solid var(--line);}
-  .stat{display:flex; flex-direction:column; line-height:1.05;}
+  /* top */
+  #top{flex:none; display:flex; align-items:center; gap:8px; padding:7px 12px 5px; background:var(--card); border-bottom:2px solid var(--line);}
+  .stat{display:flex; flex-direction:column; line-height:1.04;}
   .stat .k{font-size:9px; color:var(--dim); font-weight:700; text-transform:uppercase; letter-spacing:1px;}
-  .stat .v{font-size:16px; font-weight:800; font-variant-numeric:tabular-nums;}
-  #shopName{flex:1; text-align:center; font-weight:800; font-size:16px;}
+  .stat .v{font-size:15px; font-weight:800; font-variant-numeric:tabular-nums;}
+  #shopName{flex:1; text-align:center; font-weight:800; font-size:15px;}
   #money .v{color:#d9842b;}
-  #hearts{font-size:15px; letter-spacing:1px; min-width:52px; text-align:right;}
+  #rep{display:flex; flex-direction:column; align-items:flex-end; line-height:1.04;}
+  #repStars{color:var(--gold); font-size:13px; letter-spacing:1px;}
+  #repNum{font-size:10px; color:var(--dim); font-weight:700;}
+  #chips{flex:none; display:flex; gap:7px; padding:4px 12px 7px; background:var(--card); border-bottom:2px solid var(--line); font-size:11px; font-weight:800; color:var(--ink); align-items:center; flex-wrap:wrap;}
+  .chip{background:var(--cream2); border-radius:999px; padding:3px 9px; display:inline-flex; gap:4px; align-items:center;}
+  .chip.low{background:#ffe0e0; color:var(--red);}
+  .chip.staff{background:#e6f4e0; color:#3f8f3a;}
 
   /* customer */
-  #cust{flex:none; padding:10px 12px 6px;}
+  #cust{flex:none; padding:8px 12px 4px;}
   #custRow{display:flex; gap:10px; align-items:flex-start;}
-  #ava{width:46px; height:46px; flex:none; border-radius:50%; background:var(--pink2); display:flex; align-items:center; justify-content:center; font-size:26px; box-shadow:0 3px 0 rgba(0,0,0,.08);}
-  #bubbleWrap{flex:1;}
-  #cname{font-weight:800; font-size:14px; margin-bottom:2px;}
-  #bubble{background:var(--card); border:2px solid var(--line); border-radius:4px 16px 16px 16px; padding:9px 12px; font-size:15px; font-weight:600; line-height:1.4; min-height:40px;}
+  #ava{width:44px; height:44px; flex:none; border-radius:50%; background:var(--pink2); display:flex; align-items:center; justify-content:center; font-size:25px; box-shadow:0 3px 0 rgba(0,0,0,.08);}
+  #bubbleWrap{flex:1; min-width:0;}
+  #cname{font-weight:800; font-size:13px; margin-bottom:2px; display:flex; align-items:center; gap:6px;}
+  #ctag{font-size:10px; font-weight:800; padding:1px 7px; border-radius:999px;}
+  #ctag.picky{background:#ffe3df; color:var(--red);} #ctag.rich{background:#fff0c2; color:#b7860b;}
+  #bubble{background:var(--card); border:2px solid var(--line); border-radius:4px 14px 14px 14px; padding:8px 11px; font-size:14px; font-weight:600; line-height:1.4; min-height:38px;}
   #bubble b{color:var(--pink);}
-  #patWrap{height:9px; margin:8px 2px 0; border-radius:999px; background:#eadcc4; overflow:hidden;}
+  #patWrap{height:8px; margin:7px 2px 0; border-radius:999px; background:#eadcc4; overflow:hidden;}
   #patBar{height:100%; width:100%; border-radius:999px; background:linear-gradient(90deg,#7fd17a,#56b85a); transition:background .2s;}
 
-  /* cup */
-  #stage{flex:1; display:flex; align-items:center; justify-content:center; gap:16px; padding:4px 12px; min-height:0;}
-  .cupBox{display:flex; flex-direction:column; align-items:center; gap:4px;}
-  .cupLbl{font-size:11px; font-weight:800; color:var(--dim); text-transform:uppercase; letter-spacing:1px;}
-  .cup{position:relative; width:84px; height:118px; background:#fffdf8; border:3px solid #e8dcc4;
+  /* stage / cup */
+  #stage{flex:1; display:flex; align-items:center; justify-content:center; gap:14px; padding:2px 12px; min-height:0;}
+  .cupBox{display:flex; flex-direction:column; align-items:center; gap:3px;}
+  .cup{position:relative; width:86px; height:122px; background:#fffdf8; border:3px solid #e8dcc4;
     clip-path:polygon(14% 0,86% 0,77% 100%,23% 100%); overflow:hidden; transition:height .15s, width .15s;}
-  .cup.L{width:94px; height:140px;}
-  .cup .liquid{position:absolute; left:0; right:0; bottom:0; height:0; transition:height .35s cubic-bezier(.3,1.3,.5,1), background .2s; background:#e9dcc4;}
-  .cup .foam{position:absolute; left:0; right:0; height:0; transition:bottom .3s, height .2s; background:#fff; opacity:.9;}
+  .cup.L{width:96px; height:142px;}
+  .cup .liquid{position:absolute; left:0; right:0; bottom:0; height:0; background:#e9dcc4; transition:background .15s;}
+  .cup .foam{position:absolute; left:0; right:0; height:0; background:#fff; opacity:.9;}
+  .cup .mark{position:absolute; left:-2px; right:-2px; border-top:2px dashed #38b2a0; opacity:0; z-index:3;}
+  .cup .mark.on{opacity:.95;}
   .cup .pearls{position:absolute; left:8%; right:8%; bottom:3px; display:flex; flex-wrap:wrap; gap:2px; justify-content:center; align-items:flex-end;}
   .cup .pearls i{width:11px; height:11px; border-radius:50%; display:block; box-shadow:0 1px 1px rgba(0,0,0,.28), inset 0 -2px 2px rgba(0,0,0,.18);}
-  .cup .pearls i.jel{width:10px; height:10px; border-radius:3px; opacity:.92; box-shadow:0 1px 1px rgba(0,0,0,.15);}
-  .opt .ic2{display:block; filter:drop-shadow(0 1px 1px rgba(0,0,0,.12));}
+  .cup .pearls i.jel{width:10px; height:10px; border-radius:3px; opacity:.92;}
   .cup .empty{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:10px; color:#c9b89a; text-align:center; font-weight:700; padding:0 8px;}
-  .straw{width:7px; height:40px; border-radius:4px; background:linear-gradient(90deg,#ff7aa2,#ff9ab8); margin:-10px auto 0; position:relative; z-index:2; transform:rotate(10deg);}
-  .orderMini{font-size:11px; color:var(--dim); font-weight:700; text-align:center; max-width:150px; line-height:1.3;}
+  .straw{width:7px; height:38px; border-radius:4px; background:linear-gradient(90deg,#ff7aa2,#ff9ab8); margin:-10px auto 0; position:relative; z-index:2; transform:rotate(10deg);}
+  .orderMini{font-size:10.5px; color:var(--dim); font-weight:700; text-align:center; max-width:160px; line-height:1.3;}
+  .pourHint{font-size:10px; color:#38b2a0; font-weight:800;}
 
   /* builder */
-  #build{flex:none; background:var(--card); border-top:2px solid var(--line); padding:8px 10px 12px; overflow-y:auto; max-height:46vh;}
-  .step{font-size:11px; font-weight:800; color:var(--pink); letter-spacing:.5px; margin:7px 2px 5px; display:flex; align-items:center; gap:5px;}
-  .step:first-child{margin-top:2px;}
-  .opts{display:grid; gap:6px;}
-  .opts.sz{grid-template-columns:repeat(2,1fr);}
-  .opts.tea{grid-template-columns:repeat(3,1fr);}
-  .opts.top{grid-template-columns:repeat(3,1fr);}
-  .opt{border:2px solid var(--line); background:#fffdf8; border-radius:12px; padding:8px 4px; cursor:pointer; font-weight:700; font-size:12.5px; color:var(--ink); text-align:center; display:flex; flex-direction:column; align-items:center; gap:3px; transition:.1s; line-height:1.15;}
-  .opt .dot{width:16px; height:16px; border-radius:50%; border:1.5px solid rgba(0,0,0,.15);}
+  #build{flex:none; background:var(--card); border-top:2px solid var(--line); padding:7px 10px 10px; overflow-y:auto; max-height:50vh;}
+  .step{font-size:10.5px; font-weight:800; color:var(--pink); letter-spacing:.3px; margin:7px 2px 4px; display:flex; align-items:center; gap:5px;}
+  .step:first-child{margin-top:1px;}
+  .opts{display:grid; gap:5px;}
+  .opts.sz{grid-template-columns:repeat(2,1fr);} .opts.tea{grid-template-columns:repeat(3,1fr);} .opts.top{grid-template-columns:repeat(3,1fr);}
+  .opt{border:2px solid var(--line); background:#fffdf8; border-radius:11px; padding:6px 3px; cursor:pointer; font-weight:700; font-size:12px; color:var(--ink); text-align:center; display:flex; flex-direction:column; align-items:center; gap:2px; transition:.1s; line-height:1.1;}
   .opt:active{transform:scale(.95);}
-  .opt.sel{border-color:var(--pink); background:var(--pinkbg); box-shadow:0 0 0 2px rgba(240,106,151,.25);}
-  .opt .px{font-size:10px; color:var(--dim); font-weight:700;}
+  .opt.sel{border-color:var(--pink); background:var(--pinkbg); box-shadow:0 0 0 2px rgba(240,106,151,.22);}
+  .opt .px{font-size:9px; color:var(--dim); font-weight:700;}
+  .opt .ic2{display:block; filter:drop-shadow(0 1px 1px rgba(0,0,0,.12));}
 
-  #act{display:grid; grid-template-columns:1fr 2.4fr; gap:8px; margin-top:12px;}
-  .btn{font-family:"Baloo 2",sans-serif; border:none; border-radius:14px; cursor:pointer; font-weight:800; padding:13px 8px; font-size:17px;}
+  /* pour */
+  #pourBtn{width:100%; margin-top:2px; border:none; border-radius:13px; padding:12px; font-family:"Baloo 2"; font-weight:800; font-size:16px; color:#fff; background:linear-gradient(180deg,#4fc3b0,#2fa392); box-shadow:0 4px 0 #227c70; cursor:pointer; touch-action:none;}
+  #pourBtn:active{transform:translateY(3px); box-shadow:0 1px 0 #227c70;}
+  #pourBtn.done{background:linear-gradient(180deg,#9bd0c8,#7bb8ae); box-shadow:0 4px 0 #6b9d94;}
+  #pourBtn[disabled]{opacity:.5; filter:grayscale(.3);}
+
+  /* sugar/ice stepper */
+  .lvRow{display:flex; align-items:center; gap:8px; background:#fffdf8; border:2px solid var(--line); border-radius:12px; padding:5px 8px;}
+  .lvRow .lb{flex:none; font-size:12px; font-weight:800; width:46px;}
+  .lvBtn{border:none; width:30px; height:30px; border-radius:9px; background:var(--cream2); font-size:17px; font-weight:800; cursor:pointer; color:var(--ink);}
+  .lvBtn:active{transform:scale(.9);}
+  .lvVal{flex:1; text-align:center; font-weight:800; font-size:13px;}
+
+  #act{display:grid; grid-template-columns:1fr 2.4fr; gap:8px; margin-top:10px;}
+  .btn{font-family:"Baloo 2",sans-serif; border:none; border-radius:14px; cursor:pointer; font-weight:800; padding:12px 8px; font-size:16px;}
   #serveBtn{color:#fff; background:linear-gradient(180deg,#ff7ea6,var(--pink)); box-shadow:0 4px 0 #c94677;}
   #serveBtn:active{transform:translateY(3px); box-shadow:0 1px 0 #c94677;}
   #clearBtn{color:var(--ink); background:#efe3cc; box-shadow:0 4px 0 #d8c6a4;}
   #clearBtn:active{transform:translateY(3px); box-shadow:0 1px 0 #d8c6a4;}
 
   /* overlays */
-  .ov{position:fixed; inset:0; z-index:40; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:28px; background:rgba(60,40,30,.5); backdrop-filter:blur(5px);}
+  .ov{position:fixed; inset:0; z-index:40; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:20px; background:rgba(60,40,30,.5); backdrop-filter:blur(5px); overflow-y:auto;}
   .ov.hidden{display:none;}
-  .card{background:var(--cream); border:3px solid #fff; border-radius:24px; padding:26px 22px; max-width:360px; width:100%; box-shadow:0 20px 50px rgba(120,70,50,.35);}
-  .card h1{font-family:"Baloo 2"; font-size:34px; margin:0 0 4px; color:var(--pink); letter-spacing:1px; line-height:1.15; padding-top:.1em;}
-  .card .emo{font-size:52px; margin-bottom:6px;}
-  .card p{font-size:14.5px; line-height:1.55; color:#6b5443; margin:8px 0 16px;}
+  .card{background:var(--cream); border:3px solid #fff; border-radius:22px; padding:22px 18px; max-width:380px; width:100%; box-shadow:0 20px 50px rgba(120,70,50,.35); margin:auto;}
+  .card h1{font-family:"Baloo 2"; font-size:30px; margin:0 0 4px; color:var(--pink); letter-spacing:1px; line-height:1.15; padding-top:.1em;}
+  .card h2{font-family:"Baloo 2"; font-size:22px; margin:0 0 10px; color:var(--ink);}
+  .card .emo{font-size:48px; margin-bottom:4px;}
+  .card p{font-size:14px; line-height:1.5; color:#6b5443; margin:6px 0 14px;}
   .card p b{color:var(--pink);}
-  .card input{font-family:"Baloo 2"; font-size:20px; text-align:center; padding:12px; border-radius:14px; border:2px solid var(--line); background:#fff; color:var(--ink); width:100%; outline:none; margin-bottom:14px;}
+  .card input{font-family:"Baloo 2"; font-size:20px; text-align:center; padding:11px; border-radius:14px; border:2px solid var(--line); background:#fff; color:var(--ink); width:100%; outline:none; margin-bottom:12px;}
   .card input:focus{border-color:var(--pink);}
-  .bigbtn{font-family:"Baloo 2"; font-size:22px; font-weight:800; color:#fff; background:linear-gradient(180deg,#ff7ea6,var(--pink)); border:none; border-radius:16px; padding:14px 40px; cursor:pointer; box-shadow:0 5px 0 #c94677; width:100%;}
+  .bigbtn{font-family:"Baloo 2"; font-size:20px; font-weight:800; color:#fff; background:linear-gradient(180deg,#ff7ea6,var(--pink)); border:none; border-radius:16px; padding:13px 24px; cursor:pointer; box-shadow:0 5px 0 #c94677; width:100%; margin-top:6px;}
   .bigbtn:active{transform:translateY(3px); box-shadow:0 2px 0 #c94677;}
-  .ghost{background:none; border:none; color:#a98f77; font-weight:700; font-size:14px; margin-top:12px; cursor:pointer; text-decoration:underline;}
-  .sumRow{display:flex; justify-content:space-between; font-size:15px; font-weight:700; padding:6px 2px; border-bottom:1px dashed var(--line);}
-  .sumRow .big{color:#d9842b; font-size:19px;}
-  .stars{color:var(--gold); font-size:22px; letter-spacing:2px;}
+  .bigbtn[disabled]{opacity:.5;}
+  .buyRow{display:flex; align-items:center; gap:10px; text-align:left; padding:9px 2px; border-bottom:1px dashed var(--line);}
+  .buyRow .bi{width:34px; height:34px; flex:none; display:flex; align-items:center; justify-content:center; font-size:22px;}
+  .buyRow .bt{flex:1; min-width:0;}
+  .buyRow .bt .n{font-weight:800; font-size:14px;}
+  .buyRow .bt .d{font-size:11px; color:var(--dim); line-height:1.25;}
+  .buyRow .ct{font-weight:800; font-size:13px; white-space:nowrap;}
+  .cnt{display:flex; align-items:center; gap:6px;}
+  .cntB{border:none; width:28px; height:28px; border-radius:8px; background:var(--cream2); font-size:16px; font-weight:800; cursor:pointer; color:var(--ink);}
+  .cntB.pk{background:var(--pink); color:#fff;}
+  .cntV{min-width:26px; text-align:center; font-weight:800;}
+  .mini{font-size:12px; color:var(--dim); font-weight:700;}
+  .buyBtn{border:none; border-radius:10px; padding:7px 12px; font-weight:800; font-size:12px; background:var(--pink); color:#fff; cursor:pointer;}
+  .buyBtn[disabled]{background:#d9c7ad; color:#fff;}
+  .sumRow{display:flex; justify-content:space-between; font-size:14px; font-weight:700; padding:5px 2px; border-bottom:1px dashed var(--line);}
+  .sumRow .big{color:#d9842b; font-size:17px;}
+  .sumRow.tot{border:none; font-size:16px;} .sumRow.tot .big{font-size:20px;}
+  .revItem{display:flex; gap:8px; text-align:left; padding:6px 2px; font-size:12.5px; border-bottom:1px dashed var(--line);}
+  .revItem .ra{font-size:19px;} .revItem .rs{color:var(--gold); font-size:11px; letter-spacing:1px;}
+  .revItem .rc{color:#6b5443;}
+  .secTitle{font-weight:800; font-size:13px; margin:14px 0 4px; display:flex; align-items:center; gap:6px; color:var(--ink);}
+  .ghost{background:none; border:none; color:#a98f77; font-weight:700; font-size:13px; margin-top:10px; cursor:pointer; text-decoration:underline;}
 
-  /* floaty feedback */
-  .pop{position:fixed; z-index:50; font-family:"Baloo 2"; font-weight:800; font-size:30px; pointer-events:none; animation:popUp 1s ease-out forwards;}
-  @keyframes popUp{0%{opacity:1; transform:translate(-50%,0) scale(.8)}100%{opacity:0; transform:translate(-50%,-70px) scale(1.2)}}
-  #flash{position:fixed; inset:0; z-index:35; pointer-events:none; opacity:0; background:#ff3b5c;}
-  #flash.bad{animation:flashBad .4s;}
-  #flash.good{background:#6bbf6a;} #flash.good.go{animation:flashGood .4s;}
-  @keyframes flashBad{0%{opacity:.35}100%{opacity:0}}
-  @keyframes flashGood{0%{opacity:.22}100%{opacity:0}}
+  /* fx */
+  .pop{position:fixed; z-index:50; font-family:"Baloo 2"; font-weight:800; font-size:26px; pointer-events:none; animation:popUp 1.1s ease-out forwards;}
+  @keyframes popUp{0%{opacity:1; transform:translate(-50%,0) scale(.8)}100%{opacity:0; transform:translate(-50%,-66px) scale(1.15)}}
+  #flash{position:fixed; inset:0; z-index:35; pointer-events:none; opacity:0;}
+  #flash.bad{background:#ff6b6b; animation:fl .4s;} #flash.good{background:#6bbf6a; animation:flg .4s;} #flash.star{background:#ffd45e; animation:flg .5s;}
+  @keyframes fl{0%{opacity:.33}100%{opacity:0}} @keyframes flg{0%{opacity:.22}100%{opacity:0}}
   #mute{position:absolute; top:6px; right:8px; border:none; background:none; font-size:16px; cursor:pointer;}
+  .warnbar{position:fixed; left:50%; bottom:0; transform:translateX(-50%); z-index:30; max-width:520px; width:100%; text-align:center; font-weight:800; font-size:13px; color:#8a6a1a; background:rgba(255,232,170,.96); padding:9px; pointer-events:none;}
 </style>
 </head>
 <body>
 <div id="wrap">
   <div id="awn"></div>
   <div id="top">
-    <div class="stat" id="day"><span class="k">Ngày</span><span class="v">1</span></div>
+    <div class="stat" id="dayS"><span class="k">Ngày</span><span class="v">1</span></div>
     <div id="shopName" class="display">Tiệm Trà Nhỏ</div>
-    <div class="stat" id="money"><span class="k">Doanh thu</span><span class="v">0k</span></div>
-    <div id="hearts">❤️❤️❤️</div>
+    <div class="stat" id="money"><span class="k">Vốn</span><span class="v">400k</span></div>
+    <div id="rep"><span id="repStars">★★★★★</span><span id="repNum">5.0 · 0 đánh giá</span></div>
+  </div>
+  <div id="chips">
+    <span class="chip" id="chipCup">🥤 <b id="nCup">0</b></span>
+    <span class="chip" id="chipTea">🫖 <b id="nTea">0</b></span>
+    <span class="chip" id="chipTop">⚫ <b id="nTop">0</b></span>
+    <span class="chip staff" id="chipStaff" style="display:none">🧑‍🍳 Nhân viên</span>
+    <span style="flex:1"></span>
+    <span class="mini" id="queueLeft"></span>
   </div>
 
   <div id="cust">
     <div id="custRow">
       <div id="ava">🐻</div>
       <div id="bubbleWrap">
-        <div id="cname">Khách</div>
+        <div id="cname"><span id="cnameT">Khách</span><span id="ctag" style="display:none"></span></div>
         <div id="bubble">…</div>
       </div>
     </div>
@@ -145,10 +188,12 @@
       <div class="cup" id="cup">
         <div class="foam" id="foam"></div>
         <div class="liquid" id="liquid"></div>
+        <div class="mark" id="mark"></div>
         <div class="pearls" id="pearls"></div>
         <div class="empty" id="cupEmpty">Chưa chọn ly</div>
       </div>
       <div class="orderMini" id="orderMini"></div>
+      <div class="pourHint" id="pourHint"></div>
     </div>
   </div>
 
@@ -157,8 +202,14 @@
     <div class="opts sz" id="optSize"></div>
     <div class="step">② CHỌN TRÀ</div>
     <div class="opts tea" id="optTea"></div>
-    <div class="step">③ TOPPING</div>
+    <div class="step">③ RÓT TRÀ — giữ nút cho tới vạch 🫗</div>
+    <button id="pourBtn">GIỮ ĐỂ RÓT</button>
+    <div class="step">④ TOPPING</div>
     <div class="opts top" id="optTop"></div>
+    <div class="step">⑤ ĐƯỜNG &amp; ĐÁ</div>
+    <div class="lvRow" id="sugarRow"><span class="lb">🍬 Đường</span><button class="lvBtn" id="sugDn">−</button><span class="lvVal" id="sugVal">50%</span><button class="lvBtn" id="sugUp">+</button></div>
+    <div style="height:6px"></div>
+    <div class="lvRow" id="iceRow"><span class="lb">🧊 Đá</span><button class="lvBtn" id="iceDn">−</button><span class="lvVal" id="iceVal">Đá vừa</span><button class="lvBtn" id="iceUp">+</button></div>
     <div id="act">
       <button class="btn" id="clearBtn">🗑️</button>
       <button class="btn" id="serveBtn">GIAO LY 🧋</button>
@@ -167,6 +218,7 @@
 </div>
 
 <div id="flash"></div>
+<div class="warnbar" id="warnbar" style="display:none"></div>
 
 <!-- START -->
 <div class="ov" id="startOv">
@@ -174,290 +226,446 @@
     <button id="mute">🔊</button>
     <div class="emo">🧋</div>
     <h1 class="display">TIỆM TRÀ NHỎ</h1>
-    <p>Khách gọi món, bạn <b>chọn ly → pha trà → thêm topping</b> rồi <b>Giao ly</b>. Đúng & nhanh thì được tiền và sao ⭐. Chậm là khách giận bỏ đi đó nha!</p>
+    <p>Mở quán trà sữa của riêng bạn! <b>Nhập hàng → pha từng ly theo đơn</b> (rót tới vạch, thêm đường đá topping) → <b>giao khách</b>. Giữ uy tín cao để khách đến đông, kiếm lời mở rộng quán. 🏪</p>
     <input id="shopInput" maxlength="16" placeholder="Tên quán của bạn" autocomplete="off" spellcheck="false">
-    <button class="bigbtn" id="openBtn">MỞ QUÁN 🏪</button>
+    <button class="bigbtn" id="openBtn">MỞ QUÁN 🎀</button>
   </div>
 </div>
 
-<!-- DAY SUMMARY -->
-<div class="ov hidden" id="dayOv">
-  <div class="card">
-    <div class="emo" id="dayEmo">🌙</div>
-    <h1 class="display" id="dayTitle">Hết ngày!</h1>
-    <div style="margin:10px 0 14px">
-      <div class="sumRow"><span>Khách phục vụ</span><span id="sServed">0</span></div>
-      <div class="sumRow"><span>Pha chuẩn 💯</span><span id="sPerfect">0</span></div>
-      <div class="sumRow"><span>Tiền trong ngày</span><span class="big" id="sMoney">0k</span></div>
-      <div class="sumRow" style="border:none"><span>Đánh giá</span><span class="stars" id="sStars">★★★★★</span></div>
-    </div>
-    <button class="bigbtn" id="nextDayBtn">MỞ CỬA NGÀY MỚI ☀️</button>
-  </div>
-</div>
-
+<!-- PREP (morning) -->
+<div class="ov hidden" id="prepOv"><div class="card" id="prepCard"></div></div>
+<!-- SUMMARY + SHOP (end of day) -->
+<div class="ov hidden" id="sumOv"><div class="card" id="sumCard"></div></div>
 <!-- GAME OVER -->
-<div class="ov hidden" id="overOv">
-  <div class="card">
-    <div class="emo">😢</div>
-    <h1 class="display">Quán đóng cửa rồi…</h1>
-    <p id="overMsg">Nhiều khách giận quá! Nhưng không sao, mai mở lại nha.</p>
-    <div style="margin:4px 0 14px">
-      <div class="sumRow"><span>Trụ được</span><span id="oDays">1 ngày</span></div>
-      <div class="sumRow" style="border:none"><span>Tổng doanh thu</span><span class="big" id="oMoney">0k</span></div>
-    </div>
-    <button class="bigbtn" id="againBtn">MỞ QUÁN LẠI 🔁</button>
-  </div>
-</div>
+<div class="ov hidden" id="overOv"><div class="card" id="overCard"></div></div>
 
 <script>
 (function(){
   "use strict";
   var $=function(id){return document.getElementById(id);};
+  function rnd(n){return Math.floor(Math.random()*n);} function pick(a){return a[rnd(a.length)];}
+  function clamp(v,a,b){return v<a?a:v>b?b:v;}
+  function kstr(n){ n=Math.round(n); if(Math.abs(n)>=1000) return (n/1000).toFixed(n%1000?1:0).replace(/\.0$/,'')+"tr"; return n+"k"; }
 
+  // ---------- config ----------
+  var SIZES=[{k:"M",name:"Ly M",extra:0,target:66},{k:"L",name:"Ly L",extra:7,target:82}];
   var TEAS=[
-    {key:"milk",  name:"Trà sữa", color:"#d8b88c", base:39},
-    {key:"matcha",name:"Matcha",  color:"#9ac46a", base:49},
-    {key:"black", name:"Hồng trà",color:"#c06a46", base:39},
-    {key:"green", name:"Lục trà", color:"#8ec56a", base:39},
-    {key:"olong", name:"Olong",   color:"#c49a5e", base:39},
-    {key:"thai",  name:"Trà Thái",color:"#e8853c", base:39}
+    {k:"milk",  name:"Trà sữa", color:"#d8b88c", base:25, locked:false, cost:0},
+    {k:"matcha",name:"Matcha",  color:"#9ac46a", base:30, locked:false, cost:0},
+    {k:"black", name:"Hồng trà",color:"#c06a46", base:28, locked:true,  cost:150},
+    {k:"thai",  name:"Trà Thái",color:"#e8853c", base:32, locked:true,  cost:300},
+    {k:"green", name:"Lục trà", color:"#8ec56a", base:28, locked:true,  cost:150},
+    {k:"olong", name:"Olong",   color:"#c49a5e", base:28, locked:true,  cost:250}
   ];
   var TOPS=[
-    {key:"none",  name:"Không",       color:null,      price:0},
-    {key:"black", name:"TC đen",      color:"#2d2620", price:7},
-    {key:"white", name:"TC trắng",    color:"#efe6d2", price:6},
-    {key:"gold",  name:"TC hoàng kim",color:"#e2a500", price:10},
-    {key:"pop",   name:"TC popping",  color:"#ff6f9a", price:9},
-    {key:"jelly", name:"Thạch",       color:"#ff6b6b", price:7}
+    {k:"none",  name:"Không",       color:null,      price:0,  locked:false, cost:0},
+    {k:"black", name:"TC đen",      color:"#2d2620", price:6,  locked:false, cost:0},
+    {k:"white", name:"TC trắng",    color:"#efe6d2", price:5,  locked:false, cost:0},
+    {k:"gold",  name:"TC hoàng kim",color:"#e2a500", price:10, locked:true,  cost:120},
+    {k:"pop",   name:"TC popping",  color:"#ff6f9a", price:9,  locked:true,  cost:120},
+    {k:"jelly", name:"Thạch",       color:"#ff6b6b", price:7,  locked:true,  cost:100}
   ];
-  var SIZES=[{key:"M",name:"Ly M",price:0},{key:"L",name:"Ly L",price:7}];
-  var AVATARS=["🐻","🐱","🐰","🐨","🐯","🦊","🐼","🐷","🐵","🐸","🐮","🐹"];
-  var NAMES=["Lý Phúc","Ngô Vinh","Phạm Thảo","Minh Anh","Bảo Trân","Gia Hân","Tuấn Kiệt","Thu Hà","Khánh Vy","Đức Huy","Mỹ Duyên","Hoàng Nam","Ngọc Bích","Quốc Bảo","Thanh Vân","Hải Đăng"];
-  var PHRASES=[
-    function(o){return "Cho mình "+o+" nha em!";},
-    function(o){return "Cho em "+o+" ạ, cảm ơn!";},
-    function(o){return o+" nhé, cảm ơn shop! 😊";},
-    function(o){return "Mình lấy "+o+" nha.";},
-    function(o){return "Em ơi cho chị "+o+" với~";}
+  var SUGAR=[{v:0,l:"0%"},{v:30,l:"30%"},{v:50,l:"50%"},{v:70,l:"70%"},{v:100,l:"100%"}];
+  var ICE=[{l:"Không đá"},{l:"Ít đá"},{l:"Đá vừa"},{l:"Nhiều đá"}];
+  var UPGRADES=[
+    {k:"sign",  name:"Biển đèn LED",   emo:"💡", desc:"Thêm khách ghé quán (+2 khách/ngày).", cost:600, apply:function(){st.extraCust+=2;}},
+    {k:"seat",  name:"Bàn ghế ngồi",   emo:"🛋️", desc:"Khách kiên nhẫn hơn (+4 giây chờ).", cost:500, apply:function(){st.patBonus+=4;}},
+    {k:"machine",name:"Máy pha tốt",   emo:"⚙️", desc:"Rót dễ canh hơn (vạch rộng gấp đôi).", cost:450, apply:function(){st.pourTol+=6;}},
+    {k:"promo", name:"Quảng cáo mạng", emo:"📣", desc:"Thêm khách ghé quán (+3 khách/ngày).", cost:1000, apply:function(){st.extraCust+=3;}},
+    {k:"deco",  name:"Trang trí dễ thương", emo:"🎀", desc:"Khách dễ tính hơn, tip nhiều hơn (+15%).", cost:800, apply:function(){st.tipMul+=0.15;}}
   ];
+  var STAFF={name:"Nhân viên phụ quầy", emo:"🧑‍🍳", wage:80, desc:"Tự pha giúp 1 khách đang chờ mỗi ~7 giây (pha chuẩn, không được tip hoàn hảo)."};
+  var AVATARS=["🐻","🐱","🐰","🐨","🐯","🦊","🐼","🐷","🐵","🐸","🐮","🐹","🐧","🐣"];
+  var NAMES=["Lý Phúc","Ngô Vinh","Phạm Thảo","Minh Anh","Bảo Trân","Gia Hân","Tuấn Kiệt","Thu Hà","Khánh Vy","Đức Huy","Mỹ Duyên","Hoàng Nam","Ngọc Bích","Quốc Bảo","Thanh Vân","Hải Đăng","Bé Mèo","Chị Hai"];
+  var REVIEWS={
+    5:["Trà ngon xỉu, 10 điểm! 😍","Pha chuẩn vị luôn á 💕","Quán ruột từ nay nha!","Nhanh mà ngon, mê quá!","Đúng gu, sẽ rủ hội quay lại 🔥"],
+    4:["Ngon, sẽ ghé lại 👍","Ổn áp nha shop","Trà ok, phục vụ dễ thương","Khá ngon, thêm tí nữa là đỉnh"],
+    3:["Tạm được, hơi chờ xíu","Cũng bình thường","Uống ok mà chưa wow","Được, lần sau pha kỹ hơn nha"],
+    2:["Pha hơi sai vị 🙁","Chờ hơi lâu á","Chưa đúng ý lắm","Hơi thất vọng nhẹ"],
+    1:["Sai món rồi shop ơi 😤","Đợi mãi mới tới 😮‍💨","Thua, không quay lại","Dở quá à"]
+  };
 
-  function teaBy(k){return TEAS.filter(function(t){return t.key===k;})[0];}
-  function topBy(k){return TOPS.filter(function(t){return t.key===k;})[0];}
-  function rnd(n){return Math.floor(Math.random()*n);}
-  function pick(a){return a[rnd(a.length)];}
-  function kstr(n){ if(n>=1000){ return (n/1000).toFixed(n%1000?1:0)+"tr"; } return n+"k"; }
+  // ---------- state ----------
+  var st={ shop:"Tiệm Trà Nhỏ", day:1, money:400, rep:5.0, revCount:0, combo:0,
+    teaUn:{milk:1,matcha:1}, topUn:{none:1,black:1,white:1}, upg:{}, staff:false,
+    extraCust:0, patBonus:0, pourTol:0, tipMul:1.0,
+    stock:{cup:0,tea:0,top:0}, reviews:[] };
+  var queue=[], order=null, special=null, specialDone=false;
+  var dayRev=0, dayStockCost=0, dayServed=0, dayPerfect=0, dayLeft=0;
+  var sel={size:null,tea:null,top:null,sugar:2,ice:2,fill:0,poured:false};
+  var phase="start", patTimer=null, patLeft=0, patMax=0, running=false, muted=false, staffTimer=null;
 
-  // ---- state ----
-  var shopName="Tiệm Trà Nhỏ", day=1, money=0, dayMoney=0, hearts=3;
-  var queue=[], order=null, served=0, perfect=0, dayServed=0, dayPerfect=0, combo=0;
-  var sel={size:null,tea:null,top:null};
-  var patTimer=null, patLeft=0, patMax=0, running=false, muted=false, totalMoney=0;
+  function teaBy(k){for(var i=0;i<TEAS.length;i++)if(TEAS[i].k===k)return TEAS[i];}
+  function topBy(k){for(var i=0;i<TOPS.length;i++)if(TOPS[i].k===k)return TOPS[i];}
+  function sizeBy(k){return k==="L"?SIZES[1]:SIZES[0];}
+  function unlockedTeas(){return TEAS.filter(function(t){return st.teaUn[t.k];});}
+  function unlockedTops(){return TOPS.filter(function(t){return st.topUn[t.k];});}
 
-  // ---- audio ----
+  // ---------- audio ----------
   var AC=null;
   function au(){ if(AC)return; try{AC=new(window.AudioContext||window.webkitAudioContext)();}catch(e){} }
-  function beep(f,d,t,v){ if(muted||!AC)return; var o=AC.createOscillator(),g=AC.createGain(); o.type=t||"sine"; o.frequency.value=f; g.gain.value=v||0.07; o.connect(g); g.connect(AC.destination); var n=AC.currentTime; o.start(n); g.gain.exponentialRampToValueAtTime(0.0001,n+(d||0.12)); o.stop(n+(d||0.12)); }
-  function sTap(){ beep(520,0.06,"triangle",0.05); }
-  function sGood(){ beep(660,0.09,"triangle",0.08); setTimeout(function(){beep(990,0.12,"triangle",0.08);},90); }
-  function sPerfect(){ beep(660,0.08,"triangle",0.09); setTimeout(function(){beep(880,0.08,"triangle",0.09);},80); setTimeout(function(){beep(1180,0.16,"triangle",0.09);},160); }
-  function sBad(){ beep(180,0.3,"sawtooth",0.12); }
-  function sLeave(){ beep(300,0.2,"sine",0.08); setTimeout(function(){beep(200,0.3,"sine",0.08);},120); }
+  function beep(f,d,t,v){ if(muted||!AC)return; var o=AC.createOscillator(),g=AC.createGain(); o.type=t||"sine"; o.frequency.value=f; g.gain.value=v||0.06; o.connect(g); g.connect(AC.destination); var n=AC.currentTime; o.start(n); g.gain.exponentialRampToValueAtTime(0.0001,n+(d||0.12)); o.stop(n+(d||0.12)); }
+  function sTap(){ beep(520,0.05,"triangle",0.04); }
+  function sGood(){ beep(660,0.08,"triangle",0.07); setTimeout(function(){beep(990,0.1,"triangle",0.07);},80); }
+  function sPerfect(){ beep(660,0.07,"triangle",0.08); setTimeout(function(){beep(880,0.07,"triangle",0.08);},70); setTimeout(function(){beep(1240,0.14,"triangle",0.08);},140); }
+  function sBad(){ beep(170,0.3,"sawtooth",0.11); }
+  function sPour(){ beep(300,0.05,"sine",0.03); }
   $("mute").onclick=function(e){ e.stopPropagation(); muted=!muted; this.textContent=muted?"🔇":"🔊"; };
 
-  // ---- icon vẽ tay (SVG gốc, không dùng ảnh của ai) ----
+  // ---------- SVG icons (gốc) ----------
   function teaIconSVG(color){
-    return '<svg class="ic2" viewBox="0 0 28 28" width="30" height="30" aria-hidden="true">'
+    return '<svg class="ic2" viewBox="0 0 28 28" width="28" height="28" aria-hidden="true">'
       +'<rect x="15.6" y="2.5" width="2.4" height="9" rx="1.2" fill="#ff9ab8" transform="rotate(14 16.8 6)"/>'
       +'<path d="M7 7 h14 l-1.5 16.5 a1.5 1.5 0 0 1 -1.5 1.4 h-8 a1.5 1.5 0 0 1 -1.5 -1.4 Z" fill="#fffdf8" stroke="#dcc29c" stroke-width="1.2"/>'
       +'<path d="M7.7 13 h12.6 l-1 10.5 a1.5 1.5 0 0 1 -1.5 1.4 h-8 a1.5 1.5 0 0 1 -1.5 -1.4 Z" fill="'+color+'"/>'
       +'<ellipse cx="13.2" cy="8.4" rx="5.3" ry="1.2" fill="#fff" opacity=".85"/>'
-      +'<circle cx="11" cy="22" r="1.6" fill="#2d2620"/><circle cx="14.2" cy="22.6" r="1.6" fill="#2d2620"/><circle cx="17.2" cy="22" r="1.6" fill="#2d2620"/>'
-      +'</svg>';
+      +'<circle cx="11" cy="22" r="1.5" fill="#2d2620"/><circle cx="14.2" cy="22.6" r="1.5" fill="#2d2620"/><circle cx="17.2" cy="22" r="1.5" fill="#2d2620"/></svg>';
   }
-  function ball(cx,cy,r,color,light){
-    return '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="'+color+'"/>'
-      +'<circle cx="'+(cx-r*0.32)+'" cy="'+(cy-r*0.34)+'" r="'+(r*0.3)+'" fill="#fff" opacity="'+(light?0.5:0.65)+'"/>';
-  }
+  function ballSVG(cx,cy,r,color,light){ return '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="'+color+'"/><circle cx="'+(cx-r*0.32)+'" cy="'+(cy-r*0.34)+'" r="'+(r*0.3)+'" fill="#fff" opacity="'+(light?0.5:0.65)+'"/>'; }
   function topIconSVG(tp){
-    var S='<svg class="ic2" viewBox="0 0 28 28" width="30" height="30" aria-hidden="true">';
-    if(tp.key==='none') return S+'<circle cx="14" cy="14" r="9" fill="none" stroke="#cbb89a" stroke-width="2.2" stroke-dasharray="3.5 4"/><line x1="8" y1="20" x2="20" y2="8" stroke="#cbb89a" stroke-width="2.2" stroke-linecap="round"/></svg>';
-    if(tp.key==='jelly') return S
-      +'<rect x="5" y="13.5" width="8.5" height="8.5" rx="2.6" fill="#ff6b6b" opacity=".9"/>'
-      +'<rect x="14.5" y="11.5" width="8.5" height="8.5" rx="2.6" fill="#ffb24d" opacity=".9"/>'
-      +'<rect x="9.8" y="16" width="8.5" height="8.5" rx="2.6" fill="#ffd45e" opacity=".92"/>'
-      +'<rect x="6.6" y="15" width="2.4" height="2.4" rx="1.2" fill="#fff" opacity=".55"/></svg>';
-    var light=(tp.key==='white');
-    return S+ball(9,17,4.4,tp.color,light)+ball(19,17,4.4,tp.color,light)+ball(14,11.5,4.6,tp.color,light)+'</svg>';
+    var S='<svg class="ic2" viewBox="0 0 28 28" width="28" height="28" aria-hidden="true">';
+    if(tp.k==="none") return S+'<circle cx="14" cy="14" r="9" fill="none" stroke="#cbb89a" stroke-width="2.2" stroke-dasharray="3.5 4"/><line x1="8" y1="20" x2="20" y2="8" stroke="#cbb89a" stroke-width="2.2" stroke-linecap="round"/></svg>';
+    if(tp.k==="jelly") return S+'<rect x="5" y="13.5" width="8.5" height="8.5" rx="2.6" fill="#ff6b6b" opacity=".9"/><rect x="14.5" y="11.5" width="8.5" height="8.5" rx="2.6" fill="#ffb24d" opacity=".9"/><rect x="9.8" y="16" width="8.5" height="8.5" rx="2.6" fill="#ffd45e" opacity=".92"/><rect x="6.6" y="15" width="2.4" height="2.4" rx="1.2" fill="#fff" opacity=".55"/></svg>';
+    var light=(tp.k==="white"); return S+ballSVG(9,17,4.4,tp.color,light)+ballSVG(19,17,4.4,tp.color,light)+ballSVG(14,11.5,4.6,tp.color,light)+'</svg>';
   }
 
-  // ---- build option buttons ----
-  function buildOpts(){
+  // ---------- build serve UI ----------
+  function buildServeUI(){
     var s=$("optSize"); s.innerHTML="";
-    SIZES.forEach(function(z){ var b=document.createElement("div"); b.className="opt"; b.setAttribute("data-k",z.key);
-      b.innerHTML='<span>'+z.name+'</span>'+(z.price?'<span class="px">+'+z.price+'k</span>':'<span class="px">&nbsp;</span>');
-      b.onclick=function(){ sel.size=z.key; au(); sTap(); mark(); renderCup(); }; s.appendChild(b); });
-    var t=$("optTea"); t.innerHTML="";
-    TEAS.forEach(function(te){ var b=document.createElement("div"); b.className="opt"; b.setAttribute("data-k",te.key);
+    SIZES.forEach(function(z){ var b=document.createElement("div"); b.className="opt"; b.setAttribute("data-k",z.k);
+      b.innerHTML='<span>'+z.name+'</span>'+(z.extra?'<span class="px">+'+z.extra+'k</span>':'<span class="px">&nbsp;</span>');
+      b.onclick=function(){ if(!running)return; sel.size=z.k; sel.fill=0; sel.poured=false; au(); sTap(); markSel(); renderCup(); updatePour(); }; s.appendChild(b); });
+    renderTeaOpts(); renderTopOpts();
+  }
+  function renderTeaOpts(){ var t=$("optTea"); t.innerHTML="";
+    unlockedTeas().forEach(function(te){ var b=document.createElement("div"); b.className="opt"; b.setAttribute("data-k",te.k);
       b.innerHTML=teaIconSVG(te.color)+'<span>'+te.name+'</span>';
-      b.onclick=function(){ sel.tea=te.key; au(); sTap(); mark(); renderCup(); }; t.appendChild(b); });
-    var p=$("optTop"); p.innerHTML="";
-    TOPS.forEach(function(tp){ var b=document.createElement("div"); b.className="opt"; b.setAttribute("data-k",tp.key);
+      b.onclick=function(){ if(!running)return; sel.tea=te.k; au(); sTap(); markSel(); renderCup(); updatePour(); }; t.appendChild(b); }); }
+  function renderTopOpts(){ var p=$("optTop"); p.innerHTML="";
+    unlockedTops().forEach(function(tp){ var b=document.createElement("div"); b.className="opt"; b.setAttribute("data-k",tp.k);
       b.innerHTML=topIconSVG(tp)+'<span>'+tp.name+'</span>';
-      b.onclick=function(){ sel.top=tp.key; au(); sTap(); mark(); renderCup(); }; p.appendChild(b); });
+      b.onclick=function(){ if(!running)return; sel.top=tp.k; au(); sTap(); markSel(); renderCup(); }; p.appendChild(b); }); }
+  function markSel(){
+    [["optSize",sel.size],["optTea",sel.tea],["optTop",sel.top]].forEach(function(pr){ var box=$(pr[0]);
+      for(var i=0;i<box.children.length;i++){ box.children[i].classList.toggle("sel", box.children[i].getAttribute("data-k")===pr[1]); } });
+    $("sugVal").textContent=SUGAR[sel.sugar].l; $("iceVal").textContent=ICE[sel.ice].l;
   }
-  function mark(){
-    [["optSize",sel.size],["optTea",sel.tea],["optTop",sel.top]].forEach(function(pair){
-      var box=$(pair[0]); for(var i=0;i<box.children.length;i++){ var c=box.children[i];
-        c.classList.toggle("sel", c.getAttribute("data-k")===pair[1]); }
-    });
+  function updatePour(){ var b=$("pourBtn"); var ok=sel.size&&sel.tea;
+    b.disabled=!ok; b.classList.toggle("done", sel.poured);
+    b.textContent = !ok ? "Chọn ly + trà trước" : sel.poured ? "Đã rót ✓ (giữ lại để rót thêm)" : "GIỮ ĐỂ RÓT";
+    $("pourHint").textContent = ok&&sel.size ? ("Rót tới vạch — size "+sel.size) : "";
   }
-
   function renderCup(){
-    var cup=$("cup"), liq=$("liquid"), pe=$("pearls"), em=$("cupEmpty"), foam=$("foam");
+    var cup=$("cup"), liq=$("liquid"), pe=$("pearls"), em=$("cupEmpty"), mk=$("mark");
     cup.classList.toggle("L", sel.size==="L");
-    if(!sel.size){ em.style.display="flex"; em.textContent="Chưa chọn ly"; liq.style.height="0"; pe.innerHTML=""; foam.style.height="0"; return; }
-    em.style.display = sel.tea? "none":"flex";
-    if(!sel.tea){ em.textContent="Chọn trà đi~"; liq.style.height="0"; }
-    else { var te=teaBy(sel.tea); liq.style.background=te.color; liq.style.height="72%"; }
-    // pearls / jelly trong ly
+    if(!sel.size){ em.style.display="flex"; em.textContent="Chưa chọn ly"; liq.style.height="0"; pe.innerHTML=""; mk.classList.remove("on"); return; }
+    // target mark
+    var tgt=sizeBy(sel.size).target; mk.classList.add("on"); mk.style.bottom=tgt+"%";
+    em.style.display = sel.tea? "none":"flex"; if(!sel.tea) em.textContent="Chọn trà rồi rót~";
+    liq.style.height=(sel.fill)+"%";
+    liq.style.background= sel.tea? teaBy(sel.tea).color : "#e9dcc4";
     pe.innerHTML="";
-    if(sel.top && sel.top!=="none"){
-      var tp=topBy(sel.top);
-      if(sel.top==="jelly"){
-        var cols=["#ff6b6b","#ffb24d","#ffd45e","#7ed0ff","#ff8fb0","#9be36a"];
-        for(var i=0;i<7;i++){ var d=document.createElement("i"); d.className="jel"; d.style.background=cols[i%cols.length]; pe.appendChild(d); }
-      } else {
-        for(var j=0;j<9;j++){ var e=document.createElement("i"); e.style.background="radial-gradient(circle at 34% 28%, rgba(255,255,255,.85), "+tp.color+" 62%)"; pe.appendChild(e); }
-      }
+    if(sel.top && sel.top!=="none"){ var tp=topBy(sel.top);
+      if(sel.top==="jelly"){ var cols=["#ff6b6b","#ffb24d","#ffd45e","#7ed0ff","#ff8fb0"]; for(var i=0;i<7;i++){ var d=document.createElement("i"); d.className="jel"; d.style.background=cols[i%cols.length]; pe.appendChild(d);} }
+      else { for(var j=0;j<9;j++){ var e=document.createElement("i"); e.style.background="radial-gradient(circle at 34% 28%, rgba(255,255,255,.85), "+tp.color+" 62%)"; pe.appendChild(e);} }
     }
   }
 
-  // ---- order generation ----
+  // ---------- pour (hold to fill) ----------
+  var pouring=false, pourRaf=null;
+  function canPour(){ return running && sel.size && sel.tea; }
+  function startPour(){ if(!canPour())return; pouring=true; sel.poured=true; pourLoop(); }
+  function pourLoop(){ if(!pouring)return; sel.fill=Math.min(100, sel.fill+1.25); if(Math.random()<0.25)sPour(); renderCup(); pourRaf=requestAnimationFrame(pourLoop); }
+  function stopPour(){ if(!pouring)return; pouring=false; if(pourRaf){cancelAnimationFrame(pourRaf);pourRaf=null;} updatePour(); }
+  (function(){ var b=$("pourBtn");
+    b.addEventListener("pointerdown",function(e){e.preventDefault(); au(); startPour();});
+    ["pointerup","pointerleave","pointercancel"].forEach(function(ev){ b.addEventListener(ev,function(){stopPour();}); });
+    document.addEventListener("pointerup",function(){stopPour();});
+  })();
+
+  // sugar/ice steppers
+  $("sugDn").onclick=function(){ if(!running)return; sel.sugar=clamp(sel.sugar-1,0,4); sTap(); markSel(); };
+  $("sugUp").onclick=function(){ if(!running)return; sel.sugar=clamp(sel.sugar+1,0,4); sTap(); markSel(); };
+  $("iceDn").onclick=function(){ if(!running)return; sel.ice=clamp(sel.ice-1,0,3); sTap(); markSel(); };
+  $("iceUp").onclick=function(){ if(!running)return; sel.ice=clamp(sel.ice+1,0,3); sTap(); markSel(); };
+  $("clearBtn").onclick=function(){ if(!running)return; resetSel(); sTap(); markSel(); renderCup(); updatePour(); };
+
+  function resetSel(){ sel={size:null,tea:null,top:null,sugar:2,ice:2,fill:0,poured:false}; }
+
+  // ---------- order generation ----------
   function makeOrder(){
-    var tea=pick(TEAS), size=pick(SIZES);
-    var topChance = Math.min(0.9, 0.45 + day*0.06);
-    var top = Math.random()<topChance ? pick(TOPS.slice(1)) : TOPS[0];
-    var parts=[tea.name+" size "+size.key];
-    if(top.key!=="none") parts.push(top.name.replace("TC","trân châu").toLowerCase());
-    var txt = parts.join(", ");
-    return { tea:tea.key, size:size.key, top:top.key, name:pick(NAMES), ava:pick(AVATARS), text:pick(PHRASES)(txt) };
+    var tea=pick(unlockedTeas()), size=pick(SIZES);
+    var topPool=unlockedTops(); var topChance=Math.min(0.9,0.5+st.day*0.05);
+    var top = (Math.random()<topChance)? pick(topPool.filter(function(t){return t.k!=="none";})||[topBy("none")]) : topBy("none");
+    if(!top) top=topBy("none");
+    var reqSugar = st.day>=2, reqIce = st.day>=3;
+    var sugar = reqSugar? rnd(5) : 2, ice = reqIce? rnd(4) : 2;
+    // special customer
+    var type="normal"; var r=Math.random();
+    if(st.day>=2 && r<0.14) type="picky"; else if(st.day>=2 && r<0.26) type="rich";
+    var o={tea:tea.k,size:size.k,top:top.k,sugar:sugar,ice:ice,reqSugar:reqSugar,reqIce:reqIce,type:type,
+      name:pick(NAMES),ava:pick(AVATARS)};
+    return o;
   }
-  function orderMiniText(o){
-    var s=teaBy(o.tea).name+" "+o.size; if(o.top!=="none") s+=" · "+topBy(o.top).name; return s;
+  function orderText(o){
+    var parts=[teaBy(o.tea).name+" size "+o.size];
+    if(o.top!=="none") parts.push(topBy(o.top).name.replace("TC","trân châu").toLowerCase());
+    if(o.reqSugar) parts.push(SUGAR[o.sugar].l+" đường");
+    if(o.reqIce) parts.push(ICE[o.ice].l.toLowerCase());
+    var s=parts.join(", ");
+    if(o.type==="picky") return "Cho mình "+s+" nha, pha chuẩn giùm nhé! 🧐";
+    if(o.type==="rich") return "Cho anh "+s+", ngon anh boa đậm! 🤑";
+    return pick(["Cho mình "+s+" nha em!","Cho em "+s+" ạ~","Mình lấy "+s+", cảm ơn shop! 😊"]);
+  }
+  function orderMiniText(o){ var s=teaBy(o.tea).name+" "+o.size; if(o.top!=="none")s+=" · "+topBy(o.top).name; if(o.reqSugar)s+=" · "+SUGAR[o.sugar].l; if(o.reqIce)s+=" · "+ICE[o.ice].l; return s; }
+
+  // ---------- day flow ----------
+  function startDay(){
+    phase="prep";
+    // daily special
+    var ut=unlockedTeas(), uo=unlockedTops().filter(function(t){return t.k!=="none";});
+    special={tea:pick(ut).k, size:pick(SIZES).k, top:(uo.length?pick(uo).k:"none")}; specialDone=false;
+    // build queue
+    var n=Math.min(14, 4+st.day+st.extraCust);
+    queue=[]; for(var i=0;i<n;i++) queue.push(makeOrder());
+    dayRev=0; dayStockCost=0; dayServed=0; dayPerfect=0; dayLeft=0;
+    $("dayS").querySelector(".v").textContent=st.day;
+    showPrep(n);
+  }
+  function showPrep(n){
+    var suggest=n+1;
+    var tmp={cup:Math.max(0,suggest-st.stock.cup), tea:Math.max(0,suggest-st.stock.tea), top:Math.max(0,suggest-st.stock.top)};
+    var PR={cup:3, tea:5, top:4};
+    function render(){
+      var cost=tmp.cup*PR.cup+tmp.tea*PR.tea+tmp.top*PR.top;
+      var html='<div class="emo">🌅</div><h2 class="display">Ngày '+st.day+' · Chuẩn bị</h2>'
+        +'<p>Nhập nguyên liệu cho hôm nay. Dự kiến <b>~'+n+' khách</b>. Hàng ế cuối ngày bị bỏ, nên nhập vừa đủ nha!</p>'
+        +'<div style="text-align:left">';
+      [["cup","🥤 Ly",PR.cup],["tea","🫖 Phần trà",PR.tea],["top","⚫ Topping",PR.top]].forEach(function(row){
+        var k=row[0];
+        html+='<div class="buyRow"><div class="bt"><div class="n">'+row[1]+'</div><div class="d">Đang có: '+st.stock[k]+' · '+row[2]+'k/phần</div></div>'
+          +'<div class="cnt"><button class="cntB" data-m="'+k+'" data-d="-5">−5</button><button class="cntB" data-m="'+k+'" data-d="-1">−</button><span class="cntV">+'+tmp[k]+'</span><button class="cntB pk" data-m="'+k+'" data-d="1">+</button><button class="cntB pk" data-m="'+k+'" data-d="5">+5</button></div></div>';
+      });
+      html+='</div><div class="sumRow tot"><span>Tổng nhập</span><span class="big">'+kstr(cost)+'</span></div>'
+        +'<div class="sumRow" style="border:none"><span>Vốn còn</span><span>'+kstr(st.money)+'</span></div>'
+        +'<div style="background:#fff6e0;border-radius:12px;padding:8px;margin:8px 0;font-size:12.5px;text-align:left">⭐ <b>Món đặc biệt hôm nay:</b> '+teaBy(special.tea).name+' · size '+special.size+(special.top!=="none"?' · '+topBy(special.top).name:'')+' → làm đúng được thưởng!</div>'
+        +'<button class="bigbtn" id="prepGo"'+(cost>st.money?' disabled':'')+'>NẤU &amp; NHẬP → MỞ CỬA</button>'
+        +(cost>st.money?'<div class="mini" style="color:#e2574e;margin-top:6px">Không đủ vốn — giảm bớt lượng nhập.</div>':'');
+      $("prepCard").innerHTML=html;
+      Array.prototype.forEach.call($("prepCard").querySelectorAll(".cntB"),function(btn){
+        btn.onclick=function(){ var k=btn.getAttribute("data-m"), d=parseInt(btn.getAttribute("data-d"),10); tmp[k]=Math.max(0,tmp[k]+d); render(); }; });
+      $("prepGo").onclick=function(){ if(cost>st.money)return; st.money-=cost; dayStockCost=cost;
+        st.stock.cup+=tmp.cup; st.stock.tea+=tmp.tea; st.stock.top+=tmp.top;
+        $("prepOv").classList.add("hidden"); beginServe(); };
+    }
+    render();
+    $("prepOv").classList.remove("hidden");
+    updateTop();
   }
 
-  // ---- day / customer flow ----
-  function startDay(){
-    var n = Math.min(10, 4+day);
-    queue=[]; for(var i=0;i<n;i++) queue.push(makeOrder());
-    dayMoney=0; dayServed=0; dayPerfect=0;
-    $("day").querySelector(".v").textContent=day;
+  function beginServe(){ phase="serve"; updateTop(); updateChips();
+    if(st.staff){ clearInterval(staffTimer); staffTimer=setInterval(staffTick, 7000); }
     nextCustomer();
   }
   function nextCustomer(){
+    resetSel(); markSel(); renderCup(); updatePour();
     if(!queue.length){ endDay(); return; }
     order=queue.shift();
-    $("ava").textContent=order.ava; $("cname").textContent=order.name;
-    var html=order.text
-      .replace(teaBy(order.tea).name,"<b>"+teaBy(order.tea).name+"</b>")
-      .replace("size "+order.size,"size <b>"+order.size+"</b>");
-    if(order.top!=="none"){ var tn=topBy(order.top).name.replace("TC","trân châu").toLowerCase(); html=html.replace(tn,"<b>"+tn+"</b>"); }
+    $("ava").textContent=order.ava; $("cnameT").textContent=order.name;
+    var tag=$("ctag"); if(order.type==="picky"){ tag.style.display="inline-block"; tag.className="picky"; tag.textContent="Khó tính 🧐"; }
+    else if(order.type==="rich"){ tag.style.display="inline-block"; tag.className="rich"; tag.textContent="Khách sộp 🤑"; }
+    else tag.style.display="none";
+    // bubble with bold
+    var html=orderText(order).replace(teaBy(order.tea).name,"<b>"+teaBy(order.tea).name+"</b>").replace("size "+order.size,"size <b>"+order.size+"</b>");
     $("bubble").innerHTML=html;
-    $("orderMini").textContent="Khách muốn: "+orderMiniText(order);
-    sel={size:null,tea:null,top:null}; mark(); renderCup();
-    patMax = Math.max(6, 15 - day) ; patLeft=patMax; running=true;
+    $("orderMini").textContent="Đơn: "+orderMiniText(order);
+    patMax=Math.max(6, 15-st.day)+st.patBonus; patLeft=patMax; running=true;
+    $("queueLeft").textContent="Còn "+(queue.length+1)+" khách";
     startPatience();
   }
-  function startPatience(){
-    if(patTimer) cancelAnimationFrame(patTimer);
-    var last=performance.now();
-    function tick(now){
-      if(!running) return;
-      patLeft -= (now-last)/1000; last=now;
-      var f=Math.max(0,patLeft/patMax);
+  function startPatience(){ if(patTimer)cancelAnimationFrame(patTimer); var last=performance.now();
+    function tick(now){ if(!running)return; patLeft-=(now-last)/1000; last=now; var f=Math.max(0,patLeft/patMax);
       var bar=$("patBar"); bar.style.width=(f*100)+"%";
-      bar.style.background = f>0.5?"linear-gradient(90deg,#7fd17a,#56b85a)":f>0.25?"linear-gradient(90deg,#f5c242,#e89b1e)":"linear-gradient(90deg,#ff7a7a,#e74c3c)";
+      bar.style.background= f>0.5?"linear-gradient(90deg,#7fd17a,#56b85a)":f>0.25?"linear-gradient(90deg,#f5c242,#e89b1e)":"linear-gradient(90deg,#ff7a7a,#e74c3c)";
       if(patLeft<=0){ running=false; customerLeaves(); return; }
-      patTimer=requestAnimationFrame(tick);
-    }
+      patTimer=requestAnimationFrame(tick); }
     patTimer=requestAnimationFrame(tick);
   }
 
+  function haveStock(o){ return st.stock.cup>0 && st.stock.tea>0 && (o.top==="none"||st.stock.top>0); }
+  function consumeStock(o){ st.stock.cup--; st.stock.tea--; if(o.top!=="none")st.stock.top--; updateChips(); }
+
   function serve(){
-    if(!running||!order) return;
-    if(!sel.size||!sel.tea){ flash("bad"); sBad(); shakeBubble(); return; }
-    running=false; if(patTimer) cancelAnimationFrame(patTimer);
-    var topSel = sel.top||"none";
-    var okTea=sel.tea===order.tea, okSize=sel.size===order.size, okTop=topSel===order.top;
-    var allOk=okTea&&okSize&&okTop;
-    if(okTea && okSize){
-      // acceptable (tea+size right). topping right = perfect
-      var price = teaBy(order.tea).base + SIZES.filter(function(s){return s.key===order.size;})[0].price + topBy(order.top).price;
-      var tip=0; if(allOk){ perfect++; dayPerfect++; combo++; tip=Math.min(10,combo)+ (patLeft>patMax*0.5?5:0); }
-      else { combo=0; }
-      var gain=price+tip;
-      money+=gain; dayMoney+=gain; totalMoney+=gain; served++; dayServed++;
-      updateTop();
-      flash("good");
-      if(allOk){ sPerfect(); popTxt("+"+kstr(gain)+(tip?" 💯":""),"#2e9e4f"); }
-      else { sGood(); popTxt("+"+kstr(gain)+" (thiếu topping)","#d9842b"); }
-      setTimeout(nextCustomer,520);
-    } else {
-      // wrong drink
-      combo=0; hearts--; updateTop(); flash("bad"); sBad(); shakeBubble();
-      popTxt("Sai món! 💔","#e74c3c");
-      if(hearts<=0){ setTimeout(gameOver,700); return; }
-      served++; dayServed++;
-      setTimeout(nextCustomer,650);
+    if(!running||!order)return;
+    if(!sel.size||!sel.tea||!sel.poured){ flash("bad"); sBad(); warn("Chưa đủ: chọn ly, trà và RÓT trà!"); return; }
+    if(sel.top===null){ flash("bad"); sBad(); warn("Chọn topping (hoặc 'Không')!"); return; }
+    if(!haveStock(order)){ flash("bad"); sBad(); warn("Hết nguyên liệu! Mai nhập thêm nha."); return; }
+    running=false; if(patTimer)cancelAnimationFrame(patTimer);
+    var tgt=sizeBy(order.size).target, diff=Math.abs(sel.fill-tgt);
+    var pourPerfect=diff<=6+st.pourTol, pourOk=diff<=13+st.pourTol;
+    var okTea=sel.tea===order.tea, okSize=sel.size===order.size, okTop=(sel.top||"none")===order.top;
+    var okSugar=!order.reqSugar||sel.sugar===order.sugar, okIce=!order.reqIce||sel.ice===order.ice;
+    consumeStock(order);
+    if(!okTea||!okSize||!pourOk){ // sai nặng
+      st.combo=0; dayServed++; addReview(order, okTea&&okSize?2:1, false);
+      flash("bad"); sBad(); popTxt("Sai món! 💔","#e74c3c"); adjustRep(-0.3);
+      setTimeout(nextCustomer,650); return;
     }
+    var allPerfect=okTop&&okSugar&&okIce&&pourPerfect;
+    if(order.type==="picky" && !allPerfect){ // khó tính: chỉ ok coi như chưa vừa ý
+      st.combo=0; dayServed++; var price0=drinkPrice(order); var gain0=Math.round(price0*0.7);
+      st.money+=gain0; dayRev+=gain0; addReview(order,3,false); flash("bad"); popTxt("+"+kstr(gain0)+" 😐","#d9842b"); sGood(); adjustRep(-0.05);
+      setTimeout(nextCustomer,560); return;
+    }
+    // thành công
+    dayServed++;
+    var price=drinkPrice(order);
+    var tip=0;
+    if(allPerfect){ st.combo++; dayPerfect++; tip=Math.min(12,st.combo*2)+(pourPerfect?4:0); if(order.type==="rich")tip=Math.round(tip*3+10); }
+    else { st.combo=0; }
+    tip=Math.round(tip*st.tipMul);
+    var gain=price+tip; st.money+=gain; dayRev+=gain;
+    // special bonus
+    var isSpecial=(order.tea===special.tea&&order.size===special.size&&order.top===special.top);
+    if(isSpecial&&!specialDone){ specialDone=true; var sb=40; st.money+=sb; dayRev+=sb; flash("star"); popTxt("⭐ MÓN ĐẶC BIỆT +"+kstr(sb),"#d98f00"); sPerfect(); }
+    else if(allPerfect){ flash("good"); sPerfect(); popTxt("+"+kstr(gain)+(st.combo>1?" 🔥x"+st.combo:""),"#2e9e4f"); }
+    else { flash("good"); sGood(); popTxt("+"+kstr(gain),"#2e9e4f"); }
+    addReview(order, allPerfect?5:4, true);
+    adjustRep(allPerfect?0.06:0.02);
+    updateTop();
+    setTimeout(nextCustomer,520);
   }
-  function customerLeaves(){
-    combo=0; hearts--; updateTop(); flash("bad"); sLeave(); popTxt("Khách bỏ đi 😤","#e74c3c");
-    if(hearts<=0){ setTimeout(gameOver,700); return; }
+  function drinkPrice(o){ return teaBy(o.tea).base + sizeBy(o.size).extra + topBy(o.top).price; }
+
+  function customerLeaves(){ st.combo=0; dayLeft++; dayServed++; addReview(order,1,false);
+    flash("bad"); beep(300,0.2,"sine",0.07); popTxt("Khách bỏ đi 😤","#e74c3c"); adjustRep(-0.4);
     setTimeout(nextCustomer,650);
   }
 
-  function endDay(){
-    running=false; if(patTimer) cancelAnimationFrame(patTimer);
-    $("dayTitle").textContent="Hết ngày "+day+"!";
-    $("dayEmo").textContent = dayPerfect>=dayServed-1 ? "🌟":"🌙";
-    $("sServed").textContent=dayServed; $("sPerfect").textContent=dayPerfect;
-    $("sMoney").textContent="+"+kstr(dayMoney);
-    var st = dayServed? Math.round((dayPerfect/dayServed)*5):5; if(st<1)st=1;
-    $("sStars").textContent = "★★★★★".slice(0,st)+"☆☆☆☆☆".slice(0,5-st);
-    $("dayOv").classList.remove("hidden");
+  // staff auto-serve oldest waiting customer
+  function staffTick(){ if(phase!=="serve"||!running||!order)return;
+    if(!haveStock(order))return;
+    running=false; if(patTimer)cancelAnimationFrame(patTimer);
+    consumeStock(order); dayServed++; var price=drinkPrice(order); st.money+=price; dayRev+=price;
+    addReview(order,4,true); adjustRep(0.01); popTxt("🧑‍🍳 NV pha +"+kstr(price),"#3f8f3a"); updateTop();
+    setTimeout(nextCustomer,400);
   }
-  function gameOver(){
-    running=false; if(patTimer) cancelAnimationFrame(patTimer);
-    $("oDays").textContent=day+" ngày"; $("oMoney").textContent=kstr(totalMoney);
+
+  function addReview(o,stars,good){ st.revCount++;
+    var c=pick(REVIEWS[stars]||REVIEWS[3]);
+    st.reviews.unshift({name:o.name,ava:o.ava,stars:stars,text:c}); if(st.reviews.length>12)st.reviews.pop();
+  }
+  function adjustRep(d){ st.rep=clamp(st.rep+d,0,5); }
+
+  function endDay(){
+    running=false; if(patTimer)cancelAnimationFrame(patTimer); clearInterval(staffTimer);
+    phase="summary";
+    var rent=50, util=20+Object.keys(st.upg).length*5, wage=st.staff?STAFF.wage:0;
+    var waste=st.stock.cup+st.stock.tea+st.stock.top;
+    st.money-=(rent+util+wage);
+    // hàng ế bị bỏ
+    st.stock={cup:0,tea:0,top:0};
+    var net=dayRev-dayStockCost-rent-util-wage;
+    showSummary(rent,util,wage,waste,net);
+    // check game over
+    if(st.money<0){ setTimeout(function(){ gameOver("Hết vốn rồi! Quán phải đóng cửa 💸"); },50); }
+    else if(st.rep<2.0){ setTimeout(function(){ gameOver("Uy tín quá thấp, khách không tới nữa 😢"); },50); }
+  }
+
+  function showSummary(rent,util,wage,waste,net){
+    var stars=repStars(st.rep);
+    var html='<div class="emo">🌙</div><h2 class="display">Hết ngày '+st.day+'</h2>'
+      +'<div style="text-align:left;margin-bottom:6px">'
+      +'<div class="sumRow"><span>💰 Doanh thu</span><span>'+kstr(dayRev)+'</span></div>'
+      +'<div class="sumRow"><span>📦 Tiền nhập hàng</span><span>-'+kstr(dayStockCost)+'</span></div>'
+      +'<div class="sumRow"><span>🏠 Thuê + điện nước</span><span>-'+kstr(rent+util)+'</span></div>'
+      +(wage?'<div class="sumRow"><span>🧑‍🍳 Lương nhân viên</span><span>-'+kstr(wage)+'</span></div>':'')
+      +'<div class="sumRow tot"><span>Lãi/lỗ ròng</span><span class="big" style="color:'+(net>=0?'#2e9e4f':'#e2574e')+'">'+(net>=0?'+':'')+kstr(net)+'</span></div>'
+      +'<div class="sumRow" style="border:none"><span>Phục vụ</span><span>'+dayServed+' khách · '+dayPerfect+' chuẩn 💯 · '+dayLeft+' bỏ đi</span></div>'
+      +'<div class="sumRow" style="border:none"><span>Uy tín</span><span style="color:#f5b50a">'+stars+' '+st.rep.toFixed(1)+'</span></div>'
+      +(waste?'<div class="mini" style="color:#e2574e;margin-top:2px">🗑️ '+waste+' phần nguyên liệu ế bị bỏ.</div>':'')
+      +'</div>';
+    // reviews
+    if(st.reviews.length){ html+='<div class="secTitle">💬 Khách nói gì</div>';
+      st.reviews.slice(0,3).forEach(function(r){ html+='<div class="revItem"><span class="ra">'+r.ava+'</span><div><div class="rs">'+repStars(r.stars)+' <b style="color:#5b4636">'+r.name+'</b></div><div class="rc">"'+r.text+'"</div></div></div>'; });
+    }
+    // shop: unlock + upgrades + staff
+    html+='<div class="secTitle">🛒 Mở rộng quán · Vốn: '+kstr(st.money)+'</div>';
+    html+='<div id="shopList" style="text-align:left"></div>';
+    html+='<button class="bigbtn" id="nextDayBtn">☀️ MỞ CỬA NGÀY MỚI</button>';
+    $("sumCard").innerHTML=html;
+    renderShop();
+    $("nextDayBtn").onclick=function(){ $("sumOv").classList.add("hidden"); st.day++; startDay(); };
+    $("sumOv").classList.remove("hidden");
+  }
+  function renderShop(){
+    var el=$("shopList"); if(!el)return; var html="";
+    // staff
+    html+='<div class="buyRow"><div class="bi">'+STAFF.emo+'</div><div class="bt"><div class="n">'+STAFF.name+(st.staff?' ✓':'')+'</div><div class="d">'+STAFF.desc+' Lương '+STAFF.wage+'k/ngày.</div></div>'
+      +(st.staff?'<button class="buyBtn" data-act="fire">Cho nghỉ</button>':'<button class="buyBtn" data-act="hire">Thuê</button>')+'</div>';
+    // unlock teas
+    TEAS.forEach(function(te){ if(st.teaUn[te.k])return;
+      html+='<div class="buyRow"><div class="bi">'+teaIconSVG(te.color)+'</div><div class="bt"><div class="n">'+te.name+'</div><div class="d">Mở thêm món trà mới cho menu.</div></div><button class="buyBtn" data-tea="'+te.k+'"'+(st.money<te.cost?' disabled':'')+'>'+kstr(te.cost)+'</button></div>'; });
+    // unlock tops
+    TOPS.forEach(function(tp){ if(tp.k==="none"||st.topUn[tp.k])return;
+      html+='<div class="buyRow"><div class="bi">'+topIconSVG(tp)+'</div><div class="bt"><div class="n">'+tp.name+'</div><div class="d">Topping mới, khách thích hơn.</div></div><button class="buyBtn" data-top="'+tp.k+'"'+(st.money<tp.cost?' disabled':'')+'>'+kstr(tp.cost)+'</button></div>'; });
+    // upgrades
+    UPGRADES.forEach(function(u){ if(st.upg[u.k])return;
+      html+='<div class="buyRow"><div class="bi">'+u.emo+'</div><div class="bt"><div class="n">'+u.name+'</div><div class="d">'+u.desc+'</div></div><button class="buyBtn" data-upg="'+u.k+'"'+(st.money<u.cost?' disabled':'')+'>'+kstr(u.cost)+'</button></div>'; });
+    el.innerHTML=html;
+    Array.prototype.forEach.call(el.querySelectorAll(".buyBtn"),function(b){ b.onclick=function(){
+      var act=b.getAttribute("data-act");
+      if(act==="hire"){ st.staff=true; } else if(act==="fire"){ st.staff=false; }
+      var tk=b.getAttribute("data-tea"); if(tk){ var te=teaBy(tk); if(st.money<te.cost)return; st.money-=te.cost; st.teaUn[tk]=1; renderTeaOpts(); }
+      var pk=b.getAttribute("data-top"); if(pk){ var tp=topBy(pk); if(st.money<tp.cost)return; st.money-=tp.cost; st.topUn[pk]=1; renderTopOpts(); }
+      var uk=b.getAttribute("data-upg"); if(uk){ var u=null; for(var i=0;i<UPGRADES.length;i++)if(UPGRADES[i].k===uk)u=UPGRADES[i]; if(!u||st.money<u.cost)return; st.money-=u.cost; st.upg[uk]=1; u.apply(); }
+      sTap(); updateTop(); showSummaryRefreshShop();
+    }; });
+  }
+  function showSummaryRefreshShop(){ var t=$("shopList"); if(t){ renderShop(); var h=$("sumCard").querySelector(".secTitle:last-of-type"); }
+    // update vốn label
+    var labels=$("sumCard").querySelectorAll(".secTitle"); if(labels.length){ labels[labels.length-1].innerHTML='🛒 Mở rộng quán · Vốn: '+kstr(st.money); } }
+
+  function gameOver(msg){
+    phase="over"; clearInterval(staffTimer);
+    $("sumOv").classList.add("hidden");
+    $("overCard").innerHTML='<div class="emo">😢</div><h2 class="display">Quán đóng cửa…</h2><p>'+msg+'</p>'
+      +'<div class="sumRow"><span>Trụ được</span><span>'+st.day+' ngày</span></div>'
+      +'<div class="sumRow" style="border:none"><span>Uy tín cuối</span><span style="color:#f5b50a">'+st.rep.toFixed(1)+' ⭐ · '+st.revCount+' đánh giá</span></div>'
+      +'<button class="bigbtn" id="againBtn">🔁 MỞ QUÁN LẠI</button>';
+    $("overCard").querySelector("#againBtn").onclick=function(){ $("overOv").classList.add("hidden"); initGame(); };
     $("overOv").classList.remove("hidden");
   }
 
-  function updateTop(){
-    $("money").querySelector(".v").textContent=kstr(money);
-    $("hearts").textContent = "❤️".repeat(Math.max(0,hearts)) + "🤍".repeat(Math.max(0,3-hearts));
+  // ---------- UI helpers ----------
+  function repStars(r){ var full=Math.round(r); return "★★★★★".slice(0,full)+"☆☆☆☆☆".slice(0,5-full); }
+  function updateTop(){ $("money").querySelector(".v").textContent=kstr(st.money);
+    $("dayS").querySelector(".v").textContent=st.day;
+    $("repStars").textContent=repStars(st.rep); $("repNum").textContent=st.rep.toFixed(1)+" · "+st.revCount+" đánh giá"; }
+  function updateChips(){ $("nCup").textContent=st.stock.cup; $("nTea").textContent=st.stock.tea; $("nTop").textContent=st.stock.top;
+    $("chipCup").classList.toggle("low",st.stock.cup<=1); $("chipTea").classList.toggle("low",st.stock.tea<=1); $("chipTop").classList.toggle("low",st.stock.top<=1);
+    $("chipStaff").style.display=st.staff?"inline-flex":"none"; }
+  function flash(k){ var f=$("flash"); f.className=""; void f.offsetWidth; f.className=k; }
+  function popTxt(t,c){ var el=document.createElement("div"); el.className="pop"; el.textContent=t; el.style.color=c; el.style.left="50%"; el.style.top="30%"; el.style.transform="translate(-50%,0)"; document.body.appendChild(el); setTimeout(function(){if(el.parentNode)el.parentNode.removeChild(el);},1100); }
+  var warnT=null;
+  function warn(t){ var w=$("warnbar"); w.textContent="⚠️ "+t; w.style.display="block"; clearTimeout(warnT); warnT=setTimeout(function(){w.style.display="none";},1600); }
+
+  // ---------- init ----------
+  function initGame(){
+    st={ shop:st.shop, day:1, money:400, rep:5.0, revCount:0, combo:0,
+      teaUn:{milk:1,matcha:1}, topUn:{none:1,black:1,white:1}, upg:{}, staff:false,
+      extraCust:0, patBonus:0, pourTol:0, tipMul:1.0, stock:{cup:0,tea:0,top:0}, reviews:[] };
+    $("shopName").textContent=st.shop;
+    buildServeUI(); markSel(); renderCup(); updatePour(); updateTop(); updateChips();
+    startDay();
   }
-
-  // ---- fx ----
-  function flash(kind){ var f=$("flash"); f.className=""; void f.offsetWidth; f.className=kind==="good"?"good go":"bad"; }
-  function shakeBubble(){ var b=$("bubble"); b.animate([{transform:"translateX(0)"},{transform:"translateX(-7px)"},{transform:"translateX(7px)"},{transform:"translateX(0)"}],{duration:300}); }
-  function popTxt(t,color){ var el=document.createElement("div"); el.className="pop"; el.textContent=t; el.style.color=color;
-    el.style.left="50%"; el.style.top="34%"; el.style.transform="translateX(-50%)"; document.body.appendChild(el);
-    setTimeout(function(){ if(el.parentNode) el.parentNode.removeChild(el); },1000); }
-
-  // ---- wiring ----
-  buildOpts();
-  $("serveBtn").onclick=function(){ au(); serve(); };
-  $("clearBtn").onclick=function(){ sel={size:null,tea:null,top:null}; sTap(); mark(); renderCup(); };
   $("openBtn").onclick=function(){ au(); if(AC&&AC.state==="suspended")AC.resume();
-    var v=($("shopInput").value||"").trim(); if(v){ shopName=v.slice(0,16); $("shopName").textContent=shopName; }
-    day=1; money=0; totalMoney=0; hearts=3; served=0; perfect=0; combo=0; updateTop();
-    $("startOv").classList.add("hidden"); startDay(); };
-  $("shopInput").addEventListener("keydown",function(e){ if(e.key==="Enter") $("openBtn").click(); });
-  $("nextDayBtn").onclick=function(){ day++; $("dayOv").classList.add("hidden"); startDay(); };
-  $("againBtn").onclick=function(){ $("overOv").classList.add("hidden"); day=1; money=0; totalMoney=0; hearts=3; served=0; perfect=0; combo=0; updateTop(); startDay(); };
+    var v=($("shopInput").value||"").trim(); if(v)st.shop=v.slice(0,16);
+    $("startOv").classList.add("hidden"); initGame(); };
+  $("shopInput").addEventListener("keydown",function(e){ if(e.key==="Enter")$("openBtn").click(); });
+  $("serveBtn").onclick=function(){ au(); serve(); };
 
-  updateTop();
+  buildServeUI(); markSel(); renderCup(); updatePour();
 
   if('serviceWorker' in navigator){ window.addEventListener('load',function(){ navigator.serviceWorker.register('sw.js').catch(function(){}); }); }
 })();

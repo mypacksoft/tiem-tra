@@ -561,25 +561,30 @@
       if(c.t==="none"){ b.setAttribute("data-k","none"); b.innerHTML=trayTopSVG(topBy("none"));
         b.onclick=function(){ if(phase!=="serve")return; sel.top="none"; au(); sTap(); markSel(); renderCup(); }; p.appendChild(b); return; }
       var tp=c.tp; b.setAttribute("data-k",tp.k);
-      b.innerHTML=trayTopSVG(tp)+'<span class="trayq">'+topQ(tp.k)+'</span>';
+      b.innerHTML=trayTopSVG(tp,fillLevel(topQ(tp.k)))+'<span class="trayq">'+topQ(tp.k)+'</span>';
       b.onclick=function(){ if(phase!=="serve")return; if(topQ(tp.k)<1){ warn("Hết "+tp.name+" — nhập ở tab Kho"); sBad(); return; } sel.top=tp.k; au(); sTap(); markSel(); renderCup(); };
       p.appendChild(b); }); }
-  function trayTopSVG(tp){
+  function fillLevel(q){ if(q<=0)return 0; if(q<=2)return 1; if(q<=6)return 2; return 3; }
+  function trayTopSVG(tp,lvl){ if(lvl===undefined)lvl=3;
     var gid="ix"+tp.k, pg="pp"+tp.k, col=tp.color||"#8a8a8a", light=(tp.k==="white");
     var defs='<linearGradient id="'+gid+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4f7f9"/><stop offset=".38" stop-color="#d2d9de"/><stop offset=".62" stop-color="#bcc4ca"/><stop offset="1" stop-color="#9aa3aa"/></linearGradient>';
-    if(tp.k!=="none"&&tp.k!=="jelly") defs+='<radialGradient id="'+pg+'" cx=".34" cy=".3" r=".82"><stop offset="0" stop-color="#ffffff"/><stop offset=".22" stop-color="'+(light?"#fcfcfb":lighten(col))+'"/><stop offset=".6" stop-color="'+col+'"/><stop offset="1" stop-color="rgba(0,0,0,.42)"/></radialGradient>';
+    if(tp.k!=="none"&&tp.k!=="jelly"&&lvl>0) defs+='<radialGradient id="'+pg+'" cx=".34" cy=".3" r=".82"><stop offset="0" stop-color="#ffffff"/><stop offset=".22" stop-color="'+(light?"#fcfcfb":lighten(col))+'"/><stop offset=".6" stop-color="'+col+'"/><stop offset="1" stop-color="rgba(0,0,0,.42)"/></radialGradient>';
     var S='<svg class="ic2" viewBox="0 0 44 40" style="width:100%;height:auto;display:block" aria-hidden="true"><defs>'+defs+'</defs>'
       +'<rect x="1.5" y="1.5" width="41" height="37" rx="7" fill="url(#'+gid+')" stroke="#8b949b" stroke-width="1.3"/>'
       +'<rect x="4.2" y="4.2" width="35.6" height="31.6" rx="4.5" fill="#7f8891"/>'
       +'<rect x="5" y="5" width="34" height="6" rx="3" fill="#ffffff" opacity=".16"/>'
       +'<rect x="4.6" y="31" width="34.8" height="4.6" rx="2.5" fill="#000" opacity=".12"/>';
     if(tp.k==="none") return S+'<circle cx="22" cy="20" r="8.5" fill="none" stroke="#cdd3d8" stroke-width="2.8"/><line x1="16" y1="26" x2="28" y2="14" stroke="#cdd3d8" stroke-width="2.8" stroke-linecap="round"/></svg>';
+    if(lvl<=0) return S+'</svg>';
     if(tp.k==="jelly"){ var c=["#ff5d5d","#ffb13d","#ffe14d","#6fd0ff","#ff8fb0","#7be06a"],J='',k=0;
-      for(var rr=0;rr<4;rr++)for(var cc=0;cc<5;cc++){ var jx=7+cc*5.9+(rr%2?2.9:0), jy=7+rr*6.3; if(jx>35)continue; J+='<rect x="'+jx.toFixed(1)+'" y="'+jy.toFixed(1)+'" width="5.2" height="5.2" rx="1.6" fill="'+c[(k++)%c.length]+'"/><rect x="'+(jx+.7).toFixed(1)+'" y="'+(jy+.7).toFixed(1)+'" width="1.8" height="1.8" rx=".9" fill="#fff" opacity=".55"/>'; }
+      var jr=lvl>=3?[0,1,2,3]:lvl===2?[2,3]:[3];
+      jr.forEach(function(rr){ for(var cc=0;cc<5;cc++){ var jx=7+cc*5.9+(rr%2?2.9:0), jy=7+rr*6.3; if(jx>35)continue; J+='<rect x="'+jx.toFixed(1)+'" y="'+jy.toFixed(1)+'" width="5.2" height="5.2" rx="1.6" fill="'+c[(k++)%c.length]+'"/><rect x="'+(jx+.7).toFixed(1)+'" y="'+(jy+.7).toFixed(1)+'" width="1.8" height="1.8" rx=".9" fill="#fff" opacity=".55"/>'; } });
       return S+J+'</svg>'; }
-    var P='', rows=[[9,8,5],[7,13.5,6],[9,19,5],[7,24.2,6]];
+    var all=[[9,8,5],[7,13.5,6],[9,19,5],[7,24.2,6]];
+    var rows = lvl>=3?all : lvl===2?all.slice(2) : [[9,25,3]];
+    var P='';
     for(var ri=0;ri<rows.length;ri++){ var x0=rows[ri][0], yy=rows[ri][1], n=rows[ri][2];
-      for(var i=0;i<n;i++){ var cx=x0+i*5.7+(Math.random()*1-0.5), cy=yy+(Math.random()*1-0.5);
+      for(var i=0;i<n;i++){ var cx=x0+i*5.7+(i%2?0.5:-0.5), cy=yy+(((ri+i)%3)-1)*0.45;
         P+='<circle cx="'+cx.toFixed(1)+'" cy="'+cy.toFixed(1)+'" r="3.4" fill="url(#'+pg+')"/><circle cx="'+(cx-1).toFixed(1)+'" cy="'+(cy-1.1).toFixed(1)+'" r="1" fill="#fff" opacity=".7"/>'; } }
     return S+P+'</svg>';
   }
@@ -1102,7 +1107,7 @@
   function repStars(r){ var full=Math.round(r); return "★★★★★".slice(0,full)+"☆☆☆☆☆".slice(0,5-full); }
   function updateTop(){ $("moneyV").textContent=kstr(st.money);
     $("repStars").textContent=repStars(st.rep); $("repNum").textContent=st.rep.toFixed(1)+" · "+st.revCount+" đánh giá"; }
-  function updateTrayBadges(){ var p=$("optTop"); if(!p)return; for(var i=0;i<p.children.length;i++){ var el=p.children[i]; var k=el.getAttribute("data-k"); var q=el.querySelector(".trayq"); if(q&&k&&k!=="none")q.textContent=topQ(k); } }
+  function updateTrayBadges(){ var p=$("optTop"); if(!p)return; for(var i=0;i<p.children.length;i++){ var el=p.children[i]; var k=el.getAttribute("data-k"); if(!k||k==="none")continue; el.innerHTML=trayTopSVG(topBy(k),fillLevel(topQ(k)))+'<span class="trayq">'+topQ(k)+'</span>'; } }
   function updateTeaBadges(){ var t=$("optTea"); if(!t)return; for(var i=0;i<t.children.length;i++){ var el=t.children[i]; var k=el.getAttribute("data-k"); var q=el.querySelector(".trayq"); if(q&&k)q.textContent=teaQ(k).toFixed(1)+"L"; } }
   function refreshAvail(){
     var tb=$("optTea"); if(tb){ for(var i=0;i<tb.children.length;i++){ var e0=tb.children[i]; var tk0=e0.getAttribute("data-k"); e0.classList.toggle("soldout", st.stock.cup<1 || teaQ(tk0)<teaUse("M")-1e-9); } }

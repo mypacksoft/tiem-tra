@@ -50,8 +50,8 @@
   #queueLeft{flex:1; text-align:right; color:var(--dim); font-weight:700;}
 
   /* customer slots */
-  #slots{flex:none; display:flex; gap:7px; padding:0 12px 6px;}
-  .slot{flex:1; min-width:0; background:linear-gradient(#ffffff,#eef6ff); border:1.5px solid #ccd9f2; border-radius:15px; padding:8px 8px 9px; display:flex; flex-direction:column; gap:5px; box-shadow:0 3px 10px rgba(50,90,140,.13), inset 0 1px 0 rgba(255,255,255,.7);}
+  #slots{flex:none; display:flex; gap:7px; padding:0 12px 6px; height:156px; align-items:stretch;}
+  .slot{flex:1; min-width:0; overflow:hidden; background:linear-gradient(#ffffff,#eef6ff); border:1.5px solid #ccd9f2; border-radius:15px; padding:7px 7px 8px; display:flex; flex-direction:column; gap:3px; box-shadow:0 3px 10px rgba(50,90,140,.13), inset 0 1px 0 rgba(255,255,255,.7);}
   .slot.empty{border:1.5px dashed #bcd6ee; align-items:center; justify-content:center; color:#8ba6c8; font-weight:800; font-size:10.5px; box-shadow:none; background:rgba(246,251,255,.5); gap:1px; padding:10px 6px;}
   .slot.empty .eghost{font-size:19px; opacity:.45; line-height:1;}
   .slot.active{border-color:var(--pink); box-shadow:0 2px 12px rgba(184,90,110,.18);}
@@ -60,13 +60,13 @@
   .slot .sn{font-weight:800; font-size:11px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1;}
   .slot .stg{font-size:9px; font-weight:800; padding:1px 5px; border-radius:999px;}
   .slot .stg.picky{background:#f6dcd9; color:var(--red);} .slot .stg.rich{background:#fbeecb; color:#a8781a;}
-  .slot .so{font-size:10.5px; font-weight:600; line-height:1.32; color:var(--ink); min-height:40px;}
+  .slot .so{font-size:10.5px; font-weight:600; line-height:1.3; color:var(--ink); min-height:0;}
   .slot .so b{color:var(--pink);}
-  .slot .sbar{height:6px; border-radius:999px; background:#eadcc4; overflow:hidden;}
+  .slot .sbar{height:6px; border-radius:999px; background:#d7e4f5; overflow:hidden;}
   .slot .sbar i{display:block; height:100%; border-radius:999px; width:100%; background:linear-gradient(90deg,#7fd17a,#56b85a);}
   .slot .sfbar{margin-top:3px; background:#d7e6ff;}
   .slot .sfbar i{background:linear-gradient(90deg,#7aa7ff,#4e82e8);}
-  .slot .sfwrap{display:flex; align-items:center; gap:2px; margin-top:4px;}
+  .slot .sfwrap{display:flex; align-items:center; gap:2px; margin-top:2px;}
   .slot .sfstep{opacity:.25; filter:grayscale(1); font-size:12px; transition:.15s;}
   .slot .sfstep.on{opacity:1; filter:none;}
   .slot .sfstep.now{transform:scale(1.3) translateY(-1px);}
@@ -74,8 +74,8 @@
   .slot .sfcup{position:relative; width:13px; height:17px; background:#fffdf8; border:1.5px solid #dcc29c; border-radius:2px 2px 4px 4px; overflow:hidden; display:inline-block; vertical-align:middle; flex:none;}
   .slot .sfcup i{position:absolute; left:0; right:0; bottom:0; height:0; background:#d8b88c; transition:height .12s;}
   .slot .sfcup b{position:absolute; left:50%; bottom:1px; width:4px; height:4px; margin-left:-2px; border-radius:50%; background:#2d2620; display:none; z-index:2;}
-  .slot .sbt{display:flex; gap:5px;}
-  .slot .sbt button{flex:1; border:none; border-radius:9px; padding:7px 4px; font-weight:800; font-size:11px; cursor:pointer;}
+  .slot .sbt{display:flex; gap:5px; margin-top:auto;}
+  .slot .sbt button{flex:1; border:none; border-radius:9px; padding:6px 4px; font-weight:800; font-size:11px; cursor:pointer;}
   .slot .give{background:var(--pink); color:#fff;} .slot .give:active{transform:scale(.96);}
   .slot .rej{background:var(--cream2); color:var(--dim);} .slot .rej:active{transform:scale(.96);}
 

@@ -1010,7 +1010,11 @@
           if(sel.size===null && sel.fill===0){ var ph=$("pourHint"); if(ph)ph.textContent="🧑‍🍳 Nhân viên đang pha ("+STAFFSTEPS[cur].l+")…"; }
           if(sw.staff>=1){ staffServe(si2); } else active++;
         }
-        for(si2=0;si2<MAXSLOTS && active<(st.staffN||0);si2++){ var sa2=slots[si2]; if(sa2 && sa2.staff===0 && haveStockFor(sa2.o.size,sa2.o.tea,sa2.o.top)){ sa2.staff=0.001; active++; renderSlots(); } }
+        var idleQ=[];
+        for(si2=0;si2<MAXSLOTS;si2++){ var sa2=slots[si2]; if(sa2 && sa2.staff===0 && haveStockFor(sa2.o.size,sa2.o.tea,sa2.o.top)) idleQ.push(si2); }
+        idleQ.sort(function(a,b){ return slots[a].patLeft - slots[b].patLeft; });
+        for(var iq=0; iq<idleQ.length && active<(st.staffN||0); iq++){ slots[idleQ[iq]].staff=0.001; active++; }
+        if(idleQ.length) renderSlots();
       }
       if(closing && slots.every(function(s){return !s;})){ endDay(); return; }
       slotRaf=requestAnimationFrame(tick); }

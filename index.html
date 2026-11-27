@@ -22,6 +22,7 @@
   html,body{margin:0; height:100%; overflow:hidden; background:#e8dcc7; color:var(--ink); font-family:"Be Vietnam Pro",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; user-select:none; touch-action:manipulation;}
   .display{font-family:"Baloo 2","Be Vietnam Pro",sans-serif;}
   #wrap{position:fixed; inset:0; display:flex; flex-direction:column; max-width:520px; margin:0 auto; background:var(--cream) url('assets/bg_shop.png') top center / cover no-repeat; box-shadow:0 0 60px rgba(150,110,80,.2);}
+  #wrap::before{content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; background:linear-gradient(180deg, rgba(246,238,224,.30) 0%, rgba(246,238,224,.66) 24%, rgba(246,238,224,.80) 50%, rgba(246,238,224,.94) 72%);}
   #awn{display:none;}
   #mascot{position:absolute; left:4px; bottom:8px; height:112px; width:auto; z-index:4; pointer-events:none; filter:drop-shadow(0 4px 5px rgba(90,60,35,.28)); transition:transform .15s;}
   #stage .cupBox{z-index:2;}
@@ -75,7 +76,7 @@
   .slot .rej{background:var(--cream2); color:var(--dim);} .slot .rej:active{transform:scale(.96);}
 
   /* mixing cup */
-  #stage{flex:1; display:flex; align-items:center; justify-content:center; gap:14px; padding:2px 12px; min-height:0; position:relative;}
+  #stage{flex:1; display:flex; align-items:center; justify-content:center; gap:14px; padding:4px 12px; min-height:0; position:relative; margin:2px 8px 3px; border-radius:18px; background:linear-gradient(rgba(253,248,238,.72),rgba(253,248,238,.9)); box-shadow:inset 0 0 0 1.5px rgba(214,190,150,.35), 0 2px 8px rgba(150,110,70,.08);}
   #stage::after{content:""; position:absolute; left:50%; bottom:16px; width:120px; height:14px; transform:translateX(-50%); border-radius:50%; background:radial-gradient(ellipse at center,rgba(150,110,70,.2),rgba(150,110,70,0) 72%); z-index:0;}
   .cupBox{display:flex; flex-direction:column; align-items:center; gap:3px;}
   .cup{position:relative; width:68px; height:92px; background:#fffdf8; border:3px solid #e8dcc4; clip-path:polygon(14% 0,86% 0,77% 100%,23% 100%); overflow:hidden; transition:height .15s, width .15s;}

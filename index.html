@@ -20,9 +20,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Be+Vietnam+Pro:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
-  :root{ --cream:#e7f5fb; --cream2:#d2ebf5; --ink:#123a50; --dim:#6f92a6; --pink:#12a0cf; --pink2:#58c3e2; --pinkbg:#d7eff8; --green:#4e9f6a; --line:#c6e3ef; --card:#f2fbfe; --gold:#e0a53a; --red:#d1564e; --teal:#16a9d0; }
+  :root{ --cream:#eaf1fd; --cream2:#d6e2f7; --ink:#15295e; --dim:#6f92a6; --pink:#2050cc; --pink2:#5a7ee0; --pinkbg:#d7eff8; --green:#4e9f6a; --line:#ccd9f2; --card:#f2fbfe; --gold:#e0a53a; --red:#d1564e; --teal:#2a5fd4; }
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent; touch-action:manipulation;}
-  html,body{margin:0; height:100%; overflow:hidden; background:#c6e3ef; color:var(--ink); font-family:"Be Vietnam Pro",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; user-select:none; touch-action:manipulation;}
+  html,body{margin:0; height:100%; overflow:hidden; background:#ccd9f2; color:var(--ink); font-family:"Be Vietnam Pro",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; user-select:none; touch-action:manipulation;}
   .display{font-family:"Baloo 2","Be Vietnam Pro",sans-serif;}
   #wrap{position:fixed; inset:0; display:flex; flex-direction:column; max-width:520px; margin:0 auto; background:linear-gradient(180deg,#eef5fd 0%,#e4eefa 40%,#dce9f8 100%); box-shadow:0 0 60px rgba(60,100,150,.2);}
   #wrap::before{content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; background:radial-gradient(120% 60% at 50% 0%, rgba(255,255,255,.5), rgba(255,255,255,0) 60%);}
@@ -38,8 +38,8 @@
   .tleft small{font-size:10px; color:var(--dim); font-weight:700;}
   .tmid{text-align:center; line-height:1.06;}
   #clock{font-family:"Baloo 2",sans-serif; font-size:20px; font-weight:800; font-variant-numeric:tabular-nums;}
-  .tmid small{font-size:12px; font-weight:800; color:#0f82b0;}
-  #money .v{color:#0f82b0;}
+  .tmid small{font-size:12px; font-weight:800; color:#2546c0;}
+  #money .v{color:#2546c0;}
   #rep{display:flex; flex-direction:column; align-items:flex-end; line-height:1.05;}
   #repStars{color:var(--gold); font-size:13px; letter-spacing:1px;}
   #repNum{font-size:10px; color:var(--dim); font-weight:700;}
@@ -51,7 +51,7 @@
 
   /* customer slots */
   #slots{flex:none; display:flex; gap:7px; padding:0 12px 6px;}
-  .slot{flex:1; min-width:0; background:linear-gradient(#ffffff,#eef6ff); border:1.5px solid #c6e3ef; border-radius:15px; padding:8px 8px 9px; display:flex; flex-direction:column; gap:5px; box-shadow:0 3px 10px rgba(50,90,140,.13), inset 0 1px 0 rgba(255,255,255,.7);}
+  .slot{flex:1; min-width:0; background:linear-gradient(#ffffff,#eef6ff); border:1.5px solid #ccd9f2; border-radius:15px; padding:8px 8px 9px; display:flex; flex-direction:column; gap:5px; box-shadow:0 3px 10px rgba(50,90,140,.13), inset 0 1px 0 rgba(255,255,255,.7);}
   .slot.empty{border:1.5px dashed #bcd6ee; align-items:center; justify-content:center; color:#8ba6c8; font-weight:800; font-size:10.5px; box-shadow:none; background:rgba(246,251,255,.5); gap:1px; padding:10px 6px;}
   .slot.empty .eghost{font-size:19px; opacity:.45; line-height:1;}
   .slot.active{border-color:var(--pink); box-shadow:0 2px 12px rgba(184,90,110,.18);}
@@ -82,7 +82,7 @@
   /* mixing cup */
   #stage{flex:1; display:flex; align-items:center; justify-content:center; gap:14px; padding:22px 12px 8px; min-height:124px; overflow:hidden; position:relative; margin:4px 8px 3px; border-radius:18px; background:linear-gradient(rgba(255,255,255,.62),rgba(240,247,255,.74)); box-shadow:inset 0 0 0 1.5px rgba(150,190,232,.5), 0 3px 10px rgba(60,100,150,.1);}
   #stage::after{content:""; position:absolute; left:50%; bottom:14px; width:116px; height:13px; transform:translateX(-50%); border-radius:50%; background:radial-gradient(ellipse at center,rgba(60,100,150,.16),rgba(60,100,150,0) 72%); z-index:0;}
-  .stageTag{position:absolute; top:7px; left:11px; z-index:5; background:linear-gradient(#2cb4dc,#1687b8); color:#f0fbff; border:1.5px solid #0f7aa6; border-radius:8px; padding:3px 10px; font-size:9.5px; font-weight:800; letter-spacing:.6px; box-shadow:0 2px 0 #0d6c95, inset 0 1px 0 rgba(255,255,255,.35); text-shadow:0 1px 1px rgba(10,60,85,.45);}
+  .stageTag{position:absolute; top:7px; left:11px; z-index:5; background:linear-gradient(#2a56d4,#1838a8); color:#f0fbff; border:1.5px solid #142e8e; border-radius:8px; padding:3px 10px; font-size:9.5px; font-weight:800; letter-spacing:.6px; box-shadow:0 2px 0 #102682, inset 0 1px 0 rgba(255,255,255,.35); text-shadow:0 1px 1px rgba(10,60,85,.45);}
   .cupBox{display:flex; flex-direction:column; align-items:center; gap:3px;}
   .cup{position:relative; width:68px; height:92px; background:#fffdf8; border:3px solid #e8dcc4; clip-path:polygon(14% 0,86% 0,77% 100%,23% 100%); overflow:hidden; transition:height .15s, width .15s;}
   .cup.L{width:78px; height:106px;}
@@ -98,10 +98,10 @@
   .pourHint{font-size:10px; color:var(--teal); font-weight:800;}
 
   /* builder */
-  #counter{flex:none; border-top:2px solid #9fd0e4; background-color:#d6eef8; background-image:repeating-linear-gradient(0deg,rgba(90,130,180,.08) 0 1px,transparent 1px 21px),repeating-linear-gradient(0deg,rgba(255,255,255,.16) 0 20px,rgba(90,130,180,.07) 20px 22px); border-radius:18px 18px 0 0; padding:9px 10px 12px; overflow-y:auto; max-height:56vh; box-shadow:0 -5px 18px rgba(50,90,140,.14), inset 0 2px 0 rgba(255,255,255,.6); display:flex; flex-direction:column; gap:8px;}
-  .cboard{background:linear-gradient(#ffffff,#eef6ff); border:1.5px solid #c6e3ef; border-radius:14px; padding:7px 9px 9px; box-shadow:0 2px 7px rgba(50,90,140,.12), inset 0 1px 0 rgba(255,255,255,.7);}
+  #counter{flex:none; border-top:2px solid #9fd0e4; background-color:#dde6fa; background-image:repeating-linear-gradient(0deg,rgba(90,130,180,.08) 0 1px,transparent 1px 21px),repeating-linear-gradient(0deg,rgba(255,255,255,.16) 0 20px,rgba(90,130,180,.07) 20px 22px); border-radius:18px 18px 0 0; padding:9px 10px 12px; overflow-y:auto; max-height:56vh; box-shadow:0 -5px 18px rgba(50,90,140,.14), inset 0 2px 0 rgba(255,255,255,.6); display:flex; flex-direction:column; gap:8px;}
+  .cboard{background:linear-gradient(#ffffff,#eef6ff); border:1.5px solid #ccd9f2; border-radius:14px; padding:7px 9px 9px; box-shadow:0 2px 7px rgba(50,90,140,.12), inset 0 1px 0 rgba(255,255,255,.7);}
   .cLabel{display:flex; align-items:center; gap:7px; margin-bottom:7px; flex-wrap:wrap;}
-  .plaque{display:inline-block; background:linear-gradient(#2cb4dc,#1687b8); color:#f0fbff; border:1.5px solid #0f7aa6; border-radius:8px; padding:3px 11px; font-size:10px; font-weight:800; letter-spacing:.6px; text-transform:uppercase; box-shadow:0 2px 0 #0d6c95, inset 0 1px 0 rgba(255,255,255,.35); white-space:nowrap; text-shadow:0 1px 1px rgba(10,60,85,.45);}
+  .plaque{display:inline-block; background:linear-gradient(#2a56d4,#1838a8); color:#f0fbff; border:1.5px solid #142e8e; border-radius:8px; padding:3px 11px; font-size:10px; font-weight:800; letter-spacing:.6px; text-transform:uppercase; box-shadow:0 2px 0 #102682, inset 0 1px 0 rgba(255,255,255,.35); white-space:nowrap; text-shadow:0 1px 1px rgba(10,60,85,.45);}
   .cHint{color:#5f7ba0; text-transform:none; letter-spacing:0; font-weight:700; font-size:10px;}
   .qtRow{display:flex; gap:7px; align-items:stretch;}
   .cups{flex:none; display:flex; flex-direction:row; gap:4px;}
@@ -112,10 +112,10 @@
   .teaBar .opt{flex:0 0 auto; width:66px; padding:5px 2px; touch-action:none; position:relative;}
   .machine{flex:none; width:38px; display:flex; align-items:center; justify-content:center;}
   .plRow{display:flex; gap:8px; align-items:stretch;}
-  .woodBoard{flex:none; width:70px; background:linear-gradient(#32b6dd,#1a8db9); border:2px solid #12708f; border-radius:10px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; color:#f0fbff; font-weight:800; font-size:11px; text-align:center; box-shadow:inset 0 0 0 3px rgba(224,244,255,.22), 0 2px 5px rgba(20,90,125,.25); text-shadow:0 1px 1px rgba(10,60,85,.5); padding:4px;}
+  .woodBoard{flex:none; width:70px; background:linear-gradient(#2f5cda,#1a3fae); border:2px solid #15318f; border-radius:10px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; color:#f0fbff; font-weight:800; font-size:11px; text-align:center; box-shadow:inset 0 0 0 3px rgba(224,244,255,.22), 0 2px 5px rgba(20,90,125,.25); text-shadow:0 1px 1px rgba(10,60,85,.5); padding:4px;}
   .woodBoard b{font-size:14px; font-family:"Baloo 2";}
   .trayGrid{flex:1; display:grid; grid-template-columns:repeat(4,1fr); gap:2px;}
-  .bottleRow{display:flex; gap:6px; justify-content:center; margin-top:8px; padding-top:6px; border-top:1px dashed #c6e3ef;}
+  .bottleRow{display:flex; gap:6px; justify-content:center; margin-top:8px; padding-top:6px; border-top:1px dashed #ccd9f2;}
   .teaBar .opt.sel{border-color:var(--teal); background:#e1edfb; box-shadow:0 0 0 2px rgba(47,134,207,.28);}
   .teaBar .opt .dn{font-size:10.5px; line-height:1.05;}
   .teaBar .opt.pouring{border-color:var(--teal); background:#d2e5fa; transform:scale(.97);}
@@ -172,19 +172,19 @@
   .bigbtn{font-family:"Baloo 2"; font-size:19px; font-weight:800; color:#fff; background:var(--pink); border:none; border-radius:16px; padding:15px 24px; cursor:pointer; box-shadow:0 6px 16px rgba(150,70,88,.28); width:100%; margin-top:8px;}
   .bigbtn:active{transform:translateY(2px); box-shadow:0 3px 10px rgba(150,70,88,.24);}
   /* hub */
-  #hubOv{background:linear-gradient(#d6eef8,#bfe4f1); backdrop-filter:none; padding:0;}
+  #hubOv{background:linear-gradient(#dde6fa,#bfe4f1); backdrop-filter:none; padding:0;}
   .hubcard{max-width:520px; width:100%; height:100%; max-height:100%; border-radius:0; box-shadow:0 0 50px rgba(150,110,80,.18); margin:0 auto; padding:12px 14px; display:flex; flex-direction:column;}
   .hubhead{text-align:left; margin-bottom:8px;}
   .hubhead .r1{display:flex; justify-content:space-between; align-items:baseline; gap:8px;}
-  .hubhead h2{margin:0; font-family:"Baloo 2"; font-size:19px; color:#123a50;}
-  .hubhead .vn{font-weight:800; color:#0f82b0; font-size:15px; white-space:nowrap;}
+  .hubhead h2{margin:0; font-family:"Baloo 2"; font-size:19px; color:#15295e;}
+  .hubhead .vn{font-weight:800; color:#2546c0; font-size:15px; white-space:nowrap;}
   .hubhead .rp{font-size:11px; color:var(--dim); font-weight:700;}
   .hubspecial{background:#e3eefb; border-radius:11px; padding:7px 10px; font-size:12px; margin-top:7px; line-height:1.35;}
   .menuboard{background:linear-gradient(#ffffff,#eef6ff); border:2px solid #9fd0e4; border-radius:14px; padding:9px 12px; margin:8px 0 4px; text-align:left; box-shadow:0 3px 9px rgba(50,90,140,.14), inset 0 0 0 3px rgba(240,247,255,.9);}
-  .menuboard .mbh{font-weight:800; font-size:13px; margin-bottom:5px; color:#146a94;}
+  .menuboard .mbh{font-weight:800; font-size:13px; margin-bottom:5px; color:#2a4fb8;}
   .menuboard .mbgrid{display:grid; grid-template-columns:1fr 1fr; gap:1px 16px;}
   .menuboard .mbrow{display:flex; justify-content:space-between; font-size:12.5px; font-weight:600; border-bottom:1px dotted var(--line); padding:2px 0;}
-  .menuboard .mbrow b{color:#12a0cf; font-weight:800;}
+  .menuboard .mbrow b{color:#2050cc; font-weight:800;}
   .menuboard .mbtops{margin-top:6px; display:flex; flex-wrap:wrap; gap:4px;}
   .menuboard .mbchip{font-size:10.5px; font-weight:700; background:#fff; border:1px solid var(--line); border-radius:999px; padding:2px 8px;}
   .menuboard .mbfoot{font-size:10.5px; color:var(--dim); font-weight:700; margin-top:6px;}
@@ -195,7 +195,7 @@
   .hubtab .e{font-size:17px;}
   .hubbody{flex:1; overflow-y:auto; text-align:left; min-height:140px; max-height:none; padding:10px 4px 4px;}
   .hubbody .intro{font-size:12px; color:#46618a; margin:0 0 8px; line-height:1.45;}
-  .secTitle{font-weight:800; font-size:13px; margin:12px 0 5px; display:flex; align-items:center; gap:6px; padding-left:8px; border-left:4px solid #58c3e2; color:#123a50;}
+  .secTitle{font-weight:800; font-size:13px; margin:12px 0 5px; display:flex; align-items:center; gap:6px; padding-left:8px; border-left:4px solid #5a7ee0; color:#15295e;}
   .buyRow{display:flex; align-items:center; gap:10px; padding:8px 2px; border-bottom:1px dashed #d3e3f4;}
   .buyRow .bi{width:32px; height:32px; flex:none; display:flex; align-items:center; justify-content:center; font-size:21px;}
   .buyRow .bt{flex:1; min-width:0;}
@@ -285,7 +285,7 @@
   <div class="card startcard">
     <button id="mute">🔊</button>
     <div class="starticon">
-      <div style="width:104px;height:104px;border-radius:30px;background:linear-gradient(#2cb4dc,#1687b8);display:flex;align-items:center;justify-content:center;font-size:54px;box-shadow:0 8px 18px rgba(20,90,125,.3),inset 0 2px 0 rgba(255,255,255,.35)">🧋</div>
+      <div style="width:104px;height:104px;border-radius:30px;background:linear-gradient(#2a56d4,#1838a8);display:flex;align-items:center;justify-content:center;font-size:54px;box-shadow:0 8px 18px rgba(20,90,125,.3),inset 0 2px 0 rgba(255,255,255,.35)">🧋</div>
     </div>
     <h1 class="display">Hồng Trà Gia Gia</h1>
     <p id="startSub">Nhập hàng, pha từng ly hồng trà theo đơn của khách và mở chi nhánh Hồng Trà Gia Gia của riêng bạn.</p>
@@ -777,7 +777,7 @@
     var mx=maxStaff(), n=st.staffN||0;
     h+='<div class="buyRow"><div class="bi">'+STAFF.emo+'</div><div class="bt"><div class="n">Nhân viên phụ quầy</div><div class="d">Đang thuê <b>'+n+'/'+mx+'</b> · lương '+(n*STAFF.wage)+'k/ngày</div></div>'
       +'<div class="cnt"><button class="buyBtn" data-staff="fire" style="padding:7px 11px"'+(n<=0?' disabled':'')+'>−</button><button class="buyBtn" data-staff="hire" style="padding:7px 11px"'+(n>=mx?' disabled':'')+'>Thuê +</button></div></div>';
-    if(n>=mx && mx<MAXSLOTS){ var nt=TIERS[Math.min(TIERS.length-1,mx*2)]; h+='<div class="mini" style="color:#0f82b0; margin-top:4px">🔒 Lên hạng <b>'+nt.emo+' '+nt.n+'</b> để thuê thêm nhân viên.</div>'; }
+    if(n>=mx && mx<MAXSLOTS){ var nt=TIERS[Math.min(TIERS.length-1,mx*2)]; h+='<div class="mini" style="color:#2546c0; margin-top:4px">🔒 Lên hạng <b>'+nt.emo+' '+nt.n+'</b> để thuê thêm nhân viên.</div>'; }
     if(n>0){ var fr=Math.round(staffFailRate()*100);
       h+='<div class="sumRow"><span>🎓 Kinh nghiệm (chung)</span><span>Lv '+staffLevel()+' · '+(st.staffXp||0)+' ly</span></div>'
        +'<div class="sumRow" style="border:none"><span>💢 Tỉ lệ làm hư</span><span style="color:'+(fr>15?'#d1564e':'#2e9e4f')+'">~'+fr+'%</span></div>';
@@ -852,7 +852,7 @@
       +'<div class="secTitle">🏪 Quán</div>'
       +'<div class="sumRow"><span>Cấp quán</span><span>'+tr.emo+' '+tr.n+'</span></div>'
       +'<div class="sumRow"><span>Số ngày đã mở</span><span>'+st.day+'</span></div>'
-      +'<div class="sumRow"><span>Vốn hiện tại</span><span style="color:#0f82b0">'+kstr(st.money)+'</span></div>'
+      +'<div class="sumRow"><span>Vốn hiện tại</span><span style="color:#2546c0">'+kstr(st.money)+'</span></div>'
       +'<div class="sumRow"><span>Uy tín</span><span style="color:#e0a53a">'+repStars(st.rep)+' '+st.rep.toFixed(1)+'</span></div>'
       +(st.loan&&st.loan.bal>0?'<div class="sumRow"><span>Đang nợ</span><span style="color:#d1564e">'+kstr(st.loan.bal)+'</span></div>':'')
       +'<div class="secTitle">📈 Thành tích</div>'

@@ -64,8 +64,8 @@
   /* mixing cup */
   #stage{flex:1; display:flex; align-items:center; justify-content:center; gap:14px; padding:2px 12px; min-height:0;}
   .cupBox{display:flex; flex-direction:column; align-items:center; gap:3px;}
-  .cup{position:relative; width:78px; height:110px; background:#fffdf8; border:3px solid #e8dcc4; clip-path:polygon(14% 0,86% 0,77% 100%,23% 100%); overflow:hidden; transition:height .15s, width .15s;}
-  .cup.L{width:88px; height:128px;}
+  .cup{position:relative; width:68px; height:92px; background:#fffdf8; border:3px solid #e8dcc4; clip-path:polygon(14% 0,86% 0,77% 100%,23% 100%); overflow:hidden; transition:height .15s, width .15s;}
+  .cup.L{width:78px; height:106px;}
   .cup .liquid{position:absolute; left:0; right:0; bottom:0; height:0; background:#e9dcc4; transition:background .15s;}
   .cup .mark{position:absolute; left:-2px; right:-2px; border-top:2px dashed var(--teal); opacity:0; z-index:3;}
   .cup .mark.on{opacity:.9;}
@@ -78,17 +78,18 @@
   .pourHint{font-size:10px; color:var(--teal); font-weight:800;}
 
   /* builder */
-  #build{flex:none; background:var(--card); border-top:1.5px solid var(--line); border-radius:18px 18px 0 0; padding:9px 12px 12px; overflow-y:auto; max-height:46vh; box-shadow:0 -4px 16px rgba(150,110,80,.06);}
-  .step{font-size:10.5px; font-weight:800; color:var(--dim); letter-spacing:.3px; margin:8px 2px 4px; text-transform:uppercase;}
+  #build{flex:none; background:var(--card); border-top:1.5px solid var(--line); border-radius:18px 18px 0 0; padding:6px 12px 9px; overflow-y:auto; max-height:56vh; box-shadow:0 -4px 16px rgba(150,110,80,.06);}
+  .step{font-size:10px; font-weight:800; color:var(--dim); letter-spacing:.3px; margin:5px 2px 3px; text-transform:uppercase;}
   .step:first-child{margin-top:1px;}
   .opts{display:grid; gap:6px;}
   .opts.sz{grid-template-columns:repeat(2,1fr);} .opts.tea{grid-template-columns:repeat(3,1fr);} .opts.top{grid-template-columns:repeat(3,1fr);}
-  .opt{border:1.5px solid var(--line); background:#fffdf8; border-radius:12px; padding:7px 3px; cursor:pointer; font-weight:700; font-size:12px; color:var(--ink); text-align:center; display:flex; flex-direction:column; align-items:center; gap:2px; transition:.1s; line-height:1.1;}
+  .opt{border:1.5px solid var(--line); background:#fffdf8; border-radius:12px; padding:5px 3px; cursor:pointer; font-weight:700; font-size:12px; color:var(--ink); text-align:center; display:flex; flex-direction:column; align-items:center; gap:1px; transition:.1s; line-height:1.1;}
   .opt:active{transform:scale(.95);}
   .opt.sel{border-color:var(--pink); background:var(--pinkbg); box-shadow:0 0 0 2px rgba(184,90,110,.2);}
   .opt .px{font-size:9px; color:var(--dim); font-weight:700;}
   .opt .ic2{display:block; filter:drop-shadow(0 1px 1px rgba(0,0,0,.1));}
-  #pourBtn{width:100%; border:none; border-radius:13px; padding:13px; font-family:"Baloo 2"; font-weight:800; font-size:16px; color:#fff; background:var(--teal); box-shadow:0 4px 12px rgba(47,150,135,.28); cursor:pointer; touch-action:none;}
+  .pourRow{display:flex; gap:8px; align-items:stretch;}
+  #pourBtn{flex:1; border:none; border-radius:13px; padding:11px; font-family:"Baloo 2"; font-weight:800; font-size:15px; color:#fff; background:var(--teal); box-shadow:0 4px 12px rgba(47,150,135,.28); cursor:pointer; touch-action:none;}
   #pourBtn:active{transform:translateY(2px); box-shadow:0 2px 8px rgba(47,150,135,.24);}
   #pourBtn.done{background:#8fc4ba;} #pourBtn[disabled]{opacity:.5; filter:grayscale(.3);}
   .lv2{display:grid; grid-template-columns:1fr 1fr; gap:8px;}
@@ -97,7 +98,7 @@
   .lvBtn{border:none; width:26px; height:26px; border-radius:8px; background:var(--cream2); font-size:16px; font-weight:800; cursor:pointer; color:var(--ink);}
   .lvBtn:active{transform:scale(.9);}
   .lvVal{flex:1; text-align:center; font-weight:800; font-size:12px;}
-  #clearBtn{width:100%; margin-top:11px; border:none; border-radius:13px; padding:11px; font-weight:800; font-size:14px; color:var(--dim); background:var(--cream2); cursor:pointer;}
+  #clearBtn{flex:none; width:52px; border:none; border-radius:13px; font-size:20px; color:var(--dim); background:var(--cream2); cursor:pointer;}
   #clearBtn:active{transform:translateY(1px);}
 
   .ov{position:fixed; inset:0; z-index:40; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:16px; background:rgba(55,38,28,.46); backdrop-filter:blur(5px);}
@@ -198,8 +199,11 @@
     <div class="opts sz" id="optSize"></div>
     <div class="step">② Chọn trà</div>
     <div class="opts tea" id="optTea"></div>
-    <div class="step">③ Rót trà — giữ nút cho tới vạch</div>
-    <button id="pourBtn">GIỮ ĐỂ RÓT</button>
+    <div class="step">③ Rót trà (giữ nút tới vạch)</div>
+    <div class="pourRow">
+      <button id="clearBtn" title="Đổ ly, pha lại">🗑️</button>
+      <button id="pourBtn">GIỮ ĐỂ RÓT</button>
+    </div>
     <div class="step">④ Topping</div>
     <div class="opts top" id="optTop"></div>
     <div class="step">⑤ Đường &amp; đá</div>
@@ -207,7 +211,6 @@
       <div class="lvRow"><span class="lb">🍬</span><button class="lvBtn" id="sugDn">−</button><span class="lvVal" id="sugVal">50%</span><button class="lvBtn" id="sugUp">+</button></div>
       <div class="lvRow"><span class="lb">🧊</span><button class="lvBtn" id="iceDn">−</button><span class="lvVal" id="iceVal">Vừa</span><button class="lvBtn" id="iceUp">+</button></div>
     </div>
-    <button id="clearBtn">🗑️ Đổ ly, pha lại</button>
   </div>
 </div>
 <div id="flash"></div>
@@ -269,7 +272,10 @@
     {k:"deco",name:"Trang trí xinh",emo:"🎀",desc:"Khách dễ tính, tip nhiều hơn (+15%).",cost:800,apply:function(){st.tipMul+=0.15;}}
   ];
   var STAFF={name:"Nhân viên phụ quầy",emo:"🧑‍🍳",wage:80,desc:"Tự pha giúp khách đang chờ gấp nhất mỗi ~7 giây. Lương 80k/ngày."};
-  var PR={cup:3,tea:5,top:4}, MAXSLOTS=3;
+  var PR={cup:3,tea:15,top:4}, MAXSLOTS=3;
+  function teaUse(size){ return size==="L"?0.45:0.3; }
+  function freshStock(){ return {cup:0,tea:0,tops:{}}; }
+  function totalTops(){ var s=0,t=(st.stock&&st.stock.tops)||{}; for(var k in t)s+=t[k]||0; return s; }
   var AVATARS=["🐻","🐱","🐰","🐨","🐯","🦊","🐼","🐷","🐵","🐸","🐮","🐹","🐧","🐣"];
   var FACE_BGS=["#ffd7c2","#ffe0ea","#d9ecff","#e3f3d6","#fff0c7","#eadcff","#ffe9d1","#ffdede"];
   var FACE_KINDS=["happy","smile","neutral","cool","wink","happy","smile"];
@@ -292,13 +298,42 @@
     {k:"c7",name:"Trà sữa thạch rau câu",tea:"milk",top:"jelly",emo:"🧋"},
     {k:"c8",name:"Matcha hoàng kim",tea:"matcha",top:"gold",emo:"🍵"}
   ];
+  // Cấp độ quán theo tổng lượt khách đã phục vụ
+  var TIERS=[
+    {n:"Quán cóc",emo:"🏚️",at:0},{n:"Quán nhỏ",emo:"🏠",at:40},{n:"Tiệm trà xinh",emo:"🏡",at:100},
+    {n:"Thương hiệu trà",emo:"🏪",at:220},{n:"Chuỗi trà sữa",emo:"🏢",at:450}
+  ];
+  // Thành tựu (mốc dài hạn, thưởng 1 lần)
+  var ACHS=[
+    {k:"first",n:"Khởi nghiệp",d:"Qua ngày đầu tiên",emo:"🌱",rw:50,test:function(){return st.day>=2;}},
+    {k:"staff",n:"Có người phụ",d:"Thuê nhân viên",emo:"🧑‍🍳",rw:50,test:function(){return !!st.staff;}},
+    {k:"rich1",n:"Vốn 1 triệu",d:"Đạt 1.000k vốn",emo:"💰",rw:100,test:function(){return st.money>=1000;}},
+    {k:"serve100",n:"Trăm ly",d:"Phục vụ 100 lượt khách",emo:"🥤",rw:120,test:function(){return (st.revCount||0)>=100;}},
+    {k:"rep5",n:"5 sao",d:"Uy tín 4.9+ (sau 30 khách)",emo:"⭐",rw:120,test:function(){return st.rep>=4.9&&(st.revCount||0)>=30;}},
+    {k:"streak7",n:"Chăm chỉ",d:"Điểm danh 7 ngày",emo:"🔥",rw:150,test:function(){return st.streak&&st.streak.n>=7;}},
+    {k:"debtfree",n:"Hết nợ",d:"Trả xong một khoản vay",emo:"🏦",rw:120,test:function(){return st.everLoan&&!st.loan;}},
+    {k:"collect",n:"Nhà sưu tầm",d:"Đủ bộ sưu tập món",emo:"🏆",rw:200,test:function(){return Object.keys(st.col||{}).length>=COLLECTION.length;}},
+    {k:"rich3",n:"Đại gia trà",d:"Đạt 3.000k vốn",emo:"🤑",rw:250,test:function(){return st.money>=3000;}},
+    {k:"day15",n:"Quán vững",d:"Trụ 15 ngày",emo:"📅",rw:300,test:function(){return st.day>=15;}}
+  ];
+  // Thử thách mỗi ngày
+  var CHALS=[
+    {k:"perfect",mk:function(d){var g=Math.max(3,3+Math.floor(d/2));return{g:g,txt:"Pha chuẩn 💯 "+g+" ly",rw:80+g*8};},ok:function(c){return dayPerfect>=c.g;}},
+    {k:"serve",mk:function(d){var g=Math.max(5,Math.round((5+d)*0.8));return{g:g,txt:"Phục vụ "+g+" khách",rw:70+g*6};},ok:function(c){return daySuccess>=c.g;}},
+    {k:"rev",mk:function(d){var g=Math.round((180+d*45)/10)*10;return{g:g,txt:"Kiếm "+g+"k doanh thu",rw:Math.round(g*0.4)};},ok:function(c){return dayRev>=c.g;}},
+    {k:"noleave",mk:function(d){return{g:0,txt:"Không để khách nào bỏ đi",rw:150};},ok:function(c){return dayLeft===0&&daySuccess>=3;}},
+    {k:"special",mk:function(d){return{g:1,txt:"Làm đúng món đặc biệt ⭐",rw:120};},ok:function(c){return specialDone;}}
+  ];
+  function tierIdx(){ var rc=st.revCount||0,k=0; for(var i=0;i<TIERS.length;i++) if(rc>=TIERS[i].at)k=i; return k; }
+  function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
+  function genChallenge(){ var c=pick(CHALS); var m=c.mk(st.day); return {k:c.k,g:m.g,txt:m.txt,rw:m.rw,done:false}; }
 
   var st={ shop:"Tiệm Trà Nhỏ", day:1, money:400, rep:5.0, revCount:0, combo:0,
     teaUn:{milk:1,matcha:1}, topUn:{none:1,black:1,white:1}, upg:{}, staff:false,
-    extraCust:0, patBonus:0, pourTol:0, tipMul:1.0, stock:{cup:0,tea:0,top:0}, reviews:[], col:{}, colDone:0, loan:null };
+    extraCust:0, patBonus:0, pourTol:0, tipMul:1.0, stock:{cup:0,tea:0,tops:{}}, reviews:[], col:{}, colDone:0, loan:null, ach:{}, tier:0, best:0, everLoan:0, promoOn:false, chal:null, totalRev:0, totalPerfect:0 };
   var SAVEKEY="tiemtra_save_v1";
   var CLOUD="https://script.google.com/macros/s/AKfycbzuJvFLb2gtBjogCiw0tRUNeZSSzeO7IuuReiDzPUyY346k_4rvJHEiKx7NoUDaXoxY/exec"; var _cbN=0, _cloudT=null;
-  function saveBlob(){ return { v:1, code:st.code||"", shop:st.shop, day:st.day, money:st.money, rep:st.rep, revCount:st.revCount, teaUn:st.teaUn, topUn:st.topUn, upg:st.upg, staff:st.staff, extraCust:st.extraCust, patBonus:st.patBonus, pourTol:st.pourTol, tipMul:st.tipMul, sell:st.sell, streak:st.streak, onlineOn:st.onlineOn, col:st.col||{}, colDone:st.colDone||0, loan:st.loan||null, reviews:(st.reviews||[]).slice(0,8) }; }
+  function saveBlob(){ return { v:1, code:st.code||"", shop:st.shop, day:st.day, money:st.money, rep:st.rep, revCount:st.revCount, teaUn:st.teaUn, topUn:st.topUn, upg:st.upg, staff:st.staff, extraCust:st.extraCust, patBonus:st.patBonus, pourTol:st.pourTol, tipMul:st.tipMul, sell:st.sell, streak:st.streak, onlineOn:st.onlineOn, col:st.col||{}, colDone:st.colDone||0, loan:st.loan||null, ach:st.ach||{}, tier:st.tier||0, best:st.best||0, everLoan:st.everLoan||0, promoOn:!!st.promoOn, chal:st.chal||null, totalRev:st.totalRev||0, totalPerfect:st.totalPerfect||0, reviews:(st.reviews||[]).slice(0,8) }; }
   function jsonp(url){ return new Promise(function(res,rej){ var cb='__tt'+(++_cbN); var s=document.createElement('script'); var done=false;
     window[cb]=function(data){ done=true; try{delete window[cb];}catch(e){window[cb]=undefined;} if(s.parentNode)s.parentNode.removeChild(s); res(data); };
     s.onerror=function(){ if(done)return; try{delete window[cb];}catch(e){} if(s.parentNode)s.parentNode.removeChild(s); rej(new Error('net')); };
@@ -308,10 +343,12 @@
   function cloudSave(){ if(!CLOUD||!st.code)return; clearTimeout(_cloudT); _cloudT=setTimeout(function(){ try{ jsonp(CLOUD+'?action=save&code='+encodeURIComponent(st.code)+'&data='+encodeURIComponent(JSON.stringify(saveBlob()))).catch(function(){}); }catch(e){} },500); }
   function cloudNew(cb){ if(!CLOUD){ if(cb)cb(null); return; } jsonp(CLOUD+'?action=new&data='+encodeURIComponent(JSON.stringify(saveBlob()))).then(function(d){ if(d&&d.ok&&d.code){ st.code=d.code; saveGame(); if(cb)cb(d.code);} else if(cb)cb(null); }).catch(function(){ if(cb)cb(null); }); }
   function cloudLoad(code){ return jsonp(CLOUD+'?action=load&code='+encodeURIComponent(code)); }
+  function cloudTop(){ if(!CLOUD)return Promise.reject(); return jsonp(CLOUD+'?action=lbtop'); }
+  function cloudSubScore(){ if(!CLOUD||!st.code||!st.best)return; try{ jsonp(CLOUD+'?action=lbsub&code='+encodeURIComponent(st.code)+'&name='+encodeURIComponent((st.shop||'Quán').slice(0,16))+'&score='+(st.best|0)).catch(function(){}); }catch(e){} }
   function saveGame(){ try{ localStorage.setItem(SAVEKEY,JSON.stringify(saveBlob())); }catch(e){} cloudSave(); }
   function clearSave(){ try{ localStorage.removeItem(SAVEKEY); }catch(e){} }
   function loadSave(){ try{ var raw=localStorage.getItem(SAVEKEY); if(!raw)return null; var d=JSON.parse(raw); if(!d||typeof d.day!=="number"||typeof d.money!=="number")return null; return d; }catch(e){ return null; } }
-  function applySave(d){ st={ code:d.code||"", shop:d.shop||"Tiệm Trà Nhỏ", day:d.day||1, money:(typeof d.money==="number"?d.money:400), rep:(typeof d.rep==="number"?d.rep:5), revCount:d.revCount||0, combo:0, teaUn:d.teaUn||{milk:1,matcha:1}, topUn:d.topUn||{none:1,black:1,white:1}, upg:d.upg||{}, staff:!!d.staff, extraCust:d.extraCust||0, patBonus:d.patBonus||0, pourTol:d.pourTol||0, tipMul:d.tipMul||1.0, sell:d.sell||{}, streak:d.streak||{n:0,last:""}, onlineOn:!!d.onlineOn, stock:{cup:0,tea:0,top:0}, col:d.col||{}, colDone:d.colDone||0, loan:d.loan||null, reviews:d.reviews||[] }; }
+  function applySave(d){ st={ code:d.code||"", shop:d.shop||"Tiệm Trà Nhỏ", day:d.day||1, money:(typeof d.money==="number"?d.money:400), rep:(typeof d.rep==="number"?d.rep:5), revCount:d.revCount||0, combo:0, teaUn:d.teaUn||{milk:1,matcha:1}, topUn:d.topUn||{none:1,black:1,white:1}, upg:d.upg||{}, staff:!!d.staff, extraCust:d.extraCust||0, patBonus:d.patBonus||0, pourTol:d.pourTol||0, tipMul:d.tipMul||1.0, sell:d.sell||{}, streak:d.streak||{n:0,last:""}, onlineOn:!!d.onlineOn, stock:{cup:0,tea:0,tops:{}}, col:d.col||{}, colDone:d.colDone||0, loan:d.loan||null, ach:d.ach||{}, tier:d.tier||0, best:d.best||0, everLoan:d.everLoan||0, promoOn:!!d.promoOn, chal:d.chal||null, totalRev:d.totalRev||0, totalPerfect:d.totalPerfect||0, reviews:d.reviews||[] }; }
 
   // ---- sự kiện ngày, chuỗi điểm danh, giá bán ----
   var EVENTS=[
@@ -393,15 +430,17 @@
   function renderTopOpts(){ var p=$("optTop"); p.innerHTML="";
     unlockedTops().forEach(function(tp){ var b=document.createElement("div"); b.className="opt"; b.setAttribute("data-k",tp.k);
       b.innerHTML=topIconSVG(tp)+'<span>'+tp.name+'</span>';
-      b.onclick=function(){ if(phase!=="serve")return; sel.top=tp.k; au(); sTap(); markSel(); renderCup(); }; p.appendChild(b); }); }
+      b.onclick=function(){ if(phase!=="serve")return; if(tp.k!=="none"&&(st.stock.tops[tp.k]||0)<1){ warn("Hết "+tp.name+" — nhập ở tab Kho"); sBad(); return; } sel.top=tp.k; au(); sTap(); markSel(); renderCup(); }; p.appendChild(b); }); }
   function markSel(){
     [["optSize",sel.size],["optTea",sel.tea],["optTop",sel.top]].forEach(function(pr){ var box=$(pr[0]);
       for(var i=0;i<box.children.length;i++){ box.children[i].classList.toggle("sel", box.children[i].getAttribute("data-k")===pr[1]); } });
     $("sugVal").textContent=SUGAR[sel.sugar].l; $("iceVal").textContent=ICE[sel.ice].s;
   }
-  function updatePour(){ var b=$("pourBtn"); var ok=sel.size&&sel.tea;
-    b.disabled=!ok; b.classList.toggle("done", sel.poured);
-    b.textContent = !ok ? "Chọn ly + trà trước" : sel.poured ? "Đã rót ✓ (giữ lại rót thêm)" : "GIỮ ĐỂ RÓT";
+  function updatePour(){ var b=$("pourBtn"); var chosen=sel.size&&sel.tea;
+    var stockOk=chosen && st.stock.cup>=1 && st.stock.tea>=teaUse(sel.size)-1e-9;
+    var ok=chosen&&stockOk;
+    b.disabled=!ok; b.classList.toggle("done", sel.poured&&ok);
+    b.textContent = !chosen ? "Chọn ly + trà trước" : !stockOk ? "⚠️ Hết ly/trà — nhập ở Kho" : sel.poured ? "Đã rót ✓ (giữ lại rót thêm)" : "GIỮ ĐỂ RÓT";
     $("pourHint").textContent = ok ? ("Rót tới vạch · size "+sel.size) : "";
   }
   function renderCup(){
@@ -418,8 +457,8 @@
     }
   }
   var pouring=false, pourRaf=null;
-  function canPour(){ return phase==="serve" && sel.size && sel.tea; }
-  function startPour(){ if(!canPour())return; pouring=true; sel.poured=true; pourLoop(); }
+  function canPour(){ return phase==="serve" && sel.size && sel.tea && st.stock.cup>=1 && st.stock.tea>=teaUse(sel.size)-1e-9; }
+  function startPour(){ if(phase==="serve" && sel.size && sel.tea && !canPour()){ warn("Hết ly/trà — nhập ở tab Kho trước nha"); sBad(); return; } if(!canPour())return; pouring=true; sel.poured=true; pourLoop(); }
   function pourLoop(){ if(!pouring)return; sel.fill=Math.min(100, sel.fill+1.25); if(Math.random()<0.25)sPour(); renderCup(); pourRaf=requestAnimationFrame(pourLoop); }
   function stopPour(){ if(!pouring)return; pouring=false; if(pourRaf){cancelAnimationFrame(pourRaf);pourRaf=null;} updatePour(); }
   (function(){ var b=$("pourBtn");
@@ -458,7 +497,9 @@
     var ut=unlockedTeas(), uo=unlockedTops().filter(function(t){return t.k!=="none";});
     special={tea:pick(ut).k, size:pick(SIZES).k, top:(uo.length?pick(uo).k:"none")}; specialDone=false;
     todayEvent=rollEvent(); streakUpdate();
-    var baseC=5+st.day+st.extraCust+Math.max(0,(st.rep-3))*1.4;
+    checkTier(); checkAch();
+    st.promoOn=false; st.chal=genChallenge();
+    var baseC=5+st.day+st.extraCust+Math.max(0,(st.rep-3))*1.4+tierIdx()*0.8;
     expectedCust=Math.round(baseC);
     dailyBusy=0.55+Math.random()*1.15; targetCust=Math.max(3,Math.round(baseC*dailyBusy*(todayEvent.custMul||1)*priceFactor()));
     slots=[null,null,null]; renderSlots(); $("clock").textContent="11:00"; $("dayState").textContent="Ngày "+st.day+" · Chuẩn bị";
@@ -468,7 +509,7 @@
     $("hubOv").classList.remove("hidden");
     saveGame();
   }
-  var HUBTABS=[{k:"kho",n:"Kho",e:"📦"},{k:"menu",n:"Menu",e:"🧋"},{k:"gia",n:"Giá",e:"🏷️"},{k:"trangbi",n:"Trang bị",e:"⚙️"},{k:"nhanvien",n:"Nhân viên",e:"🧑‍🍳"},{k:"suutap",n:"Sưu tập",e:"🏆"},{k:"bank",n:"Vay vốn",e:"🏦"},{k:"tongket",n:"Hôm qua",e:"📊"}];
+  var HUBTABS=[{k:"kho",n:"Kho",e:"📦"},{k:"menu",n:"Menu",e:"🧋"},{k:"gia",n:"Giá",e:"🏷️"},{k:"promo",n:"Khuyến mãi",e:"🎁"},{k:"trangbi",n:"Trang bị",e:"⚙️"},{k:"nhanvien",n:"Nhân viên",e:"🧑‍🍳"},{k:"suutap",n:"Sưu tập",e:"🏆"},{k:"thanhtuu",n:"Thành tựu",e:"🏅"},{k:"bank",n:"Vay vốn",e:"🏦"},{k:"bxh",n:"BXH",e:"👑"},{k:"thongke",n:"Thống kê",e:"📈"},{k:"tongket",n:"Hôm qua",e:"📊"}];
   function openHub(tab){ activeTab=tab||"kho"; renderHubHead(); renderHubTabs(); renderHubBody(); }
   function menuBoard(){
     var teas=unlockedTeas().map(function(t){ return '<div class="mbrow"><span>'+t.name+'</span><b>'+sellP(t.k)+'k</b></div>'; }).join('');
@@ -480,11 +521,15 @@
   function renderHubHead(){
     var sp=teaBy(special.tea).name+" · size "+special.size+(special.top!=="none"?" · "+topBy(special.top).name:"");
     var sk=(st.streak&&st.streak.n>=2)?' · 🔥 '+st.streak.n+' ngày':'';
+    var tr=TIERS[tierIdx()];
     var evb=(todayEvent&&todayEvent.name)?'<div class="hubspecial" style="background:#e6f0ff">'+todayEvent.name+' — '+todayEvent.desc+'</div>':'';
+    var ch=st.chal?'<div class="hubspecial" style="background:#e4f3e0">🎯 <b>Thử thách:</b> '+st.chal.txt+' — thưởng '+st.chal.rw+'k'+(st.chal.done?' ✓':'')+'</div>':'';
+    var pr=st.promoOn?'<div class="hubspecial" style="background:#fde8ef">🎁 <b>Khuyến mãi giảm 15%</b> đang bật hôm nay.</div>':'';
     $("hubHead").innerHTML='<div class="r1"><h2 class="display">🌅 Ngày '+st.day+'</h2><span class="vn">Vốn '+kstr(st.money)+'</span></div>'
+      +'<div class="rp">'+tr.emo+' '+tr.n+sk+'</div>'
       +'<div class="rp">'+repStars(st.rep)+' '+st.rep.toFixed(1)+' · '+st.revCount+' đánh giá · ~'+expectedCust+' khách'+(st.code?' · 🔑 '+st.code:'')+'</div>'
       +menuBoard()
-      +'<div class="hubspecial">⭐ <b>Món đặc biệt hôm nay:</b> '+sp+' → làm đúng được thưởng!</div>'+evb;
+      +'<div class="hubspecial">⭐ <b>Món đặc biệt hôm nay:</b> '+sp+' → làm đúng được thưởng!</div>'+ch+pr+evb;
   }
   function renderHubTabs(){ var el=$("hubTabs"); el.innerHTML="";
     HUBTABS.forEach(function(t){ if(t.k==="tongket"&&!lastRecap)return;
@@ -500,15 +545,26 @@
     else if(activeTab==="nhanvien") el.innerHTML=hubStaff();
     else if(activeTab==="suutap") el.innerHTML=hubCollection();
     else if(activeTab==="bank") el.innerHTML=hubBank();
+    else if(activeTab==="promo") el.innerHTML=hubPromo();
+    else if(activeTab==="thanhtuu") el.innerHTML=hubAch();
+    else if(activeTab==="bxh") el.innerHTML=hubBXH();
+    else if(activeTab==="thongke") el.innerHTML=hubStats();
     else el.innerHTML=hubRecap();
     wireHub();
   }
+  function stockRow(key,ic,name,unit,per,qty,isL){ var disp=isL?((qty||0).toFixed(1)+"L"):(qty||0);
+    return '<div class="buyRow"><div class="bi">'+ic+'</div><div class="bt"><div class="n">'+name+'</div><div class="d">'+unit+'k/'+per+'</div></div>'
+      +'<div class="cnt"><button class="cntB" data-stock="'+key+'" data-d="-1">−</button><span class="cntV">'+disp+'</span><button class="cntB pk" data-stock="'+key+'" data-d="1"'+(st.money<unit?' disabled':'')+'>+</button></div></div>';
+  }
   function hubKho(){
-    var h='<div class="intro">Bấm <b>+</b> để nhập, <b>−</b> trả lại. Nhập vừa đủ ~'+expectedCust+' khách — hàng ế cuối ngày bị bỏ.</div>';
-    [["cup","🥤 Ly",PR.cup],["tea","🫖 Phần trà",PR.tea],["top","⚫ Topping",PR.top]].forEach(function(r){ var k=r[0];
-      h+='<div class="buyRow"><div class="bt"><div class="n">'+r[1]+'</div><div class="d">'+r[2]+'k/phần</div></div>'
-       +'<div class="cnt"><button class="cntB" data-stock="'+k+'" data-d="-1">−</button><span class="cntV">'+st.stock[k]+'</span><button class="cntB pk" data-stock="'+k+'" data-d="1"'+(st.money<r[2]?' disabled':'')+'>+</button></div></div>';
-    });
+    var h='<div class="intro">Nhập đủ dùng cho ~'+expectedCust+' khách. Trà tính theo <b>lít</b> (1 lít ~3 ly). Topping nhập <b>theo từng loại</b>. Hàng ế cuối ngày bị bỏ.</div>';
+    h+='<div class="secTitle">🥤 Ly &amp; trà</div>';
+    h+=stockRow("cup",'🥤',"Ly (cái)",PR.cup,"cái",st.stock.cup,false);
+    h+=stockRow("tea",'🫖',"Trà (lít)",PR.tea,"lít",st.stock.tea,true);
+    h+='<div class="secTitle">⚫ Topping (theo loại)</div>';
+    var uo=unlockedTops().filter(function(t){return t.k!=="none";});
+    if(!uo.length) h+='<div class="mini">Chưa mở topping nào. Vào tab Menu để mở nhé.</div>';
+    uo.forEach(function(tp){ h+=stockRow("top:"+tp.k,topIconSVG(tp),tp.name,PR.top,"phần",(st.stock.tops[tp.k]||0),false); });
     return h;
   }
   function hubMenu(){
@@ -538,6 +594,36 @@
       +(st.staff?'<button class="buyBtn" data-staff="fire">Cho nghỉ</button>':'<button class="buyBtn" data-staff="hire">Thuê</button>')+'</div>'
       +'<div class="mini" style="margin-top:10px">Sắp có: nhân viên pha chế giỏi, nhân viên đơn online…</div>';
   }
+  function hubPromo(){
+    var on=st.promoOn;
+    return '<div class="intro">Bật khuyến mãi <b>giảm giá 15%</b> cho riêng hôm nay: khách ghé đông hơn (~+40%) nhưng lời mỗi ly ít đi. Hợp ngày muốn kéo khách hoặc đẩy hàng tồn. Mỗi sáng tự tắt lại.</div>'
+      +'<div class="buyRow"><div class="bi">🎁</div><div class="bt"><div class="n">Giảm giá 15% hôm nay'+(on?' ✓':'')+'</div><div class="d">'+(on?'Đang bật — khách đông hơn, giá mềm hơn':'Đang tắt')+'</div></div>'
+      +'<button class="buyBtn'+(on?' own':'')+'" data-promo="t">'+(on?'Tắt':'Bật')+'</button></div>';
+  }
+  function hubAch(){
+    var got=0; ACHS.forEach(function(a){ if(st.ach&&st.ach[a.k])got++; });
+    var h='<div class="intro">Đạt cột mốc để nhận thưởng tiền. Đã mở <b>'+got+'/'+ACHS.length+'</b>.</div>';
+    ACHS.forEach(function(a){ var own=st.ach&&st.ach[a.k];
+      h+='<div class="buyRow"><div class="bi">'+(own?a.emo:'🔒')+'</div><div class="bt"><div class="n">'+(own?a.n:'???')+'</div><div class="d">'+a.d+' · thưởng '+a.rw+'k</div></div>'
+       +(own?'<button class="buyBtn own">✓</button>':'<span class="mini">chưa</span>')+'</div>';
+    });
+    return h;
+  }
+  function hubBXH(){
+    if(!CLOUD) return '<div class="intro">Bảng xếp hạng cần lưu online.</div>';
+    setTimeout(loadBXH,30);
+    return '<div class="intro">🏆 Thi doanh thu cao nhất trong 1 ngày với các quán khác! Kỷ lục của bạn: <b>'+kstr(st.best||0)+'</b>. Bán hết một ngày để ghi danh.</div>'
+      +'<div id="bxhList"><div class="mini">Đang tải bảng xếp hạng…</div></div>';
+  }
+  function loadBXH(){ var el=$("bxhList"); if(!el)return;
+    cloudTop().then(function(d){ el=$("bxhList"); if(!el)return;
+      if(!d||!d.ok||!d.top||!d.top.length){ el.innerHTML='<div class="mini">Chưa có ai trên bảng. Bán hết 1 ngày để ghi danh nhé!</div>'; return; }
+      var h=''; d.top.forEach(function(row,i){ var me=(row.name===st.shop);
+        h+='<div class="buyRow"'+(me?' style="background:#fbf4e4;border-radius:10px"':'')+'><div class="bi">'+(i===0?'👑':i===1?'🥈':i===2?'🥉':'<span class="mini">#'+(i+1)+'</span>')+'</div><div class="bt"><div class="n">'+esc(row.name||'Quán')+(me?' <span class="mini">(bạn)</span>':'')+'</div></div><span class="vn">'+kstr(row.score||0)+'</span></div>';
+      });
+      el.innerHTML=h;
+    }).catch(function(){ el=$("bxhList"); if(el)el.innerHTML='<div class="mini">Lỗi tải BXH, thử lại sau nhé.</div>'; });
+  }
   function hubCollection(){
     var got=Object.keys(st.col||{}).length;
     var h='<div class="intro">Pha chuẩn một công thức lần đầu để mở khoá. Mỗi món mới <b>+25k</b>, đủ bộ thưởng lớn! Đã có <b>'+got+'/'+COLLECTION.length+'</b>.</div>';
@@ -564,6 +650,27 @@
     });
     return h;
   }
+  function hubStats(){
+    var tr=TIERS[tierIdx()]; var achN=0; ACHS.forEach(function(a){ if(st.ach&&st.ach[a.k])achN++; });
+    var colN=Object.keys(st.col||{}).length;
+    var h='<div class="intro">Tổng quan cả quá trình kinh doanh của quán.</div>'
+      +'<div class="secTitle">🏪 Quán</div>'
+      +'<div class="sumRow"><span>Cấp quán</span><span>'+tr.emo+' '+tr.n+'</span></div>'
+      +'<div class="sumRow"><span>Số ngày đã mở</span><span>'+st.day+'</span></div>'
+      +'<div class="sumRow"><span>Vốn hiện tại</span><span style="color:#c07a2c">'+kstr(st.money)+'</span></div>'
+      +'<div class="sumRow"><span>Uy tín</span><span style="color:#e0a53a">'+repStars(st.rep)+' '+st.rep.toFixed(1)+'</span></div>'
+      +(st.loan&&st.loan.bal>0?'<div class="sumRow"><span>Đang nợ</span><span style="color:#d1564e">'+kstr(st.loan.bal)+'</span></div>':'')
+      +'<div class="secTitle">📈 Thành tích</div>'
+      +'<div class="sumRow"><span>Tổng doanh thu</span><span>'+kstr(st.totalRev||0)+'</span></div>'
+      +'<div class="sumRow"><span>Lượt khách đã tiếp</span><span>'+(st.revCount||0)+'</span></div>'
+      +'<div class="sumRow"><span>Ly pha chuẩn 💯</span><span>'+(st.totalPerfect||0)+'</span></div>'
+      +'<div class="sumRow"><span>🔥 Chuỗi điểm danh</span><span>'+((st.streak&&st.streak.n)||0)+' ngày</span></div>'
+      +'<div class="sumRow"><span>👑 Kỷ lục doanh thu/ngày</span><span>'+kstr(st.best||0)+'</span></div>'
+      +'<div class="secTitle">🏅 Sưu tầm</div>'
+      +'<div class="sumRow"><span>🏆 Bộ sưu tập món</span><span>'+colN+'/'+COLLECTION.length+'</span></div>'
+      +'<div class="sumRow" style="border:none"><span>🏅 Thành tựu</span><span>'+achN+'/'+ACHS.length+'</span></div>';
+    return h;
+  }
   function hubRecap(){
     if(!lastRecap) return '<div class="intro">Bán xong ngày đầu là có tổng kết ở đây.</div>';
     var r=lastRecap;
@@ -580,7 +687,9 @@
       +'<div class="sumRow"><span>Pha chuẩn 💯 · tỉ lệ</span><span>'+r.perfect+' · '+r.rate+'%</span></div>'
       +'<div class="sumRow"><span>Sai · từ chối · bỏ đi</span><span>'+(r.bad||0)+' · '+(r.reject||0)+' · '+r.left+'</span></div>'
       +(r.bestTea?'<div class="sumRow"><span>🔥 Món bán chạy</span><span>'+teaBy(r.bestTea).name+' ×'+r.bestN+'</span></div>':'')
-      +'<div class="sumRow" style="border:none"><span>🏆 Bộ sưu tập</span><span>'+r.colN+'/'+r.colTot+' món</span></div>'
+      +'<div class="sumRow"><span>🏆 Bộ sưu tập</span><span>'+r.colN+'/'+r.colTot+' món</span></div>'
+      +(r.chalTxt?'<div class="sumRow"><span>🎯 '+r.chalTxt+'</span><span style="color:'+(r.chalDone?'#2e9e4f':'#d1564e')+'">'+(r.chalDone?'Đạt +'+kstr(r.chalRw):'Chưa đạt')+'</span></div>':'')
+      +'<div class="sumRow" style="border:none"><span>👑 Kỷ lục doanh thu/ngày</span><span>'+kstr(r.best||0)+'</span></div>'
       +(r.waste?'<div class="mini" style="color:#d1564e">🗑️ '+r.waste+' phần ế bị bỏ.</div>':'');
     if(r.reviews&&r.reviews.length){ h+='<div class="secTitle">💬 Khách nói gì</div>';
       r.reviews.forEach(function(rv){ h+='<div class="revItem"><span class="ra">'+rv.ava+'</span><div><div class="rs">'+repStars(rv.stars)+' <b style="color:#5b4636">'+rv.name+'</b></div><div class="rc">"'+rv.text+'"</div></div></div>'; }); }
@@ -603,12 +712,16 @@
     var el=$("hubBody");
     Array.prototype.forEach.call(el.querySelectorAll(".cntB[data-stock]"),function(b){ b.onclick=function(){
       var k=b.getAttribute("data-stock"), d=parseInt(b.getAttribute("data-d"),10);
-      if(d>0){ if(st.money<PR[k])return; st.money-=PR[k]; dayStockCost+=PR[k]; st.stock[k]++; }
-      else { if(st.stock[k]<=0)return; st.stock[k]--; st.money+=PR[k]; dayStockCost-=PR[k]; }
+      var isTop=k.indexOf("top:")===0, tk=isTop?k.slice(4):"";
+      var unit=(k==="tea")?PR.tea:(k==="cup")?PR.cup:PR.top, step=(k==="tea")?1:1;
+      function cur(){ return k==="cup"?st.stock.cup : k==="tea"?st.stock.tea : (st.stock.tops[tk]||0); }
+      function set(v){ if(k==="cup")st.stock.cup=v; else if(k==="tea")st.stock.tea=Math.round(v*10)/10; else st.stock.tops[tk]=v; }
+      if(d>0){ if(st.money<unit)return; st.money-=unit; dayStockCost+=unit; set(cur()+step); }
+      else { if(cur()<=0)return; set(Math.max(0,cur()-step)); st.money+=unit; dayStockCost-=unit; }
       sTap(); updateTop(); updateChips(); renderHubHead(); renderHubBody();
     }; });
     Array.prototype.forEach.call(el.querySelectorAll(".buyBtn"),function(b){ b.onclick=function(){
-      var sa=b.getAttribute("data-staff"); if(sa){ st.staff=(sa==="hire"); }
+      var sa=b.getAttribute("data-staff"); if(sa){ st.staff=(sa==="hire"); checkAch(); }
       var tk=b.getAttribute("data-tea"); if(tk){ var te=teaBy(tk); if(st.money<te.cost)return; st.money-=te.cost; st.teaUn[tk]=1; renderTeaOpts(); }
       var pk=b.getAttribute("data-top"); if(pk){ var tp=topBy(pk); if(st.money<tp.cost)return; st.money-=tp.cost; st.topUn[pk]=1; renderTopOpts(); }
       var uk=b.getAttribute("data-upg"); if(uk){ var u=null; for(var i=0;i<UPGRADES.length;i++)if(UPGRADES[i].k===uk)u=UPGRADES[i]; if(!u||st.money<u.cost)return; st.money-=u.cost; st.upg[uk]=1; u.apply(); }
@@ -622,10 +735,15 @@
     }; });
     Array.prototype.forEach.call(el.querySelectorAll(".buyBtn[data-loan]"),function(b){ b.onclick=function(){
       if(st.loan&&st.loan.bal>0)return; var a=parseInt(b.getAttribute("data-loan"),10); var tot=Math.round(a*1.15);
-      st.loan={bal:tot,perDay:Math.round(tot/10)}; st.money+=a; sGood(); updateTop(); renderHubHead(); renderHubBody();
+      st.loan={bal:tot,perDay:Math.round(tot/10)}; st.everLoan=1; st.money+=a; sGood(); updateTop(); renderHubHead(); renderHubBody();
+    }; });
+    Array.prototype.forEach.call(el.querySelectorAll(".buyBtn[data-promo]"),function(b){ b.onclick=function(){
+      st.promoOn=!st.promoOn; sTap(); renderHubHead(); renderHubBody();
     }; });
   }
-  $("hubGo").onclick=function(){ au(); if(AC&&AC.state==="suspended")AC.resume(); $("hubOv").classList.add("hidden"); beginServe(); };
+  $("hubGo").onclick=function(){ au(); if(AC&&AC.state==="suspended")AC.resume();
+    if(st.stock.cup<1 || st.stock.tea<teaUse("M")-1e-9){ sBad(); openHub("kho"); warn("Chưa có nguyên liệu! Nhập Ly và Trà ở tab Kho trước khi mở cửa."); return; }
+    $("hubOv").classList.add("hidden"); beginServe(); };
 
   // ====== serve phase (multi-slot) ======
   function PATmax(){ return Math.max(11, 24-st.day)+st.patBonus; }
@@ -636,7 +754,7 @@
   function placeCustomer(){ for(var i=0;i<MAXSLOTS;i++){ if(!slots[i]){ var o=makeOrder(); var pm=PATmax()*(o.online?0.82:1); slots[i]={o:o,patMax:pm,patLeft:pm}; return; } } }
   function beginServe(){ phase="serve"; $("dayState").textContent="Ngày "+st.day+" · Đang bán";
     resetSel(); markSel(); renderCup(); updatePour();
-    slots=[null,null,null]; clockMin=OPEN; closing=false; pendingSpawns=targetCust; spawnInt=DAYSEC/Math.max(1,targetCust); spawnAcc=spawnInt*0.35;
+    var tc=Math.round(targetCust*(st.promoOn?1.4:1)); slots=[null,null,null]; clockMin=OPEN; closing=false; pendingSpawns=tc; spawnInt=DAYSEC/Math.max(1,tc); spawnAcc=spawnInt*0.35;
     $("clock").textContent=fmtClock(OPEN); renderSlots(); updateTop(); updateChips(); startDayLoop();
     if(st.staff){ clearInterval(staffTimer); staffTimer=setInterval(staffTick,7000); } }
   function renderSlots(){
@@ -670,20 +788,20 @@
   }
   function stopSlotLoop(){ if(slotRaf){cancelAnimationFrame(slotRaf);slotRaf=null;} }
 
-  function haveStock(o){ return st.stock.cup>0 && st.stock.tea>0 && (o.top==="none"||st.stock.top>0); }
-  function consumeStock(o){ st.stock.cup--; st.stock.tea--; if(o.top!=="none")st.stock.top--; updateChips(); }
-  function drinkPrice(o){ return sellP(o.tea) + (o.size==="L"?sellP("L"):0) + (o.top!=="none"?sellP(o.top):0); }
+  function haveStockFor(size,top){ return st.stock.cup>=1 && st.stock.tea>=teaUse(size)-1e-9 && (!top||top==="none"||(st.stock.tops[top]||0)>=1); }
+  function consumeStock(size,top){ st.stock.cup=Math.max(0,st.stock.cup-1); st.stock.tea=Math.max(0,Math.round((st.stock.tea-teaUse(size))*100)/100); if(top&&top!=="none"&&st.stock.tops[top]!=null)st.stock.tops[top]=Math.max(0,st.stock.tops[top]-1); updateChips(); }
+  function drinkPrice(o){ var p=sellP(o.tea) + (o.size==="L"?sellP("L"):0) + (o.top!=="none"?sellP(o.top):0); return Math.round(p*(st.promoOn?0.85:1)); }
 
   function serveTo(i){
     if(phase!=="serve")return; var s=slots[i]; if(!s)return; var o=s.o;
     if(!sel.size||!sel.tea||!sel.poured){ flash("bad"); sBad(); warn("Chưa pha xong: chọn ly, trà và RÓT!"); return; }
     if(sel.top===null){ flash("bad"); sBad(); warn("Chọn topping (hoặc 'Không')!"); return; }
-    if(!haveStock(o)){ flash("bad"); sBad(); warn("Hết nguyên liệu! Mai nhập thêm."); return; }
+    if(!haveStockFor(sel.size,sel.top)){ flash("bad"); sBad(); warn("Hết nguyên liệu! Nhập ở tab Kho."); return; }
     var tgt=sizeBy(sel.size).target, diff=Math.abs(sel.fill-tgt);
     var pourPerfect=diff<=6+st.pourTol, pourOk=diff<=13+st.pourTol;
     var okTea=sel.tea===o.tea, okSize=sel.size===o.size, okTop=(sel.top||"none")===o.top;
     var okSugar=!o.reqSugar||sel.sugar===o.sugar, okIce=!o.reqIce||sel.ice===o.ice;
-    var madeTea=sel.tea, madeTop=sel.top; consumeStock(o); dayServed++; slots[i]=null;
+    var madeTea=sel.tea, madeTop=sel.top; consumeStock(sel.size,sel.top); dayServed++; slots[i]=null;
     if(!okTea||!okSize||!pourOk){ st.combo=0; dayBad++; addReview(o, okTea&&okSize?2:1);
       flash("bad"); sBad(); popTxt("Sai món! 💔","#e74c3c"); adjustRep(-0.3); afterServe(); return; }
     var allPerfect=okTop&&okSugar&&okIce&&pourPerfect;
@@ -705,13 +823,18 @@
   function slotLeave(i){ var s=slots[i]; if(!s)return; st.combo=0; dayLeft++; dayServed++; addReview(s.o,1);
     flash("bad"); beep(300,0.2,"sine",0.07); popTxt("Khách bỏ đi 😤","#e74c3c"); adjustRep(-0.4); slots[i]=null; renderSlots(); updateTop(); updateChips(); maybeEnd(); }
   function staffTick(){ if(phase!=="serve")return; var best=-1,bl=1e9;
-    for(var i=0;i<MAXSLOTS;i++){ if(slots[i]&&slots[i].patLeft<bl&&haveStock(slots[i].o)){ bl=slots[i].patLeft; best=i; } }
-    if(best<0)return; var o=slots[best].o; consumeStock(o); dayServed++; daySuccess++; daySales[o.tea]=(daySales[o.tea]||0)+1; var price=drinkPrice(o); st.money+=price; dayRev+=price;
+    for(var i=0;i<MAXSLOTS;i++){ if(slots[i]&&slots[i].patLeft<bl&&haveStockFor(slots[i].o.size,slots[i].o.top)){ bl=slots[i].patLeft; best=i; } }
+    if(best<0)return; var o=slots[best].o; consumeStock(o.size,o.top); dayServed++; daySuccess++; daySales[o.tea]=(daySales[o.tea]||0)+1; var price=drinkPrice(o); st.money+=price; dayRev+=price;
     addReview(o,4); adjustRep(0.01); popTxt("🧑‍🍳 NV +"+kstr(price),"#4e8f44"); slots[best]=null; updateTop(); renderSlots(); updateChips(); maybeEnd(); }
   function maybeEnd(){ if(closing && slots.every(function(s){return !s;})) endDay(); else saveGame(); }
   function addReview(o,stars){ st.revCount++; var c=pick(REVIEWS[stars]||REVIEWS[3]);
     st.reviews.unshift({name:o.name,ava:o.ava,fk:o.fk,fb:o.fb,stars:stars,text:c}); if(st.reviews.length>12)st.reviews.pop(); }
   function adjustRep(d){ st.rep=clamp(st.rep+d,0,5); }
+  function checkAch(){ if(!st.ach)st.ach={}; var got=[];
+    for(var i=0;i<ACHS.length;i++){ var a=ACHS[i]; if(!st.ach[a.k] && a.test()){ st.ach[a.k]=1; st.money+=a.rw; got.push(a.emo+" "+a.n); } }
+    if(got.length){ updateTop(); flash("star"); warn("🏅 Mở thành tựu: "+got.join(" · ")); }
+    return got.length; }
+  function checkTier(){ var ni=tierIdx(); if(ni>(st.tier||0)){ st.tier=ni; var t=TIERS[ni]; flash("star"); popTxt(t.emo+" Lên hạng: "+t.n,"#c79400"); sPerfect(); } }
   function discoverCombo(teaK,topK){ if(!teaK||!topK||topK==="none")return false; if(!st.col)st.col={};
     for(var i=0;i<COLLECTION.length;i++){ var c=COLLECTION[i]; if(c.tea===teaK&&c.top===topK&&!st.col[c.k]){ st.col[c.k]=1;
       st.money+=25; dayRev+=25; flash("star"); popTxt("🏆 Sưu tập mới +25k","#c79400"); sPerfect();
@@ -722,17 +845,22 @@
   function endDay(){
     phase="summary"; stopSlotLoop(); clearInterval(staffTimer);
     var rent=50, util=20+Object.keys(st.upg).length*5, wage=st.staff?STAFF.wage:0;
-    var waste=st.stock.cup+st.stock.tea+st.stock.top;
+    var waste=st.stock.cup+Math.round(st.stock.tea)+totalTops();
     var gross=dayRev-dayStockCost-rent-util-wage;
     var tax=Math.max(0,Math.round(gross*0.08));
     var loanPay=0, loanBal=0;
     if(st.loan&&st.loan.bal>0){ loanPay=Math.min(st.loan.bal, st.loan.perDay); st.loan.bal=Math.max(0,st.loan.bal-loanPay); loanBal=st.loan.bal; if(st.loan.bal<=0)st.loan=null; }
     st.money-=(rent+util+wage+tax+loanPay);
     var net=gross-tax-loanPay;
+    var chalDone=false, chalRw=0;
+    if(st.chal && !st.chal.done){ var cd=null; for(var ci=0;ci<CHALS.length;ci++) if(CHALS[ci].k===st.chal.k)cd=CHALS[ci];
+      if(cd && cd.ok(st.chal)){ st.chal.done=true; chalDone=true; chalRw=st.chal.rw; st.money+=chalRw; } }
+    if(dayRev>(st.best||0)) st.best=dayRev;
+    st.totalRev=(st.totalRev||0)+dayRev; st.totalPerfect=(st.totalPerfect||0)+dayPerfect;
     var bestTea=null,bestN=0; for(var tk in daySales){ if(daySales[tk]>bestN){ bestN=daySales[tk]; bestTea=tk; } }
     var rate=(daySuccess+dayBad)>0?Math.round(dayPerfect/(daySuccess+dayBad)*100):0;
-    lastRecap={day:st.day,rev:dayRev,stockCost:dayStockCost,rent:rent,util:util,wage:wage,tax:tax,loanPay:loanPay,loanBal:loanBal,waste:waste,net:net,served:dayServed,success:daySuccess,perfect:dayPerfect,bad:dayBad,reject:dayReject,left:dayLeft,tip:dayTip,rate:rate,bestTea:bestTea,bestN:bestN,colN:Object.keys(st.col||{}).length,colTot:COLLECTION.length,rep:st.rep,reviews:st.reviews.slice(0,3)};
-    st.stock={cup:0,tea:0,top:0}; updateChips();
+    lastRecap={day:st.day,rev:dayRev,stockCost:dayStockCost,rent:rent,util:util,wage:wage,tax:tax,loanPay:loanPay,loanBal:loanBal,waste:waste,net:net,served:dayServed,success:daySuccess,perfect:dayPerfect,bad:dayBad,reject:dayReject,left:dayLeft,tip:dayTip,rate:rate,bestTea:bestTea,bestN:bestN,colN:Object.keys(st.col||{}).length,colTot:COLLECTION.length,chalDone:chalDone,chalRw:chalRw,chalTxt:(st.chal?st.chal.txt:""),best:st.best,rep:st.rep,reviews:st.reviews.slice(0,3)};
+    st.stock=freshStock(); updateChips(); cloudSubScore();
     if(st.money<0){ gameOver("Hết vốn rồi! Quán phải đóng cửa 💸"); return; }
     if(st.rep<2.0){ gameOver("Uy tín quá thấp, khách không tới nữa 😢"); return; }
     st.day++; enterMorning();
@@ -749,8 +877,8 @@
   function repStars(r){ var full=Math.round(r); return "★★★★★".slice(0,full)+"☆☆☆☆☆".slice(0,5-full); }
   function updateTop(){ $("moneyV").textContent=kstr(st.money);
     $("repStars").textContent=repStars(st.rep); $("repNum").textContent=st.rep.toFixed(1)+" · "+st.revCount+" đánh giá"; }
-  function updateChips(){ $("nCup").textContent=st.stock.cup; $("nTea").textContent=st.stock.tea; $("nTop").textContent=st.stock.top;
-    $("chipCup").classList.toggle("low",st.stock.cup<=1); $("chipTea").classList.toggle("low",st.stock.tea<=1); $("chipTop").classList.toggle("low",st.stock.top<=1);
+  function updateChips(){ $("nCup").textContent=st.stock.cup; $("nTea").textContent=(st.stock.tea||0).toFixed(1)+"L"; $("nTop").textContent=totalTops();
+    $("chipCup").classList.toggle("low",st.stock.cup<=1); $("chipTea").classList.toggle("low",(st.stock.tea||0)<0.6); $("chipTop").classList.toggle("low",totalTops()<=1);
     $("chipStaff").style.display=st.staff?"inline-flex":"none";
     $("queueLeft").textContent = phase==="serve" ? (closing?"🧹 Đang dọn quán":((todayEvent&&todayEvent.name?todayEvent.name+" · ":"")+"🕐 "+fmtClock(CLOSE))) : ""; }
   function flash(k){ var f=$("flash"); f.className=""; void f.offsetWidth; f.className=k; }
@@ -760,7 +888,7 @@
 
   function initGame(){
     st={ shop:st.shop, day:1, money:400, rep:5.0, revCount:0, combo:0, teaUn:{milk:1,matcha:1}, topUn:{none:1,black:1,white:1}, upg:{}, staff:false,
-      extraCust:0, patBonus:0, pourTol:0, tipMul:1.0, stock:{cup:0,tea:0,top:0}, reviews:[] };
+      extraCust:0, patBonus:0, pourTol:0, tipMul:1.0, stock:freshStock(), reviews:[], col:{}, colDone:0, loan:null, ach:{}, tier:0, best:0, everLoan:0, promoOn:false, chal:null, totalRev:0, totalPerfect:0 };
     lastRecap=null; clearSave(); $("shopName").textContent=st.shop;
     buildServeUI(); resetSel(); markSel(); renderCup(); updatePour(); updateTop(); updateChips(); enterMorning();
     if(CLOUD && !st.code) cloudNew(function(c){ if(c){ renderHubHead(); warn("🔑 Mã quán của bạn: "+c+" — ghi lại để đổi máy nhé!"); } });

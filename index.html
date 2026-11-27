@@ -97,9 +97,9 @@
   .plaque{display:inline-block; background:linear-gradient(#bd8e5e,#a3764b); color:#fff5e6; border:1.5px solid #875c37; border-radius:8px; padding:3px 11px; font-size:10px; font-weight:800; letter-spacing:.6px; text-transform:uppercase; box-shadow:0 2px 0 #7a5331, inset 0 1px 0 rgba(255,255,255,.28); white-space:nowrap; text-shadow:0 1px 1px rgba(90,55,25,.4);}
   .cHint{color:#8a7250; text-transform:none; letter-spacing:0; font-weight:700; font-size:10px;}
   .cTeaRow{padding-bottom:7px; border-bottom:4px solid; border-image:linear-gradient(90deg,#d9b98c,#c79e6e,#d9b98c) 1; border-radius:0 0 4px 4px;}
-  .cTeaRow{display:flex; gap:8px; align-items:flex-start;}
-  .cups{display:flex; flex-direction:column; gap:5px; flex:none;}
-  .cups .opt{padding:6px 8px; min-width:56px;}
+  .cTeaRow{display:flex; flex-direction:column; gap:7px;}
+  .cups{display:flex; flex-direction:row; gap:6px;}
+  .cups .opt{flex:1; padding:5px 8px;}
   .teaBar{flex:1; display:grid; grid-template-columns:repeat(3,1fr); gap:5px;}
   .teaBar .opt{padding:5px 2px; touch-action:none; position:relative;}
   .teaBar .opt.sel{border-color:var(--teal); background:#e3f3ef; box-shadow:0 0 0 2px rgba(63,170,154,.25);}
@@ -241,7 +241,7 @@
     <div class="cboard">
       <div class="cLabel"><span class="plaque">🫖 Quầy trà</span><span class="cHint">chọn ly rồi GIỮ bình trà để rót</span></div>
       <div class="cTeaRow">
-        <div class="cups opts" id="optSize"></div>
+        <div class="cups" id="optSize"></div>
         <div class="teaBar" id="optTea"></div>
       </div>
     </div>

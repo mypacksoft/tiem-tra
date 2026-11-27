@@ -977,6 +977,7 @@
   }
   function startDayLoop(){ stopSlotLoop(); var last=performance.now();
     function tick(now){ if(phase!=="serve"){ slotRaf=null; return; } var dt=(now-last)/1000; last=now; if(dt>0.25)dt=0.25;
+      if(!closing && st.stock.cup<=0){ soldOutClose(); }
       if(!closing){ clockMin+=dt*GMPS; if(clockMin>=CLOSE){ clockMin=CLOSE; closing=true; $("dayState").textContent="Ngày "+st.day+" · Dọn quán"; updateChips(); }
         $("clock").textContent=fmtClock(clockMin); spawnAcc+=dt;
         while(pendingSpawns>0 && spawnAcc>=spawnInt){ if(hasEmpty() && canMakeBasic()){ placeCustomer(); pendingSpawns--; renderSlots(); updateChips(); spawnAcc-=spawnInt*(0.6+Math.random()*0.8); } else { break; } } }
@@ -1053,6 +1054,11 @@
     else { var price=drinkPrice(o); st.money+=price; dayRev+=price; daySuccess++; daySales[o.tea]=(daySales[o.tea]||0)+1; popTxt("🧑‍🍳 +"+kstr(price),"#4e8f44"); adjustRep(0.01); if(last){ addReview(o,4); slots[i]=null; } }
     if(slots[i])slots[i].staff=0; updateTop(); renderSlots(); updateChips(); maybeEnd(); }
   function maybeEnd(){ if(closing && slots.every(function(s){return !s;})) endDay(); else saveGame(); }
+  function soldOutClose(){ if(closing)return; closing=true;
+    $("dayState").textContent="Ngày "+st.day+" · Hết ly — ngưng bán";
+    for(var i=0;i<MAXSLOTS;i++){ slots[i]=null; }
+    renderSlots(); updateChips();
+    warn("Hết ly rồi — ngưng bán. Nhập thêm ly ở tab Kho để bán tiếp nha!"); }
   function addReview(o,stars){ st.revCount++; var c=pick(REVIEWS[stars]||REVIEWS[3]);
     st.reviews.unshift({name:o.name,ava:o.ava,fk:o.fk,fb:o.fb,stars:stars,text:c}); if(st.reviews.length>12)st.reviews.pop(); }
   function adjustRep(d){ st.rep=clamp(st.rep+d,0,5); }

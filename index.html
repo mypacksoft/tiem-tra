@@ -40,6 +40,7 @@
   #chips{flex:none; display:flex; gap:6px; padding:0 14px 8px; font-size:11px; font-weight:800; color:var(--ink); align-items:center;}
   .chip{background:var(--cream2); border-radius:999px; padding:3px 9px; display:inline-flex; gap:4px; align-items:center;}
   .chip.low{background:#f6dcd9; color:var(--red);} .chip.staff{background:#e3efdb; color:#4e8f44;}
+  .chip.gear{border:none; cursor:pointer; font-size:14px; padding:3px 9px; color:var(--ink);} .chip.gear:active{transform:scale(.92);}
   #queueLeft{flex:1; text-align:right; color:var(--dim); font-weight:700;}
 
   /* customer slots */
@@ -78,7 +79,27 @@
   .pourHint{font-size:10px; color:var(--teal); font-weight:800;}
 
   /* builder */
-  #build{flex:none; background:var(--card); border-top:1.5px solid var(--line); border-radius:18px 18px 0 0; padding:6px 12px 9px; overflow-y:auto; max-height:56vh; box-shadow:0 -4px 16px rgba(150,110,80,.06);}
+  #counter{flex:none; background:var(--card); border-top:1.5px solid var(--line); border-radius:18px 18px 0 0; padding:7px 10px 10px; overflow-y:auto; max-height:54vh; box-shadow:0 -4px 16px rgba(150,110,80,.06); display:flex; flex-direction:column; gap:7px;}
+  .cboard{background:#fbf4e4; border:1.5px solid var(--line); border-radius:14px; padding:6px 8px 8px;}
+  .cLabel{font-size:10px; font-weight:800; color:#a8865a; letter-spacing:.5px; text-transform:uppercase; margin-bottom:5px;}
+  .cHint{color:var(--teal); text-transform:none; letter-spacing:0; font-weight:700;}
+  .cTeaRow{display:flex; gap:8px; align-items:stretch;}
+  .cups{display:flex; flex-direction:column; gap:5px; flex:none;}
+  .cups .opt{padding:6px 8px; min-width:56px;}
+  .teaBar{flex:1; display:grid; grid-template-columns:repeat(3,1fr); gap:5px;}
+  .teaBar .opt{padding:5px 2px; touch-action:none;}
+  .teaBar .opt.sel{border-color:var(--teal); background:#e3f3ef; box-shadow:0 0 0 2px rgba(63,170,154,.25);}
+  .teaBar .opt .dn{font-size:10.5px; line-height:1.05;}
+  .teaBar .opt.pouring{border-color:var(--teal); background:#d4efe9; transform:scale(.97);}
+  .trayGrid{display:grid; grid-template-columns:repeat(3,1fr); gap:5px;}
+  .trayGrid .opt{padding:5px 2px;}
+  .addRow{display:flex; gap:7px; align-items:stretch;}
+  .tray2{flex:1; background:#fffdf8; border:1.5px solid var(--line); border-radius:12px; padding:4px 6px 5px; display:flex; flex-direction:column; gap:3px; align-items:center;}
+  .tray2 .t2l{font-size:10px; font-weight:800; color:var(--dim);}
+  .tray2 .t2c{display:flex; align-items:center; gap:5px;}
+  .bucket{flex:none; width:62px; border:1.5px solid var(--line); border-radius:12px; background:var(--cream2); font-size:22px; color:var(--dim); cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; line-height:1;}
+  .bucket span{font-size:9px; font-weight:800; margin-top:1px;}
+  .bucket:active{transform:scale(.95);}
   .step{font-size:10px; font-weight:800; color:var(--dim); letter-spacing:.3px; margin:5px 2px 3px; text-transform:uppercase;}
   .step:first-child{margin-top:1px;}
   .opts{display:grid; gap:6px;}
@@ -98,8 +119,6 @@
   .lvBtn{border:none; width:26px; height:26px; border-radius:8px; background:var(--cream2); font-size:16px; font-weight:800; cursor:pointer; color:var(--ink);}
   .lvBtn:active{transform:scale(.9);}
   .lvVal{flex:1; text-align:center; font-weight:800; font-size:12px;}
-  #clearBtn{flex:none; width:52px; border:none; border-radius:13px; font-size:20px; color:var(--dim); background:var(--cream2); cursor:pointer;}
-  #clearBtn:active{transform:translateY(1px);}
 
   .ov{position:fixed; inset:0; z-index:40; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:16px; background:rgba(55,38,28,.46); backdrop-filter:blur(5px);}
   .ov.hidden{display:none;}
@@ -179,6 +198,7 @@
     <span class="chip" id="chipTop">⚫ <b id="nTop">0</b></span>
     <span class="chip staff" id="chipStaff" style="display:none">🧑‍🍳</span>
     <span id="queueLeft"></span>
+    <button class="chip gear" id="gearBtn" title="Cài đặt">⚙️</button>
   </div>
   <div id="slots"></div>
   <div id="stage">
@@ -194,22 +214,24 @@
       <div class="pourHint" id="pourHint"></div>
     </div>
   </div>
-  <div id="build">
-    <div class="step">① Chọn ly</div>
-    <div class="opts sz" id="optSize"></div>
-    <div class="step">② Chọn trà</div>
-    <div class="opts tea" id="optTea"></div>
-    <div class="step">③ Rót trà (giữ nút tới vạch)</div>
-    <div class="pourRow">
-      <button id="clearBtn" title="Đổ ly, pha lại">🗑️</button>
-      <button id="pourBtn">GIỮ ĐỂ RÓT</button>
+  <div id="counter">
+    <div class="cboard">
+      <div class="cLabel">🫖 Quầy trà · <span class="cHint">chọn ly rồi GIỮ bình trà để rót</span></div>
+      <div class="cTeaRow">
+        <div class="cups opts" id="optSize"></div>
+        <div class="teaBar" id="optTea"></div>
+      </div>
     </div>
-    <div class="step">④ Topping</div>
-    <div class="opts top" id="optTop"></div>
-    <div class="step">⑤ Đường &amp; đá</div>
-    <div class="lv2">
-      <div class="lvRow"><span class="lb">🍬</span><button class="lvBtn" id="sugDn">−</button><span class="lvVal" id="sugVal">50%</span><button class="lvBtn" id="sugUp">+</button></div>
-      <div class="lvRow"><span class="lb">🧊</span><button class="lvBtn" id="iceDn">−</button><span class="lvVal" id="iceVal">Vừa</span><button class="lvBtn" id="iceUp">+</button></div>
+    <div class="cboard">
+      <div class="cLabel">🧋 Khay topping</div>
+      <div class="trayGrid" id="optTop"></div>
+    </div>
+    <div class="cboard">
+      <div class="addRow">
+        <div class="tray2"><span class="t2l">🍬 Đường</span><div class="t2c"><button class="lvBtn" id="sugDn">−</button><span class="lvVal" id="sugVal">50%</span><button class="lvBtn" id="sugUp">+</button></div></div>
+        <div class="tray2"><span class="t2l">🧊 Đá</span><div class="t2c"><button class="lvBtn" id="iceDn">−</button><span class="lvVal" id="iceVal">Vừa</span><button class="lvBtn" id="iceUp">+</button></div></div>
+        <button class="bucket" id="clearBtn" title="Đổ bỏ ly, pha lại">🪣<span>Đổ bỏ</span></button>
+      </div>
     </div>
   </div>
 </div>
@@ -241,6 +263,12 @@
   <button class="bigbtn" id="hubGo">Mở cửa</button>
 </div></div>
 <div class="ov hidden" id="overOv"><div class="card" id="overCard"></div></div>
+<div class="ov hidden" id="setOv"><div class="card" style="max-width:360px">
+  <div class="emo">⚙️</div>
+  <h1 class="display" style="font-size:22px; margin-bottom:10px">Cài đặt</h1>
+  <div id="setBody"></div>
+  <button class="bigbtn" id="setClose" style="margin-top:14px">Đóng</button>
+</div></div>
 
 <script>
 (function(){
@@ -423,10 +451,24 @@
       b.onclick=function(){ if(phase!=="serve")return; sel.size=z.k; sel.fill=0; sel.poured=false; au(); sTap(); markSel(); renderCup(); updatePour(); }; s.appendChild(b); });
     renderTeaOpts(); renderTopOpts();
   }
+  function dispenserSVG(color){
+    return '<svg class="ic2" viewBox="0 0 28 26" width="26" height="24" aria-hidden="true">'
+      +'<rect x="6" y="3.5" width="16" height="14.5" rx="3" fill="#fffdf8" stroke="#d9c6a4" stroke-width="1.3"/>'
+      +'<rect x="7.6" y="8" width="12.8" height="9" rx="2" fill="'+color+'"/>'
+      +'<rect x="9" y="1.8" width="10" height="3" rx="1.5" fill="#cf8291"/>'
+      +'<ellipse cx="11.5" cy="10" rx="3.4" ry="1" fill="#fff" opacity=".6"/>'
+      +'<rect x="12.5" y="18" width="3" height="3.6" fill="#b89a6a"/>'
+      +'<circle cx="14" cy="23.2" r="1.4" fill="#8a6a1a"/></svg>';
+  }
   function renderTeaOpts(){ var t=$("optTea"); t.innerHTML="";
-    unlockedTeas().forEach(function(te){ var b=document.createElement("div"); b.className="opt"; b.setAttribute("data-k",te.k);
-      b.innerHTML=teaIconSVG(te.color)+'<span>'+te.name+'</span>';
-      b.onclick=function(){ if(phase!=="serve")return; sel.tea=te.k; au(); sTap(); markSel(); renderCup(); updatePour(); }; t.appendChild(b); }); }
+    unlockedTeas().forEach(function(te){ var b=document.createElement("div"); b.className="opt disp"; b.setAttribute("data-k",te.k);
+      b.innerHTML=dispenserSVG(te.color)+'<span class="dn">'+te.name+'</span>';
+      b.addEventListener("pointerdown",function(e){ e.preventDefault(); if(phase!=="serve")return; au(); sel.tea=te.k; markSel(); renderCup();
+        if(!sel.size){ updatePour(); warn("Chọn ly (M/L) trước khi rót nha"); sBad(); return; }
+        if(!canPour()){ updatePour(); warn("Hết ly/trà — nhập ở tab Kho"); sBad(); return; }
+        b.classList.add("pouring"); sTap(); startPour(); });
+      ["pointerup","pointerleave","pointercancel"].forEach(function(ev){ b.addEventListener(ev,function(){ b.classList.remove("pouring"); stopPour(); }); });
+      t.appendChild(b); }); }
   function renderTopOpts(){ var p=$("optTop"); p.innerHTML="";
     unlockedTops().forEach(function(tp){ var b=document.createElement("div"); b.className="opt"; b.setAttribute("data-k",tp.k);
       b.innerHTML=topIconSVG(tp)+'<span>'+tp.name+'</span>';
@@ -436,12 +478,9 @@
       for(var i=0;i<box.children.length;i++){ box.children[i].classList.toggle("sel", box.children[i].getAttribute("data-k")===pr[1]); } });
     $("sugVal").textContent=SUGAR[sel.sugar].l; $("iceVal").textContent=ICE[sel.ice].s;
   }
-  function updatePour(){ var b=$("pourBtn"); var chosen=sel.size&&sel.tea;
-    var stockOk=chosen && st.stock.cup>=1 && st.stock.tea>=teaUse(sel.size)-1e-9;
-    var ok=chosen&&stockOk;
-    b.disabled=!ok; b.classList.toggle("done", sel.poured&&ok);
-    b.textContent = !chosen ? "Chọn ly + trà trước" : !stockOk ? "⚠️ Hết ly/trà — nhập ở Kho" : sel.poured ? "Đã rót ✓ (giữ lại rót thêm)" : "GIỮ ĐỂ RÓT";
-    $("pourHint").textContent = ok ? ("Rót tới vạch · size "+sel.size) : "";
+  function updatePour(){ var el=$("pourHint"); if(!el)return;
+    var stockOk=sel.size && st.stock.cup>=1 && st.stock.tea>=teaUse(sel.size)-1e-9;
+    el.textContent = !sel.size ? "① Chọn ly M hoặc L" : !stockOk ? "⚠️ Hết ly/trà — nhập ở tab Kho" : !sel.tea ? "② Giữ một bình trà để rót" : sel.poured ? ("✓ Đã rót "+teaBy(sel.tea).name+" — thêm topping/đường/đá rồi Giao ly") : ("Giữ bình "+teaBy(sel.tea).name+" để rót tới vạch");
   }
   function renderCup(){
     var cup=$("cup"), liq=$("liquid"), pe=$("pearls"), em=$("cupEmpty"), mk=$("mark");
@@ -461,11 +500,7 @@
   function startPour(){ if(phase==="serve" && sel.size && sel.tea && !canPour()){ warn("Hết ly/trà — nhập ở tab Kho trước nha"); sBad(); return; } if(!canPour())return; pouring=true; sel.poured=true; pourLoop(); }
   function pourLoop(){ if(!pouring)return; sel.fill=Math.min(100, sel.fill+1.25); if(Math.random()<0.25)sPour(); renderCup(); pourRaf=requestAnimationFrame(pourLoop); }
   function stopPour(){ if(!pouring)return; pouring=false; if(pourRaf){cancelAnimationFrame(pourRaf);pourRaf=null;} updatePour(); }
-  (function(){ var b=$("pourBtn");
-    b.addEventListener("pointerdown",function(e){e.preventDefault(); au(); startPour();});
-    ["pointerup","pointerleave","pointercancel"].forEach(function(ev){ b.addEventListener(ev,function(){stopPour();}); });
-    document.addEventListener("pointerup",function(){stopPour();});
-  })();
+  document.addEventListener("pointerup",function(){ stopPour(); });
   $("sugDn").onclick=function(){ if(phase!=="serve")return; sel.sugar=clamp(sel.sugar-1,0,4); sTap(); markSel(); };
   $("sugUp").onclick=function(){ if(phase!=="serve")return; sel.sugar=clamp(sel.sugar+1,0,4); sTap(); markSel(); };
   $("iceDn").onclick=function(){ if(phase!=="serve")return; sel.ice=clamp(sel.ice-1,0,3); sTap(); markSel(); };
@@ -525,11 +560,12 @@
     var evb=(todayEvent&&todayEvent.name)?'<div class="hubspecial" style="background:#e6f0ff">'+todayEvent.name+' — '+todayEvent.desc+'</div>':'';
     var ch=st.chal?'<div class="hubspecial" style="background:#e4f3e0">🎯 <b>Thử thách:</b> '+st.chal.txt+' — thưởng '+st.chal.rw+'k'+(st.chal.done?' ✓':'')+'</div>':'';
     var pr=st.promoOn?'<div class="hubspecial" style="background:#fde8ef">🎁 <b>Khuyến mãi giảm 15%</b> đang bật hôm nay.</div>':'';
-    $("hubHead").innerHTML='<div class="r1"><h2 class="display">🌅 Ngày '+st.day+'</h2><span class="vn">Vốn '+kstr(st.money)+'</span></div>'
+    $("hubHead").innerHTML='<div class="r1"><h2 class="display">🌅 Ngày '+st.day+'</h2><span style="display:flex;align-items:center;gap:8px"><span class="vn">Vốn '+kstr(st.money)+'</span><button class="chip gear" id="hubGear" title="Cài đặt">⚙️</button></span></div>'
       +'<div class="rp">'+tr.emo+' '+tr.n+sk+'</div>'
       +'<div class="rp">'+repStars(st.rep)+' '+st.rep.toFixed(1)+' · '+st.revCount+' đánh giá · ~'+expectedCust+' khách'+(st.code?' · 🔑 '+st.code:'')+'</div>'
       +menuBoard()
       +'<div class="hubspecial">⭐ <b>Món đặc biệt hôm nay:</b> '+sp+' → làm đúng được thưởng!</div>'+ch+pr+evb;
+    var hg=$("hubGear"); if(hg)hg.onclick=openSettings;
   }
   function renderHubTabs(){ var el=$("hubTabs"); el.innerHTML="";
     HUBTABS.forEach(function(t){ if(t.k==="tongket"&&!lastRecap)return;
@@ -908,6 +944,23 @@
   function setupStart(){ if(_saved){ $("openBtn").textContent="▶ Chơi tiếp — Ngày "+_saved.day; $("openBtn").setAttribute("data-resume","1"); $("shopInput").style.display="none"; $("startSub").textContent="Chào mừng trở lại! "+(_saved.shop||"Quán")+" · Ngày "+_saved.day+" · Vốn "+kstr(_saved.money)+"."; $("newGameBtn").style.display="inline-block"; } else { $("openBtn").textContent="Bắt đầu"; $("openBtn").removeAttribute("data-resume"); $("shopInput").style.display=""; $("newGameBtn").style.display="none"; } }
   setupStart();
   buildServeUI(); resetSel(); markSel(); renderCup(); updatePour();
+  function renderSettings(){
+    var h='';
+    h+='<div class="buyRow"><div class="bi">'+(muted?'🔇':'🔊')+'</div><div class="bt"><div class="n">Âm thanh</div><div class="d">Tiếng tách, chuông khi phục vụ</div></div><button class="buyBtn'+(muted?'':' own')+'" id="setSound">'+(muted?'Bật lại':'Đang bật')+'</button></div>';
+    if(st.code) h+='<div class="buyRow"><div class="bi">🔑</div><div class="bt"><div class="n">Mã quán</div><div class="d">'+st.code+' · đổi máy nhập mã này để lấy lại data</div></div><button class="buyBtn" id="setCopy">Chép</button></div>';
+    h+='<div class="buyRow"><div class="bi">▶️</div><div class="bt"><div class="n">Cách chơi</div><div class="d">Chọn ly → GIỮ bình trà rót tới vạch → thêm topping/đường/đá → Giao ly đúng đơn khách.</div></div></div>';
+    h+='<div class="buyRow" style="border:none"><div class="bi">🔄</div><div class="bt"><div class="n">Chơi mới từ đầu</div><div class="d">Làm lại từ ngày 1 (tạo quán mới).</div></div><button class="buyBtn" id="setReset">Chơi mới</button></div>';
+    $("setBody").innerHTML=h;
+    $("setSound").onclick=function(){ muted=!muted; $("mute").textContent=muted?"🔇":"🔊"; sTap(); renderSettings(); };
+    if($("setCopy"))$("setCopy").onclick=function(){ try{ navigator.clipboard.writeText(st.code); }catch(e){} warn("Đã chép mã quán "+st.code); };
+    $("setReset").onclick=function(){ if(!window.confirm("Chơi mới từ đầu? Quán hiện tại sẽ được làm mới."))return;
+      $("setOv").classList.add("hidden"); $("hubOv").classList.add("hidden"); $("overOv").classList.add("hidden");
+      stopSlotLoop(); clearInterval(staffTimer); phase="start"; _saved=null; clearSave(); setupStart(); $("startOv").classList.remove("hidden"); };
+  }
+  function openSettings(){ au(); if(phase==="serve"){ stopSlotLoop(); clearInterval(staffTimer); } renderSettings(); $("setOv").classList.remove("hidden"); }
+  function closeSettings(){ $("setOv").classList.add("hidden"); if(phase==="serve"){ startDayLoop(); if(st.staff){ clearInterval(staffTimer); staffTimer=setInterval(staffTick,7000); } } }
+  $("gearBtn").onclick=openSettings;
+  $("setClose").onclick=closeSettings;
   document.addEventListener("visibilitychange",function(){ if(document.hidden && (phase==="serve"||phase==="hub")) saveGame(); });
   window.addEventListener("beforeunload",function(){ if(phase==="serve"||phase==="hub") saveGame(); });
   if('serviceWorker' in navigator){ window.addEventListener('load',function(){ navigator.serviceWorker.register('sw.js').catch(function(){}); }); }

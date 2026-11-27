@@ -6,13 +6,13 @@
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-<title>TIỆM TRÀ NHỎ — Pha trà sữa &amp; quản lý quán</title>
+<title>HỒNG TRÀ GIA GIA — Pha hồng trà &amp; quản lý quán</title>
 <meta name="theme-color" content="#f6eee0">
-<meta name="description" content="Game pha trà sữa cozy: rót trà tới vạch, thêm đường đá topping theo đơn, phục vụ nhiều khách, nhập kho và mở rộng quán.">
+<meta name="description" content="Hồng Trà Gia Gia — game pha hồng trà cozy: rót trà tới vạch, thêm đường đá topping theo đơn, phục vụ nhiều khách, nhập kho và mở rộng quán.">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Tiệm Trà Nhỏ">
+<meta name="apple-mobile-web-app-title" content="Hồng Trà Gia Gia">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -226,7 +226,7 @@
 <div id="wrap">
   <div id="awn"></div>
   <div id="top">
-    <div class="tleft"><div id="shopName" class="display">Tiệm Trà Nhỏ</div><small id="dayState">Ngày 1 · Chuẩn bị</small></div>
+    <div class="tleft"><div id="shopName" class="display">Hồng Trà Gia Gia</div><small id="dayState">Ngày 1 · Chuẩn bị</small></div>
     <div class="tmid"><div id="clock">11:00</div><small id="moneyV">400k</small></div>
     <div id="rep"><span id="repStars">★★★★★</span><span id="repNum">5.0 · 0 đánh giá</span></div>
   </div>
@@ -287,8 +287,8 @@
     <div class="starticon">
       <img src="assets/pobo_happy.png" alt="Pobo" style="height:132px;width:auto;filter:drop-shadow(0 5px 6px rgba(90,60,35,.25))">
     </div>
-    <h1 class="display">Tiệm Trà Nhỏ</h1>
-    <p id="startSub">Nhập hàng, pha từng ly theo đơn của khách và mở tiệm nhỏ của riêng bạn.</p>
+    <h1 class="display">Hồng Trà Gia Gia</h1>
+    <p id="startSub">Nhập hàng, pha từng ly hồng trà theo đơn của khách và mở chi nhánh Hồng Trà Gia Gia của riêng bạn.</p>
     <input id="shopInput" maxlength="16" placeholder="Tên quán của bạn" autocomplete="off" spellcheck="false">
     <button class="bigbtn" id="openBtn">Bắt đầu</button>
     <button class="ghost" id="newGameBtn" style="display:none">Chơi mới từ đầu</button>
@@ -319,9 +319,9 @@
 
   var SIZES=[{k:"M",name:"Ly M",extra:0,target:66},{k:"L",name:"Ly L",extra:7,target:82}];
   var TEAS=[
-    {k:"milk",name:"Trà sữa",color:"#d8b88c",base:25,cost:0},{k:"matcha",name:"Matcha",color:"#9ac46a",base:30,cost:0},
-    {k:"black",name:"Hồng trà",color:"#c06a46",base:28,cost:150},{k:"thai",name:"Trà Thái",color:"#e8853c",base:32,cost:300},
-    {k:"green",name:"Lục trà",color:"#8ec56a",base:28,cost:150},{k:"olong",name:"Olong",color:"#c49a5e",base:28,cost:250}
+    {k:"milk",name:"Hồng trà sữa",color:"#cdaa7e",base:25,cost:0},{k:"matcha",name:"Hồng trà đào",color:"#ec9f54",base:30,cost:0},
+    {k:"black",name:"Hồng trà",color:"#b5603a",base:28,cost:150},{k:"thai",name:"Trà Thái",color:"#e8853c",base:32,cost:300},
+    {k:"green",name:"Hồng trà vải",color:"#e6a0b4",base:28,cost:150},{k:"olong",name:"Hồng trà chanh",color:"#e4cf74",base:28,cost:250}
   ];
   var TOPS=[
     {k:"none",name:"Không",color:null,price:0,cost:0},{k:"black",name:"TC đen",color:"#2d2620",price:6,cost:0},
@@ -365,14 +365,14 @@
   };
   // Bộ sưu tập: công thức "signature" — pha chuẩn lần đầu để mở khoá
   var COLLECTION=[
-    {k:"c1",name:"Trân châu đường đen",tea:"milk",top:"black",emo:"🧋"},
-    {k:"c2",name:"Matcha trân châu trắng",tea:"matcha",top:"white",emo:"🍵"},
+    {k:"c1",name:"Hồng trà sữa trân châu đen",tea:"milk",top:"black",emo:"🧋"},
+    {k:"c2",name:"Hồng trà đào trân châu trắng",tea:"matcha",top:"white",emo:"🧋"},
     {k:"c3",name:"Hồng trà thạch mát",tea:"black",top:"jelly",emo:"🧋"},
     {k:"c4",name:"Trà Thái popping",tea:"thai",top:"pop",emo:"🧋"},
-    {k:"c5",name:"Lục trà hoàng kim",tea:"green",top:"gold",emo:"🍵"},
-    {k:"c6",name:"Olong trân châu đen",tea:"olong",top:"black",emo:"🧋"},
-    {k:"c7",name:"Trà sữa thạch rau câu",tea:"milk",top:"jelly",emo:"🧋"},
-    {k:"c8",name:"Matcha hoàng kim",tea:"matcha",top:"gold",emo:"🍵"}
+    {k:"c5",name:"Hồng trà vải hoàng kim",tea:"green",top:"gold",emo:"🧋"},
+    {k:"c6",name:"Hồng trà chanh trân châu",tea:"olong",top:"black",emo:"🧋"},
+    {k:"c7",name:"Hồng trà sữa thạch rau câu",tea:"milk",top:"jelly",emo:"🧋"},
+    {k:"c8",name:"Hồng trà đào hoàng kim",tea:"matcha",top:"gold",emo:"🧋"}
   ];
   // Cấp độ quán theo tổng lượt khách đã phục vụ
   var TIERS=[
@@ -404,7 +404,7 @@
   function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
   function genChallenge(){ var c=pick(CHALS); var m=c.mk(st.day); return {k:c.k,g:m.g,txt:m.txt,rw:m.rw,done:false}; }
 
-  var st={ shop:"Tiệm Trà Nhỏ", day:1, money:400, rep:5.0, revCount:0, combo:0,
+  var st={ shop:"Hồng Trà Gia Gia", day:1, money:400, rep:5.0, revCount:0, combo:0,
     teaUn:{milk:1,matcha:1}, topUn:{none:1,black:1,white:1}, upg:{}, staffN:0,
     extraCust:0, patBonus:0, pourTol:0, tipMul:1.0, stock:{cup:0,teas:{},tops:{}}, reviews:[], col:{}, colDone:0, loan:null, ach:{}, tier:0, best:0, everLoan:0, promoOn:false, chal:null, totalRev:0, totalPerfect:0, lastBuy:null, staffXp:0 };
   var SAVEKEY="tiemtra_save_v1";

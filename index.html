@@ -228,6 +228,7 @@
     <input id="shopInput" maxlength="16" placeholder="Tên quán của bạn" autocomplete="off" spellcheck="false">
     <button class="bigbtn" id="openBtn">Bắt đầu</button>
     <button class="ghost" id="newGameBtn" style="display:none">Chơi mới từ đầu</button>
+    <button class="ghost" id="codeBtn">🔑 Có mã quán? Nhập để lấy lại</button>
   </div>
 </div>
 <div class="ov hidden" id="hubOv"><div class="card hubcard">
@@ -285,10 +286,21 @@
     teaUn:{milk:1,matcha:1}, topUn:{none:1,black:1,white:1}, upg:{}, staff:false,
     extraCust:0, patBonus:0, pourTol:0, tipMul:1.0, stock:{cup:0,tea:0,top:0}, reviews:[] };
   var SAVEKEY="tiemtra_save_v1";
-  function saveGame(){ try{ var d={shop:st.shop,day:st.day,money:st.money,rep:st.rep,revCount:st.revCount,teaUn:st.teaUn,topUn:st.topUn,upg:st.upg,staff:st.staff,extraCust:st.extraCust,patBonus:st.patBonus,pourTol:st.pourTol,tipMul:st.tipMul,sell:st.sell,streak:st.streak,onlineOn:st.onlineOn,reviews:(st.reviews||[]).slice(0,12)}; localStorage.setItem(SAVEKEY,JSON.stringify(d)); }catch(e){} }
+  var CLOUD="https://script.google.com/macros/s/AKfycbzuJvFLb2gtBjogCiw0tRUNeZSSzeO7IuuReiDzPUyY346k_4rvJHEiKx7NoUDaXoxY/exec"; var _cbN=0, _cloudT=null;
+  function saveBlob(){ return { v:1, code:st.code||"", shop:st.shop, day:st.day, money:st.money, rep:st.rep, revCount:st.revCount, teaUn:st.teaUn, topUn:st.topUn, upg:st.upg, staff:st.staff, extraCust:st.extraCust, patBonus:st.patBonus, pourTol:st.pourTol, tipMul:st.tipMul, sell:st.sell, streak:st.streak, onlineOn:st.onlineOn, reviews:(st.reviews||[]).slice(0,8) }; }
+  function jsonp(url){ return new Promise(function(res,rej){ var cb='__tt'+(++_cbN); var s=document.createElement('script'); var done=false;
+    window[cb]=function(data){ done=true; try{delete window[cb];}catch(e){window[cb]=undefined;} if(s.parentNode)s.parentNode.removeChild(s); res(data); };
+    s.onerror=function(){ if(done)return; try{delete window[cb];}catch(e){} if(s.parentNode)s.parentNode.removeChild(s); rej(new Error('net')); };
+    s.src=url+(url.indexOf('?')<0?'?':'&')+'callback='+cb; document.head.appendChild(s);
+    setTimeout(function(){ if(!done){ try{delete window[cb];}catch(e){} if(s.parentNode)s.parentNode.removeChild(s); rej(new Error('timeout')); } },12000);
+  }); }
+  function cloudSave(){ if(!CLOUD||!st.code)return; clearTimeout(_cloudT); _cloudT=setTimeout(function(){ try{ jsonp(CLOUD+'?action=save&code='+encodeURIComponent(st.code)+'&data='+encodeURIComponent(JSON.stringify(saveBlob()))).catch(function(){}); }catch(e){} },500); }
+  function cloudNew(cb){ if(!CLOUD){ if(cb)cb(null); return; } jsonp(CLOUD+'?action=new&data='+encodeURIComponent(JSON.stringify(saveBlob()))).then(function(d){ if(d&&d.ok&&d.code){ st.code=d.code; saveGame(); if(cb)cb(d.code);} else if(cb)cb(null); }).catch(function(){ if(cb)cb(null); }); }
+  function cloudLoad(code){ return jsonp(CLOUD+'?action=load&code='+encodeURIComponent(code)); }
+  function saveGame(){ try{ localStorage.setItem(SAVEKEY,JSON.stringify(saveBlob())); }catch(e){} cloudSave(); }
   function clearSave(){ try{ localStorage.removeItem(SAVEKEY); }catch(e){} }
   function loadSave(){ try{ var raw=localStorage.getItem(SAVEKEY); if(!raw)return null; var d=JSON.parse(raw); if(!d||typeof d.day!=="number"||typeof d.money!=="number")return null; return d; }catch(e){ return null; } }
-  function applySave(d){ st={ shop:d.shop||"Tiệm Trà Nhỏ", day:d.day||1, money:(typeof d.money==="number"?d.money:400), rep:(typeof d.rep==="number"?d.rep:5), revCount:d.revCount||0, combo:0, teaUn:d.teaUn||{milk:1,matcha:1}, topUn:d.topUn||{none:1,black:1,white:1}, upg:d.upg||{}, staff:!!d.staff, extraCust:d.extraCust||0, patBonus:d.patBonus||0, pourTol:d.pourTol||0, tipMul:d.tipMul||1.0, sell:d.sell||{}, streak:d.streak||{n:0,last:""}, onlineOn:!!d.onlineOn, stock:{cup:0,tea:0,top:0}, reviews:d.reviews||[] }; }
+  function applySave(d){ st={ code:d.code||"", shop:d.shop||"Tiệm Trà Nhỏ", day:d.day||1, money:(typeof d.money==="number"?d.money:400), rep:(typeof d.rep==="number"?d.rep:5), revCount:d.revCount||0, combo:0, teaUn:d.teaUn||{milk:1,matcha:1}, topUn:d.topUn||{none:1,black:1,white:1}, upg:d.upg||{}, staff:!!d.staff, extraCust:d.extraCust||0, patBonus:d.patBonus||0, pourTol:d.pourTol||0, tipMul:d.tipMul||1.0, sell:d.sell||{}, streak:d.streak||{n:0,last:""}, onlineOn:!!d.onlineOn, stock:{cup:0,tea:0,top:0}, reviews:d.reviews||[] }; }
 
   // ---- sự kiện ngày, chuỗi điểm danh, giá bán ----
   var EVENTS=[
@@ -459,7 +471,7 @@
     var sk=(st.streak&&st.streak.n>=2)?' · 🔥 '+st.streak.n+' ngày':'';
     var evb=(todayEvent&&todayEvent.name)?'<div class="hubspecial" style="background:#e6f0ff">'+todayEvent.name+' — '+todayEvent.desc+'</div>':'';
     $("hubHead").innerHTML='<div class="r1"><h2 class="display">🌅 Ngày '+st.day+'</h2><span class="vn">Vốn '+kstr(st.money)+'</span></div>'
-      +'<div class="rp">'+repStars(st.rep)+' '+st.rep.toFixed(1)+' · '+st.revCount+' đánh giá · ~'+expectedCust+' khách</div>'
+      +'<div class="rp">'+repStars(st.rep)+' '+st.rep.toFixed(1)+' · '+st.revCount+' đánh giá · ~'+expectedCust+' khách'+(st.code?' · 🔑 '+st.code:'')+'</div>'
       +menuBoard()
       +'<div class="hubspecial">⭐ <b>Món đặc biệt hôm nay:</b> '+sp+' → làm đúng được thưởng!</div>'+evb;
   }
@@ -683,6 +695,7 @@
       extraCust:0, patBonus:0, pourTol:0, tipMul:1.0, stock:{cup:0,tea:0,top:0}, reviews:[] };
     lastRecap=null; clearSave(); $("shopName").textContent=st.shop;
     buildServeUI(); resetSel(); markSel(); renderCup(); updatePour(); updateTop(); updateChips(); enterMorning();
+    if(CLOUD && !st.code) cloudNew(function(c){ if(c){ renderHubHead(); warn("🔑 Mã quán của bạn: "+c+" — ghi lại để đổi máy nhé!"); } });
   }
   var _saved=loadSave();
   function resumeSaved(){ applySave(_saved); $("shopName").textContent=st.shop; buildServeUI(); resetSel(); markSel(); renderCup(); updatePour(); updateTop(); updateChips(); lastRecap=null; $("startOv").classList.add("hidden"); enterMorning(); }
@@ -690,6 +703,12 @@
   $("openBtn").onclick=function(){ au(); if(AC&&AC.state==="suspended")AC.resume(); if(_saved && $("openBtn").getAttribute("data-resume")==="1") resumeSaved(); else newGameInput(); };
   $("shopInput").addEventListener("keydown",function(e){ if(e.key==="Enter")$("openBtn").click(); });
   $("newGameBtn").onclick=function(){ _saved=null; clearSave(); setupStart(); };
+  $("codeBtn").onclick=function(){ au(); if(!CLOUD){ alert("Lưu online đang bật sau, tạm thời chơi local nhé."); return; }
+    var c=(window.prompt("Nhập mã quán (vd AB12345):")||"").trim().toUpperCase(); if(!c)return;
+    cloudLoad(c).then(function(d){ if(d&&d.ok&&d.data){ var sv=null; try{sv=JSON.parse(d.data);}catch(e){}
+      if(sv){ applySave(sv); st.code=c; saveGame(); _saved=null; $("shopName").textContent=st.shop; buildServeUI(); resetSel(); markSel(); renderCup(); updatePour(); updateTop(); updateChips(); lastRecap=null; $("startOv").classList.add("hidden"); enterMorning(); return; } }
+      alert("Không tìm thấy mã này."); }).catch(function(){ alert("Lỗi mạng, thử lại sau."); });
+  };
   function setupStart(){ if(_saved){ $("openBtn").textContent="▶ Chơi tiếp — Ngày "+_saved.day; $("openBtn").setAttribute("data-resume","1"); $("shopInput").style.display="none"; $("startSub").textContent="Chào mừng trở lại! "+(_saved.shop||"Quán")+" · Ngày "+_saved.day+" · Vốn "+kstr(_saved.money)+"."; $("newGameBtn").style.display="inline-block"; } else { $("openBtn").textContent="Bắt đầu"; $("openBtn").removeAttribute("data-resume"); $("shopInput").style.display=""; $("newGameBtn").style.display="none"; } }
   setupStart();
   buildServeUI(); resetSel(); markSel(); renderCup(); updatePour();

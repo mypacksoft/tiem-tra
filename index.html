@@ -48,7 +48,7 @@
   .slot.empty{border-style:dashed; align-items:center; justify-content:center; color:#c6b599; font-weight:700; font-size:12px; box-shadow:none; background:transparent;}
   .slot.active{border-color:var(--pink); box-shadow:0 2px 12px rgba(184,90,110,.18);}
   .slot .sh{display:flex; align-items:center; gap:6px;}
-  .slot .sav{width:26px; height:26px; flex:none; border-radius:50%; background:var(--pink2); display:flex; align-items:center; justify-content:center; font-size:15px;}
+  .slot .sav{width:28px; height:28px; flex:none; display:flex; align-items:center; justify-content:center;}
   .slot .sn{font-weight:800; font-size:11px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1;}
   .slot .stg{font-size:9px; font-weight:800; padding:1px 5px; border-radius:999px;}
   .slot .stg.picky{background:#f6dcd9; color:var(--red);} .slot .stg.rich{background:#fbeecb; color:#a8781a;}
@@ -215,9 +215,10 @@
       </svg>
     </div>
     <h1 class="display">Tiệm Trà Nhỏ</h1>
-    <p>Nhập hàng, pha từng ly theo đơn của khách và mở tiệm nhỏ của riêng bạn.</p>
+    <p id="startSub">Nhập hàng, pha từng ly theo đơn của khách và mở tiệm nhỏ của riêng bạn.</p>
     <input id="shopInput" maxlength="16" placeholder="Tên quán của bạn" autocomplete="off" spellcheck="false">
     <button class="bigbtn" id="openBtn">Bắt đầu</button>
+    <button class="ghost" id="newGameBtn" style="display:none">Chơi mới từ đầu</button>
   </div>
 </div>
 <div class="ov hidden" id="hubOv"><div class="card hubcard">
@@ -259,6 +260,8 @@
   var STAFF={name:"Nhân viên phụ quầy",emo:"🧑‍🍳",wage:80,desc:"Tự pha giúp khách đang chờ gấp nhất mỗi ~7 giây. Lương 80k/ngày."};
   var PR={cup:3,tea:5,top:4}, MAXSLOTS=3;
   var AVATARS=["🐻","🐱","🐰","🐨","🐯","🦊","🐼","🐷","🐵","🐸","🐮","🐹","🐧","🐣"];
+  var FACE_BGS=["#ffd7c2","#ffe0ea","#d9ecff","#e3f3d6","#fff0c7","#eadcff","#ffe9d1","#ffdede"];
+  var FACE_KINDS=["happy","smile","neutral","cool","wink","happy","smile"];
   var NAMES=["Lý Phúc","Ngô Vinh","Phạm Thảo","Minh Anh","Bảo Trân","Gia Hân","Tuấn Kiệt","Thu Hà","Khánh Vy","Đức Huy","Mỹ Duyên","Hoàng Nam","Ngọc Bích","Quốc Bảo","Thanh Vân","Hải Đăng","Bé Mèo","Chị Hai"];
   var REVIEWS={
     5:["Trà ngon xỉu, 10 điểm! 😍","Pha chuẩn vị luôn á 💕","Quán ruột từ nay nha!","Nhanh mà ngon, mê quá!","Đúng gu, rủ hội quay lại 🔥"],
@@ -271,6 +274,11 @@
   var st={ shop:"Tiệm Trà Nhỏ", day:1, money:400, rep:5.0, revCount:0, combo:0,
     teaUn:{milk:1,matcha:1}, topUn:{none:1,black:1,white:1}, upg:{}, staff:false,
     extraCust:0, patBonus:0, pourTol:0, tipMul:1.0, stock:{cup:0,tea:0,top:0}, reviews:[] };
+  var SAVEKEY="tiemtra_save_v1";
+  function saveGame(){ try{ var d={shop:st.shop,day:st.day,money:st.money,rep:st.rep,revCount:st.revCount,teaUn:st.teaUn,topUn:st.topUn,upg:st.upg,staff:st.staff,extraCust:st.extraCust,patBonus:st.patBonus,pourTol:st.pourTol,tipMul:st.tipMul,reviews:(st.reviews||[]).slice(0,12)}; localStorage.setItem(SAVEKEY,JSON.stringify(d)); }catch(e){} }
+  function clearSave(){ try{ localStorage.removeItem(SAVEKEY); }catch(e){} }
+  function loadSave(){ try{ var raw=localStorage.getItem(SAVEKEY); if(!raw)return null; var d=JSON.parse(raw); if(!d||typeof d.day!=="number"||typeof d.money!=="number")return null; return d; }catch(e){ return null; } }
+  function applySave(d){ st={ shop:d.shop||"Tiệm Trà Nhỏ", day:d.day||1, money:(typeof d.money==="number"?d.money:400), rep:(typeof d.rep==="number"?d.rep:5), revCount:d.revCount||0, combo:0, teaUn:d.teaUn||{milk:1,matcha:1}, topUn:d.topUn||{none:1,black:1,white:1}, upg:d.upg||{}, staff:!!d.staff, extraCust:d.extraCust||0, patBonus:d.patBonus||0, pourTol:d.pourTol||0, tipMul:d.tipMul||1.0, stock:{cup:0,tea:0,top:0}, reviews:d.reviews||[] }; }
   var queue=[], slots=[], special=null, specialDone=false, expectedCust=0, lastRecap=null, activeTab="kho";
   var dayRev=0, dayStockCost=0, dayServed=0, dayPerfect=0, dayLeft=0;
   var sel={size:null,tea:null,top:null,sugar:2,ice:2,fill:0,poured:false};
@@ -308,6 +316,18 @@
     var light=(tp.k==="white"); return S+ballSVG(9,17,4.4,tp.color,light)+ballSVG(19,17,4.4,tp.color,light)+ballSVG(14,11.5,4.6,tp.color,light)+'</svg>';
   }
 
+  function faceSVG(kind,bg,size){
+    size=size||26; bg=bg||"#ffe0ea"; kind=kind||"happy";
+    var leye='<circle cx="13" cy="16" r="2.1" fill="#4a3a2e"/>', reye='<circle cx="23" cy="16" r="2.1" fill="#4a3a2e"/>', extra='', mouth;
+    if(kind==="cool"){ leye=reye=""; extra='<rect x="8" y="13.5" width="20" height="5" rx="2.5" fill="#3a2f28"/>'; }
+    else if(kind==="wink"){ leye='<path d="M11 16 q2 -2 4 0" stroke="#4a3a2e" stroke-width="1.8" fill="none" stroke-linecap="round"/>'; }
+    if(kind==="picky") mouth='<path d="M13 25 q5 -3 10 0" stroke="#4a3a2e" stroke-width="1.8" fill="none" stroke-linecap="round"/>';
+    else if(kind==="neutral") mouth='<path d="M13 24 h10" stroke="#4a3a2e" stroke-width="1.8" fill="none" stroke-linecap="round"/>';
+    else mouth='<path d="M12 22 q6 6 12 0" stroke="#4a3a2e" stroke-width="1.8" fill="none" stroke-linecap="round"/>';
+    var cheeks='<circle cx="9.5" cy="21" r="2" fill="#ff9db0" opacity=".5"/><circle cx="26.5" cy="21" r="2" fill="#ff9db0" opacity=".5"/>';
+    var rich=kind==="rich"?'<text x="18" y="12.5" font-size="8" text-anchor="middle" fill="#c79400" font-family="Baloo 2,sans-serif" font-weight="800">$</text>':'';
+    return '<svg viewBox="0 0 36 36" width="'+size+'" height="'+size+'" aria-hidden="true"><circle cx="18" cy="18" r="17" fill="'+bg+'" stroke="rgba(0,0,0,.08)"/>'+cheeks+leye+reye+extra+mouth+rich+'</svg>';
+  }
   function buildServeUI(){
     var s=$("optSize"); s.innerHTML="";
     SIZES.forEach(function(z){ var b=document.createElement("div"); b.className="opt"; b.setAttribute("data-k",z.k);
@@ -371,7 +391,7 @@
     var sugar=reqSugar?rnd(5):2, ice=reqIce?rnd(4):2;
     var type="normal", r=Math.random();
     if(st.day>=2&&r<0.14)type="picky"; else if(st.day>=2&&r<0.26)type="rich";
-    return {tea:tea.k,size:size.k,top:top.k,sugar:sugar,ice:ice,reqSugar:reqSugar,reqIce:reqIce,type:type,name:pick(NAMES),ava:pick(AVATARS)};
+    return {tea:tea.k,size:size.k,top:top.k,sugar:sugar,ice:ice,reqSugar:reqSugar,reqIce:reqIce,type:type,name:pick(NAMES),ava:pick(AVATARS),fk:(type==="picky"?"picky":type==="rich"?"rich":pick(FACE_KINDS)),fb:pick(FACE_BGS)};
   }
   function orderCardText(o){
     var h="<b>"+teaBy(o.tea).name+"</b> · <b>"+o.size+"</b>";
@@ -394,6 +414,7 @@
     updateTop(); updateChips();
     openHub(lastRecap? "tongket":"kho");
     $("hubOv").classList.remove("hidden");
+    saveGame();
   }
   var HUBTABS=[{k:"kho",n:"Kho",e:"📦"},{k:"menu",n:"Menu",e:"🧋"},{k:"trangbi",n:"Trang bị",e:"⚙️"},{k:"nhanvien",n:"Nhân viên",e:"🧑‍🍳"},{k:"tongket",n:"Hôm qua",e:"📊"}];
   function openHub(tab){ activeTab=tab||"kho"; renderHubHead(); renderHubTabs(); renderHubBody(); }
@@ -504,7 +525,7 @@
       if(!s){ d.className="slot empty"; d.textContent="Trống"; el.appendChild(d); return; }
       d.className="slot"; var o=s.o;
       var tag = o.type==="picky"?'<span class="stg picky">Khó 🧐</span>':o.type==="rich"?'<span class="stg rich">Sộp 🤑</span>':'';
-      d.innerHTML='<div class="sh"><span class="sav">'+o.ava+'</span><span class="sn">'+o.name+'</span>'+tag+'</div>'
+      d.innerHTML='<div class="sh"><span class="sav">'+faceSVG(o.fk,o.fb,28)+'</span><span class="sn">'+o.name+'</span>'+tag+'</div>'
         +'<div class="so">'+orderCardText(o)+'</div>'
         +'<div class="sbar"><i id="pb'+i+'" style="width:'+Math.max(0,s.patLeft/s.patMax*100)+'%"></i></div>'
         +'<div class="sbt"><button class="give">Giao ly</button><button class="rej">Từ chối</button></div>';
@@ -568,7 +589,7 @@
     addReview(o,4); adjustRep(0.01); popTxt("🧑‍🍳 NV +"+kstr(price),"#4e8f44"); slots[best]=null; updateTop(); renderSlots(); updateChips(); maybeEnd(); }
   function maybeEnd(){ if(closing && slots.every(function(s){return !s;})) endDay(); }
   function addReview(o,stars){ st.revCount++; var c=pick(REVIEWS[stars]||REVIEWS[3]);
-    st.reviews.unshift({name:o.name,ava:o.ava,stars:stars,text:c}); if(st.reviews.length>12)st.reviews.pop(); }
+    st.reviews.unshift({name:o.name,ava:o.ava,fk:o.fk,fb:o.fb,stars:stars,text:c}); if(st.reviews.length>12)st.reviews.pop(); }
   function adjustRep(d){ st.rep=clamp(st.rep+d,0,5); }
 
   function endDay(){
@@ -583,7 +604,7 @@
     if(st.rep<2.0){ gameOver("Uy tín quá thấp, khách không tới nữa 😢"); return; }
     st.day++; enterMorning();
   }
-  function gameOver(msg){ phase="over"; stopSlotLoop(); clearInterval(staffTimer); $("hubOv").classList.add("hidden");
+  function gameOver(msg){ phase="over"; clearSave(); stopSlotLoop(); clearInterval(staffTimer); $("hubOv").classList.add("hidden");
     $("overCard").innerHTML='<div class="emo">😢</div><h1 class="display" style="font-size:23px">Quán đóng cửa…</h1><p>'+msg+'</p>'
       +'<div class="sumRow"><span>Trụ được</span><span>'+st.day+' ngày</span></div>'
       +'<div class="sumRow" style="border:none"><span>Uy tín cuối</span><span style="color:#e0a53a">'+st.rep.toFixed(1)+' ⭐ · '+st.revCount+' đánh giá</span></div>'
@@ -607,11 +628,17 @@
   function initGame(){
     st={ shop:st.shop, day:1, money:400, rep:5.0, revCount:0, combo:0, teaUn:{milk:1,matcha:1}, topUn:{none:1,black:1,white:1}, upg:{}, staff:false,
       extraCust:0, patBonus:0, pourTol:0, tipMul:1.0, stock:{cup:0,tea:0,top:0}, reviews:[] };
-    lastRecap=null; $("shopName").textContent=st.shop;
+    lastRecap=null; clearSave(); $("shopName").textContent=st.shop;
     buildServeUI(); resetSel(); markSel(); renderCup(); updatePour(); updateTop(); updateChips(); enterMorning();
   }
-  $("openBtn").onclick=function(){ au(); if(AC&&AC.state==="suspended")AC.resume(); var v=($("shopInput").value||"").trim(); if(v)st.shop=v.slice(0,16); $("startOv").classList.add("hidden"); initGame(); };
+  var _saved=loadSave();
+  function resumeSaved(){ applySave(_saved); $("shopName").textContent=st.shop; buildServeUI(); resetSel(); markSel(); renderCup(); updatePour(); updateTop(); updateChips(); lastRecap=null; $("startOv").classList.add("hidden"); enterMorning(); }
+  function newGameInput(){ var v=($("shopInput").value||"").trim(); if(v)st.shop=v.slice(0,16); $("startOv").classList.add("hidden"); initGame(); }
+  $("openBtn").onclick=function(){ au(); if(AC&&AC.state==="suspended")AC.resume(); if(_saved && $("openBtn").getAttribute("data-resume")==="1") resumeSaved(); else newGameInput(); };
   $("shopInput").addEventListener("keydown",function(e){ if(e.key==="Enter")$("openBtn").click(); });
+  $("newGameBtn").onclick=function(){ _saved=null; clearSave(); setupStart(); };
+  function setupStart(){ if(_saved){ $("openBtn").textContent="▶ Chơi tiếp — Ngày "+_saved.day; $("openBtn").setAttribute("data-resume","1"); $("shopInput").style.display="none"; $("startSub").textContent="Chào mừng trở lại! "+(_saved.shop||"Quán")+" · Ngày "+_saved.day+" · Vốn "+kstr(_saved.money)+"."; $("newGameBtn").style.display="inline-block"; } else { $("openBtn").textContent="Bắt đầu"; $("openBtn").removeAttribute("data-resume"); $("shopInput").style.display=""; $("newGameBtn").style.display="none"; } }
+  setupStart();
   buildServeUI(); resetSel(); markSel(); renderCup(); updatePour();
   if('serviceWorker' in navigator){ window.addEventListener('load',function(){ navigator.serviceWorker.register('sw.js').catch(function(){}); }); }
 })();

@@ -62,7 +62,9 @@
   .cup .liquid{position:absolute; left:0; right:0; bottom:0; height:0; transition:height .35s cubic-bezier(.3,1.3,.5,1), background .2s; background:#e9dcc4;}
   .cup .foam{position:absolute; left:0; right:0; height:0; transition:bottom .3s, height .2s; background:#fff; opacity:.9;}
   .cup .pearls{position:absolute; left:8%; right:8%; bottom:3px; display:flex; flex-wrap:wrap; gap:2px; justify-content:center; align-items:flex-end;}
-  .cup .pearls i{width:9px; height:9px; border-radius:50%; display:block;}
+  .cup .pearls i{width:11px; height:11px; border-radius:50%; display:block; box-shadow:0 1px 1px rgba(0,0,0,.28), inset 0 -2px 2px rgba(0,0,0,.18);}
+  .cup .pearls i.jel{width:10px; height:10px; border-radius:3px; opacity:.92; box-shadow:0 1px 1px rgba(0,0,0,.15);}
+  .opt .ic2{display:block; filter:drop-shadow(0 1px 1px rgba(0,0,0,.12));}
   .cup .empty{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:10px; color:#c9b89a; text-align:center; font-weight:700; padding:0 8px;}
   .straw{width:7px; height:40px; border-radius:4px; background:linear-gradient(90deg,#ff7aa2,#ff9ab8); margin:-10px auto 0; position:relative; z-index:2; transform:rotate(10deg);}
   .orderMini{font-size:11px; color:var(--dim); font-weight:700; text-align:center; max-width:150px; line-height:1.3;}
@@ -262,6 +264,32 @@
   function sLeave(){ beep(300,0.2,"sine",0.08); setTimeout(function(){beep(200,0.3,"sine",0.08);},120); }
   $("mute").onclick=function(e){ e.stopPropagation(); muted=!muted; this.textContent=muted?"🔇":"🔊"; };
 
+  // ---- icon vẽ tay (SVG gốc, không dùng ảnh của ai) ----
+  function teaIconSVG(color){
+    return '<svg class="ic2" viewBox="0 0 28 28" width="30" height="30" aria-hidden="true">'
+      +'<rect x="15.6" y="2.5" width="2.4" height="9" rx="1.2" fill="#ff9ab8" transform="rotate(14 16.8 6)"/>'
+      +'<path d="M7 7 h14 l-1.5 16.5 a1.5 1.5 0 0 1 -1.5 1.4 h-8 a1.5 1.5 0 0 1 -1.5 -1.4 Z" fill="#fffdf8" stroke="#dcc29c" stroke-width="1.2"/>'
+      +'<path d="M7.7 13 h12.6 l-1 10.5 a1.5 1.5 0 0 1 -1.5 1.4 h-8 a1.5 1.5 0 0 1 -1.5 -1.4 Z" fill="'+color+'"/>'
+      +'<ellipse cx="13.2" cy="8.4" rx="5.3" ry="1.2" fill="#fff" opacity=".85"/>'
+      +'<circle cx="11" cy="22" r="1.6" fill="#2d2620"/><circle cx="14.2" cy="22.6" r="1.6" fill="#2d2620"/><circle cx="17.2" cy="22" r="1.6" fill="#2d2620"/>'
+      +'</svg>';
+  }
+  function ball(cx,cy,r,color,light){
+    return '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="'+color+'"/>'
+      +'<circle cx="'+(cx-r*0.32)+'" cy="'+(cy-r*0.34)+'" r="'+(r*0.3)+'" fill="#fff" opacity="'+(light?0.5:0.65)+'"/>';
+  }
+  function topIconSVG(tp){
+    var S='<svg class="ic2" viewBox="0 0 28 28" width="30" height="30" aria-hidden="true">';
+    if(tp.key==='none') return S+'<circle cx="14" cy="14" r="9" fill="none" stroke="#cbb89a" stroke-width="2.2" stroke-dasharray="3.5 4"/><line x1="8" y1="20" x2="20" y2="8" stroke="#cbb89a" stroke-width="2.2" stroke-linecap="round"/></svg>';
+    if(tp.key==='jelly') return S
+      +'<rect x="5" y="13.5" width="8.5" height="8.5" rx="2.6" fill="#ff6b6b" opacity=".9"/>'
+      +'<rect x="14.5" y="11.5" width="8.5" height="8.5" rx="2.6" fill="#ffb24d" opacity=".9"/>'
+      +'<rect x="9.8" y="16" width="8.5" height="8.5" rx="2.6" fill="#ffd45e" opacity=".92"/>'
+      +'<rect x="6.6" y="15" width="2.4" height="2.4" rx="1.2" fill="#fff" opacity=".55"/></svg>';
+    var light=(tp.key==='white');
+    return S+ball(9,17,4.4,tp.color,light)+ball(19,17,4.4,tp.color,light)+ball(14,11.5,4.6,tp.color,light)+'</svg>';
+  }
+
   // ---- build option buttons ----
   function buildOpts(){
     var s=$("optSize"); s.innerHTML="";
@@ -270,12 +298,11 @@
       b.onclick=function(){ sel.size=z.key; au(); sTap(); mark(); renderCup(); }; s.appendChild(b); });
     var t=$("optTea"); t.innerHTML="";
     TEAS.forEach(function(te){ var b=document.createElement("div"); b.className="opt"; b.setAttribute("data-k",te.key);
-      b.innerHTML='<span class="dot" style="background:'+te.color+'"></span><span>'+te.name+'</span>';
+      b.innerHTML=teaIconSVG(te.color)+'<span>'+te.name+'</span>';
       b.onclick=function(){ sel.tea=te.key; au(); sTap(); mark(); renderCup(); }; t.appendChild(b); });
     var p=$("optTop"); p.innerHTML="";
     TOPS.forEach(function(tp){ var b=document.createElement("div"); b.className="opt"; b.setAttribute("data-k",tp.key);
-      var dot=tp.color?'<span class="dot" style="background:'+tp.color+'"></span>':'<span class="dot" style="background:#fff;border-style:dashed"></span>';
-      b.innerHTML=dot+'<span>'+tp.name+'</span>';
+      b.innerHTML=topIconSVG(tp)+'<span>'+tp.name+'</span>';
       b.onclick=function(){ sel.top=tp.key; au(); sTap(); mark(); renderCup(); }; p.appendChild(b); });
   }
   function mark(){
@@ -292,9 +319,17 @@
     em.style.display = sel.tea? "none":"flex";
     if(!sel.tea){ em.textContent="Chọn trà đi~"; liq.style.height="0"; }
     else { var te=teaBy(sel.tea); liq.style.background=te.color; liq.style.height="72%"; }
-    // pearls
+    // pearls / jelly trong ly
     pe.innerHTML="";
-    if(sel.top && sel.top!=="none"){ var tp=topBy(sel.top); for(var i=0;i<7;i++){ var d=document.createElement("i"); d.style.background=tp.color; pe.appendChild(d); } }
+    if(sel.top && sel.top!=="none"){
+      var tp=topBy(sel.top);
+      if(sel.top==="jelly"){
+        var cols=["#ff6b6b","#ffb24d","#ffd45e","#7ed0ff","#ff8fb0","#9be36a"];
+        for(var i=0;i<7;i++){ var d=document.createElement("i"); d.className="jel"; d.style.background=cols[i%cols.length]; pe.appendChild(d); }
+      } else {
+        for(var j=0;j<9;j++){ var e=document.createElement("i"); e.style.background="radial-gradient(circle at 34% 28%, rgba(255,255,255,.85), "+tp.color+" 62%)"; pe.appendChild(e); }
+      }
+    }
   }
 
   // ---- order generation ----

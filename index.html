@@ -237,6 +237,8 @@
     <span class="chip" id="chipTop">⚫ <b id="nTop">0</b></span>
     <span class="chip staff" id="chipStaff" style="display:none">🧑‍🍳</span>
     <span id="queueLeft"></span>
+    <button class="chip gear" id="restockBtn" title="Nhập hàng">📦</button>
+    <button class="chip gear" id="endShiftBtn" title="Kết ca">⏹️</button>
     <button class="chip gear" id="gearBtn" title="Cài đặt">⚙️</button>
   </div>
   <div id="slots"></div>
@@ -296,6 +298,7 @@
   <div class="hubtabs" id="hubTabs"></div>
   <div class="hubbody" id="hubBody"></div>
   <button class="bigbtn" id="hubGo">Mở cửa</button>
+  <button id="hubEndShift" style="display:none; margin-top:8px; width:100%; padding:11px; border:1.5px solid var(--line); background:#fff; color:var(--dim); border-radius:14px; font-weight:800; font-size:14px; font-family:'Baloo 2'; cursor:pointer">⏹️ Kết ca — ra tổng kết</button>
 </div></div>
 <div class="ov hidden" id="overOv"><div class="card" id="overCard"></div></div>
 <div class="ov hidden" id="setOv"><div class="card" style="max-width:360px">
@@ -451,7 +454,7 @@
   var queue=[], slots=[], special=null, specialDone=false, expectedCust=0, lastRecap=null, activeTab="kho";
   var dayRev=0, dayStockCost=0, dayServed=0, dayPerfect=0, dayLeft=0, dayTip=0, dayReject=0, dayBad=0, daySuccess=0, daySales={};
   var sel={size:null,tea:null,top:null,sugar:2,ice:2,fill:0,poured:false};
-  var phase="start", slotRaf=null, muted=false, staffTimer=null;
+  var phase="start", slotRaf=null, muted=false, staffTimer=null, midShift=false, soldOutFlag=false;
 
   function teaBy(k){for(var i=0;i<TEAS.length;i++)if(TEAS[i].k===k)return TEAS[i];}
   function topBy(k){for(var i=0;i<TOPS.length;i++)if(TOPS[i].k===k)return TOPS[i];}
@@ -937,9 +940,12 @@
     }; });
     var qb=el.querySelector("#quickBuy"); if(qb)qb.onclick=quickRestock;
   }
-  $("hubGo").onclick=function(){ au(); if(AC&&AC.state==="suspended")AC.resume();
+  $("hubGo").onclick=function(){ au(); if(midShift){ resumeShift(); return; } if(AC&&AC.state==="suspended")AC.resume();
     if(st.stock.cup<1 || !anyTea("M")){ sBad(); openHub("kho"); warn("Chưa có nguyên liệu! Nhập Ly và Trà ở tab Kho trước khi mở cửa."); return; }
     $("hubOv").classList.add("hidden"); beginServe(); };
+  $("hubEndShift").onclick=function(){ if(!window.confirm("Kết ca bán hôm nay? Sẽ ra màn tổng kết."))return; au(); endShift(); };
+  $("restockBtn").onclick=function(){ if(phase!=="serve")return; au(); openRestock(); };
+  $("endShiftBtn").onclick=function(){ if(phase!=="serve")return; if(!window.confirm("Kết ca bán hôm nay? Sẽ ra màn tổng kết."))return; au(); endShift(); };
 
   // ====== serve phase (multi-slot) ======
   function PATmax(){ return Math.max(11, 24-st.day)+st.patBonus; }
@@ -977,7 +983,8 @@
   }
   function startDayLoop(){ stopSlotLoop(); var last=performance.now();
     function tick(now){ if(phase!=="serve"){ slotRaf=null; return; } var dt=(now-last)/1000; last=now; if(dt>0.25)dt=0.25;
-      if(!closing && st.stock.cup<=0){ soldOutClose(); }
+      if(st.stock.cup>0){ soldOutFlag=false; }
+      else if(!closing && !midShift && !soldOutFlag){ soldOutFlag=true; openRestock(); warn("Hết ly rồi — nhập thêm để bán tiếp, hoặc Kết ca."); return; }
       if(!closing){ clockMin+=dt*GMPS; if(clockMin>=CLOSE){ clockMin=CLOSE; closing=true; $("dayState").textContent="Ngày "+st.day+" · Dọn quán"; updateChips(); }
         $("clock").textContent=fmtClock(clockMin); spawnAcc+=dt;
         while(pendingSpawns>0 && spawnAcc>=spawnInt){ if(hasEmpty() && canMakeBasic()){ placeCustomer(); pendingSpawns--; renderSlots(); updateChips(); spawnAcc-=spawnInt*(0.6+Math.random()*0.8); } else { break; } } }
@@ -1054,11 +1061,12 @@
     else { var price=drinkPrice(o); st.money+=price; dayRev+=price; daySuccess++; daySales[o.tea]=(daySales[o.tea]||0)+1; popTxt("🧑‍🍳 +"+kstr(price),"#4e8f44"); adjustRep(0.01); if(last){ addReview(o,4); slots[i]=null; } }
     if(slots[i])slots[i].staff=0; updateTop(); renderSlots(); updateChips(); maybeEnd(); }
   function maybeEnd(){ if(closing && slots.every(function(s){return !s;})) endDay(); else saveGame(); }
-  function soldOutClose(){ if(closing)return; closing=true;
-    $("dayState").textContent="Ngày "+st.day+" · Hết ly — ngưng bán";
-    for(var i=0;i<MAXSLOTS;i++){ slots[i]=null; }
-    renderSlots(); updateChips();
-    warn("Hết ly rồi — ngưng bán. Nhập thêm ly ở tab Kho để bán tiếp nha!"); }
+  function openRestock(){ if(phase!=="serve"||midShift)return; stopSlotLoop(); clearInterval(staffTimer); midShift=true;
+    $("setOv").classList.add("hidden"); openHub("kho"); $("hubGo").textContent="▶ Bán tiếp"; $("hubEndShift").style.display=""; $("hubOv").classList.remove("hidden"); }
+  function resumeShift(){ midShift=false; $("hubGo").textContent="Mở cửa"; $("hubEndShift").style.display="none"; $("hubOv").classList.add("hidden");
+    if(phase==="serve"){ staffSlot=-1; renderSlots(); updateChips(); startDayLoop(); } }
+  function endShift(){ midShift=false; $("hubGo").textContent="Mở cửa"; $("hubEndShift").style.display="none"; $("hubOv").classList.add("hidden");
+    closing=true; for(var i=0;i<MAXSLOTS;i++){ slots[i]=null; } endDay(); }
   function addReview(o,stars){ st.revCount++; var c=pick(REVIEWS[stars]||REVIEWS[3]);
     st.reviews.unshift({name:o.name,ava:o.ava,fk:o.fk,fb:o.fb,stars:stars,text:c}); if(st.reviews.length>12)st.reviews.pop(); }
   function adjustRep(d){ st.rep=clamp(st.rep+d,0,5); }

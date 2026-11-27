@@ -98,7 +98,7 @@
   .pourHint{font-size:10px; color:var(--teal); font-weight:800;}
 
   /* builder */
-  #counter{flex:none; border-top:2px solid #9fd0e4; background-color:#dde6fa; background-image:repeating-linear-gradient(0deg,rgba(90,130,180,.08) 0 1px,transparent 1px 21px),repeating-linear-gradient(0deg,rgba(255,255,255,.16) 0 20px,rgba(90,130,180,.07) 20px 22px); border-radius:18px 18px 0 0; padding:9px 10px 12px; overflow-y:auto; max-height:56vh; box-shadow:0 -5px 18px rgba(50,90,140,.14), inset 0 2px 0 rgba(255,255,255,.6); display:flex; flex-direction:column; gap:8px;}
+  #counter{flex:1; min-height:0; border-top:2px solid #9fd0e4; background-color:#dde6fa; background-image:repeating-linear-gradient(0deg,rgba(90,130,180,.08) 0 1px,transparent 1px 21px),repeating-linear-gradient(0deg,rgba(255,255,255,.16) 0 20px,rgba(90,130,180,.07) 20px 22px); border-radius:18px 18px 0 0; padding:9px 10px 12px; overflow-y:auto; box-shadow:0 -5px 18px rgba(50,90,140,.14), inset 0 2px 0 rgba(255,255,255,.6); display:flex; flex-direction:column; gap:8px;}
   .cboard{background:linear-gradient(#ffffff,#eef6ff); border:1.5px solid #ccd9f2; border-radius:14px; padding:7px 9px 9px; box-shadow:0 2px 7px rgba(50,90,140,.12), inset 0 1px 0 rgba(255,255,255,.7);}
   .cLabel{display:flex; align-items:center; gap:7px; margin-bottom:7px; flex-wrap:wrap;}
   .plaque{display:inline-block; background:linear-gradient(#2a56d4,#1838a8); color:#f0fbff; border:1.5px solid #142e8e; border-radius:8px; padding:3px 11px; font-size:10px; font-weight:800; letter-spacing:.6px; text-transform:uppercase; box-shadow:0 2px 0 #102682, inset 0 1px 0 rgba(255,255,255,.35); white-space:nowrap; text-shadow:0 1px 1px rgba(10,60,85,.45);}
@@ -114,6 +114,7 @@
   .plRow{display:flex; gap:8px; align-items:stretch;}
   .woodBoard{flex:none; width:70px; background:linear-gradient(#2f5cda,#1a3fae); border:2px solid #15318f; border-radius:10px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; color:#f0fbff; font-weight:800; font-size:11px; text-align:center; box-shadow:inset 0 0 0 3px rgba(224,244,255,.22), 0 2px 5px rgba(20,90,125,.25); text-shadow:0 1px 1px rgba(10,60,85,.5); padding:4px;}
   .woodBoard b{font-size:14px; font-family:"Baloo 2";}
+  .cupCol{flex:none; width:88px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; background:linear-gradient(#ffffff,#eef3fe); border:1.5px solid var(--line); border-radius:12px; padding:8px 4px; box-shadow:inset 0 1px 0 rgba(255,255,255,.7);}
   .trayGrid{flex:1; display:grid; grid-template-columns:repeat(4,1fr); gap:2px;}
   .bottleRow{display:flex; gap:6px; justify-content:center; margin-top:8px; padding-top:6px; border-top:1px dashed #ccd9f2;}
   .teaBar .opt.sel{border-color:var(--teal); background:#e1edfb; box-shadow:0 0 0 2px rgba(47,134,207,.28);}
@@ -239,20 +240,6 @@
     <button class="chip gear" id="gearBtn" title="Cài đặt">⚙️</button>
   </div>
   <div id="slots"></div>
-  <div id="stage">
-    <span class="stageTag">🧋 ĐANG PHA</span>
-    <img id="mascot" src="assets/pobo_idle.png" alt="Pobo">
-    <div class="cupBox">
-      <div class="straw"></div>
-      <div class="cup" id="cup">
-        <div class="liquid" id="liquid"></div>
-        <div class="mark" id="mark"></div>
-        <div class="pearls" id="pearls"></div>
-        <div class="empty" id="cupEmpty">Chưa chọn ly</div>
-      </div>
-      <div class="pourHint" id="pourHint"></div>
-    </div>
-  </div>
   <div id="counter">
     <div class="cboard">
       <div class="cLabel"><span class="plaque">🫖 Quầy trà</span><span class="cHint">chọn ly rồi GIỮ bình để rót</span></div>
@@ -263,11 +250,20 @@
       </div>
     </div>
     <div class="cboard">
-      <div class="cLabel"><span class="plaque">🧋 Pha ly — topping</span></div>
+      <div class="cLabel"><span class="plaque">🧋 Ly đang pha — topping</span></div>
       <div class="plRow">
-        <div class="woodBoard"><span>Lấy ly</span><b>M / L</b></div>
+        <div class="cupCol">
+          <div class="straw"></div>
+          <div class="cup" id="cup">
+            <div class="liquid" id="liquid"></div>
+            <div class="mark" id="mark"></div>
+            <div class="pearls" id="pearls"></div>
+            <div class="empty" id="cupEmpty">Chưa chọn ly</div>
+          </div>
+        </div>
         <div class="trayGrid" id="optTop"></div>
       </div>
+      <div class="pourHint" id="pourHint"></div>
     </div>
     <div class="cboard">
       <div class="cLabel"><span class="plaque">🍬 Nước đường</span><button class="bucket" id="clearBtn" title="Đổ bỏ ly, pha lại" style="margin-left:auto">🪣<span>Đổ bỏ</span></button></div>

@@ -662,10 +662,12 @@
     todayEvent=rollEvent(); streakUpdate();
     checkTier(); checkAch();
     st.promoOn=false; st.chal=genChallenge();
+    setDayHours();
+    var dayScale=Math.max(1,DAYSEC/120);
     var baseC=5+st.day+st.extraCust+Math.max(0,(st.rep-3))*1.4+tierIdx()*0.8;
-    expectedCust=Math.round(baseC*1.8);
-    dailyBusy=0.55+Math.random()*1.15; targetCust=Math.max(4,Math.round(baseC*dailyBusy*(todayEvent.custMul||1)*priceFactor()*1.8));
-    slots=[null,null,null]; renderSlots(); $("clock").textContent="11:00"; $("dayState").textContent="Ngày "+st.day+" · Chuẩn bị";
+    expectedCust=Math.round(baseC*dayScale);
+    dailyBusy=0.55+Math.random()*1.15; targetCust=Math.max(4,Math.round(baseC*dailyBusy*(todayEvent.custMul||1)*priceFactor()*dayScale));
+    slots=[null,null,null]; renderSlots(); $("clock").textContent=fmtClock(OPEN); $("dayState").textContent="Ngày "+st.day+" · Chuẩn bị";
     dayRev=0; dayStockCost=0; dayServed=0; dayPerfect=0; dayLeft=0; dayTip=0; dayReject=0; dayBad=0; daySuccess=0; daySales={};
     updateTop(); updateChips();
     openHub(lastRecap? "tongket":"kho");
@@ -679,7 +681,7 @@
     var tops=unlockedTops().filter(function(t){return t.k!=="none";}).map(function(t){ return '<span class="mbchip">'+t.name+' +'+sellP(t.k)+'k</span>'; }).join('');
     return '<div class="menuboard"><div class="mbh">📋 Menu hôm nay</div><div class="mbgrid">'+teas+'</div>'
       +(tops?'<div class="mbtops">'+tops+'</div>':'')
-      +'<div class="mbfoot">Size L +'+sellP("L")+'k · mở cửa 11:00–22:00</div></div>';
+      +'<div class="mbfoot">Size L +'+sellP("L")+'k · mở cửa '+fmtClock(OPEN)+'–'+fmtClock(CLOSE)+(tierIdx()<HOURS.length-1?' <span style="color:#2563a8">(lên cấp mở lâu hơn)</span>':'')+'</div></div>';
   }
   function renderHubHead(){
     var sp=teaBy(special.tea).name+" · size "+special.size+(special.top!=="none"?" · "+topBy(special.top).name:"");
@@ -876,7 +878,8 @@
     var h='<div class="secTitle">📊 Tổng kết ngày '+r.day+'</div>'
       +'<div class="sumRow"><span>💰 Doanh thu'+(r.tip?' <span class="mini">(tip '+kstr(r.tip)+')</span>':'')+'</span><span>'+kstr(r.rev)+'</span></div>'
       +'<div class="sumRow"><span>📦 Nhập hàng</span><span>-'+kstr(r.stockCost)+'</span></div>'
-      +'<div class="sumRow"><span>🏠 Thuê + điện nước</span><span>-'+kstr(r.rent+r.util)+'</span></div>'
+      +'<div class="sumRow"><span>🏠 Thuê mặt bằng</span><span>-'+kstr(r.rent)+'</span></div>'
+      +'<div class="sumRow"><span>💡 Điện nước</span><span>-'+kstr(r.util)+'</span></div>'
       +(r.wage?'<div class="sumRow"><span>🧑‍🍳 Lương</span><span>-'+kstr(r.wage)+'</span></div>':'')
       +(r.tax?'<div class="sumRow"><span>🧾 Thuế (8%)</span><span>-'+kstr(r.tax)+'</span></div>':'')
       +(r.loanPay?'<div class="sumRow"><span>🏦 Trả nợ'+(r.loanBal?' <span class="mini">(còn '+kstr(r.loanBal)+')</span>':' <span class="mini">(hết nợ 🎉)</span>')+'</span><span>-'+kstr(r.loanPay)+'</span></div>':'')
@@ -950,7 +953,11 @@
 
   // ====== serve phase (multi-slot) ======
   function PATmax(){ return Math.max(11, 24-st.day)+st.patBonus; }
-  var OPEN=660, CLOSE=1320, DAYSEC=210, GMPS=(CLOSE-OPEN)/DAYSEC;
+  var HOURS=[[660,840],[600,960],[540,1080],[480,1200],[420,1320]];
+  var RENTS=[40,80,140,220,320];
+  var OPEN=660, CLOSE=840, DAYSEC=90, GMPS=(CLOSE-OPEN)/DAYSEC;
+  function setDayHours(){ var ti=Math.min(HOURS.length-1,tierIdx()); OPEN=HOURS[ti][0]; CLOSE=HOURS[ti][1]; var span=CLOSE-OPEN; DAYSEC=Math.max(60,Math.round(span/2.8)); GMPS=(CLOSE-OPEN)/DAYSEC; }
+  function rentOf(){ return RENTS[Math.min(RENTS.length-1,tierIdx())]; }
   var clockMin=OPEN, closing=false, pendingSpawns=0, spawnAcc=0, spawnInt=6, dailyBusy=1, targetCust=0, staffSlot=-1, STAFF_DUR=4.2;
   var STAFFSTEPS=[{t:0,ic:"🥤",l:"Lấy ly"},{t:0.26,ic:"🫖",l:"Rót trà"},{t:0.56,ic:"🧋",l:"Topping"},{t:0.8,ic:"🍬",l:"Đường & đá"}];
   function fmtClock(m){ var h=Math.floor(m/60), mm=Math.floor(m%60); return h+":"+(mm<10?"0":"")+mm; }
@@ -1086,7 +1093,7 @@
 
   function endDay(){
     phase="summary"; stopSlotLoop(); clearInterval(staffTimer);
-    var rent=50, util=20+Object.keys(st.upg).length*5, wage=(st.staffN||0)*STAFF.wage;
+    var rent=rentOf(), util=20+Object.keys(st.upg).length*5, wage=(st.staffN||0)*STAFF.wage;
     var wasteTea=0, wasteTop=0;
     for(var _ck in st.stock.teas){ var _c=st.stock.teas[_ck]; _c.d=(_c.d||0)-1; if(_c.d<=0){ wasteTea+=_c.q; _c.q=0; _c.d=0; } }
     for(var _tk in st.stock.tops){ var _t=st.stock.tops[_tk]; _t.d=(_t.d||0)-1; if(_t.d<=0){ wasteTop+=_t.q; _t.q=0; _t.d=0; } }

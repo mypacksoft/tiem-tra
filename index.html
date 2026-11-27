@@ -578,14 +578,14 @@
     if(lvl<=0) return S+'</svg>';
     if(tp.k==="jelly"){ var c=["#ff5d5d","#ffb13d","#ffe14d","#6fd0ff","#ff8fb0","#7be06a"],J='',k=0;
       var jr=lvl>=3?[0,1,2,3]:lvl===2?[2,3]:[3];
-      jr.forEach(function(rr){ for(var cc=0;cc<5;cc++){ var jx=7+cc*5.9+(rr%2?2.9:0), jy=7+rr*6.3; if(jx>35)continue; J+='<rect x="'+jx.toFixed(1)+'" y="'+jy.toFixed(1)+'" width="5.2" height="5.2" rx="1.6" fill="'+c[(k++)%c.length]+'"/><rect x="'+(jx+.7).toFixed(1)+'" y="'+(jy+.7).toFixed(1)+'" width="1.8" height="1.8" rx=".9" fill="#fff" opacity=".55"/>'; } });
+      jr.forEach(function(rr){ for(var cc=0;cc<6;cc++){ var jx=6+cc*5.35+(rr%2?2.6:0), jy=7+rr*5.3; if(jx>36)continue; J+='<rect x="'+jx.toFixed(1)+'" y="'+jy.toFixed(1)+'" width="5.4" height="5.4" rx="1.6" fill="'+c[(k++)%c.length]+'"/><rect x="'+(jx+.7).toFixed(1)+'" y="'+(jy+.7).toFixed(1)+'" width="1.8" height="1.8" rx=".9" fill="#fff" opacity=".55"/>'; } });
       return S+J+'</svg>'; }
-    var all=[[9,8,5],[7,13.5,6],[9,19,5],[7,24.2,6]];
-    var rows = lvl>=3?all : lvl===2?all.slice(2) : [[9,25,3]];
+    var all=[[7,8,6],[9.5,12.2,6],[7,16.4,6],[9.5,20.6,6],[7,24.8,6]];
+    var rows = lvl>=3?all : lvl===2?all.slice(2) : [[8.5,24.8,4]];
     var P='';
     for(var ri=0;ri<rows.length;ri++){ var x0=rows[ri][0], yy=rows[ri][1], n=rows[ri][2];
-      for(var i=0;i<n;i++){ var cx=x0+i*5.7+(i%2?0.5:-0.5), cy=yy+(((ri+i)%3)-1)*0.45;
-        P+='<circle cx="'+cx.toFixed(1)+'" cy="'+cy.toFixed(1)+'" r="3.4" fill="url(#'+pg+')"/><circle cx="'+(cx-1).toFixed(1)+'" cy="'+(cy-1.1).toFixed(1)+'" r="1" fill="#fff" opacity=".7"/>'; } }
+      for(var i=0;i<n;i++){ var cx=x0+i*5.0, cy=yy;
+        P+='<circle cx="'+cx.toFixed(1)+'" cy="'+cy.toFixed(1)+'" r="3.5" fill="url(#'+pg+')"/><circle cx="'+(cx-1).toFixed(1)+'" cy="'+(cy-1.1).toFixed(1)+'" r="1" fill="#fff" opacity=".7"/>'; } }
     return S+P+'</svg>';
   }
   function lighten(hex){ try{ hex=hex.replace("#",""); if(hex.length===3)hex=hex.replace(/(.)/g,"$1$1"); var r=Math.min(255,parseInt(hex.slice(0,2),16)+70),g=Math.min(255,parseInt(hex.slice(2,4),16)+70),b=Math.min(255,parseInt(hex.slice(4,6),16)+70); return "rgb("+r+","+g+","+b+")"; }catch(e){ return "#ffffff"; } }

@@ -21,9 +21,10 @@
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent; touch-action:manipulation;}
   html,body{margin:0; height:100%; overflow:hidden; background:#e8dcc7; color:var(--ink); font-family:"Be Vietnam Pro",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; user-select:none; touch-action:manipulation;}
   .display{font-family:"Baloo 2","Be Vietnam Pro",sans-serif;}
-  #wrap{position:fixed; inset:0; display:flex; flex-direction:column; max-width:520px; margin:0 auto; background:var(--cream); box-shadow:0 0 60px rgba(150,110,80,.2);}
-  #awn{height:15px; flex:none; position:relative; z-index:3; background:repeating-linear-gradient(90deg,#d16b78 0 22px,#fbe7ea 22px 44px); box-shadow:0 1px 3px rgba(120,60,70,.2);}
-  #awn::after{content:""; position:absolute; left:0; right:0; bottom:-8px; height:9px; background:radial-gradient(circle at 11px -1px,#d16b78 8px,rgba(209,107,120,0) 9px) repeat-x; background-size:22px 9px;}
+  #wrap{position:fixed; inset:0; display:flex; flex-direction:column; max-width:520px; margin:0 auto; background:var(--cream) url('assets/bg_shop.png') top center / cover no-repeat; box-shadow:0 0 60px rgba(150,110,80,.2);}
+  #awn{display:none;}
+  #mascot{position:absolute; left:4px; bottom:8px; height:112px; width:auto; z-index:4; pointer-events:none; filter:drop-shadow(0 4px 5px rgba(90,60,35,.28)); transition:transform .15s;}
+  #stage .cupBox{z-index:2;}
   #top{flex:none; display:flex; align-items:center; gap:8px; padding:9px 14px 7px;}
   .stat{display:flex; flex-direction:column; line-height:1.05;}
   .stat .k{font-size:9px; color:var(--dim); font-weight:700; text-transform:uppercase; letter-spacing:1px;}
@@ -232,6 +233,7 @@
   </div>
   <div id="slots"></div>
   <div id="stage">
+    <img id="mascot" src="assets/pobo_idle.png" alt="Pobo">
     <div class="cupBox">
       <div class="straw"></div>
       <div class="cup" id="cup">
@@ -276,11 +278,7 @@
   <div class="card startcard">
     <button id="mute">🔊</button>
     <div class="starticon">
-      <svg width="64" height="64" viewBox="0 0 48 48" fill="none" stroke="#b85a6e" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M14 16 h20 l-1.9 23 a2 2 0 0 1 -2 1.8 h-10.2 a2 2 0 0 1 -2 -1.8 Z"/>
-        <path d="M11.5 16 h25"/><path d="M30 16 l3 -7"/>
-        <circle cx="20" cy="33" r="1.5" fill="#b85a6e" stroke="none"/><circle cx="24.5" cy="35" r="1.5" fill="#b85a6e" stroke="none"/><circle cx="28" cy="31.5" r="1.5" fill="#b85a6e" stroke="none"/>
-      </svg>
+      <img src="assets/pobo_happy.png" alt="Pobo" style="height:132px;width:auto;filter:drop-shadow(0 5px 6px rgba(90,60,35,.25))">
     </div>
     <h1 class="display">Tiệm Trà Nhỏ</h1>
     <p id="startSub">Nhập hàng, pha từng ly theo đơn của khách và mở tiệm nhỏ của riêng bạn.</p>
@@ -595,9 +593,9 @@
   }
   var pouring=false, pourRaf=null;
   function canPour(){ return phase==="serve" && sel.size && sel.tea && st.stock.cup>=1 && teaQ(sel.tea)>=teaUse(sel.size)-1e-9; }
-  function startPour(){ if(phase==="serve" && sel.size && sel.tea && !canPour()){ warn("Hết ly/trà — nhập ở tab Kho trước nha"); sBad(); return; } if(!canPour())return; pouring=true; sel.poured=true; pourLoop(); }
+  function startPour(){ if(phase==="serve" && sel.size && sel.tea && !canPour()){ warn("Hết ly/trà — nhập ở tab Kho trước nha"); sBad(); return; } if(!canPour())return; pouring=true; sel.poured=true; setMascot("working"); pourLoop(); }
   function pourLoop(){ if(!pouring)return; sel.fill=Math.min(100, sel.fill+1.25); if(Math.random()<0.25)sPour(); renderCup(); pourRaf=requestAnimationFrame(pourLoop); }
-  function stopPour(){ if(!pouring)return; pouring=false; if(pourRaf){cancelAnimationFrame(pourRaf);pourRaf=null;} updatePour(); }
+  function stopPour(){ if(!pouring)return; pouring=false; if(pourRaf){cancelAnimationFrame(pourRaf);pourRaf=null;} updatePour(); setMascot("idle"); }
   document.addEventListener("pointerup",function(){ stopPour(); });
   document.addEventListener("gesturestart",function(e){ e.preventDefault(); });
   buildLevels();
@@ -927,7 +925,7 @@
   function fmtClock(m){ var h=Math.floor(m/60), mm=Math.floor(m%60); return h+":"+(mm<10?"0":"")+mm; }
   function hasEmpty(){ for(var i=0;i<MAXSLOTS;i++) if(!slots[i]) return true; return false; }
   function placeCustomer(){ for(var i=0;i<MAXSLOTS;i++){ if(!slots[i]){ var o=makeOrder(); var pm=PATmax()*(o.online?0.82:1)*(1+(o.qty-1)*0.8); slots[i]={o:o,patMax:pm,patLeft:pm,served:0,staff:0}; return; } } }
-  function beginServe(){ phase="serve"; $("dayState").textContent="Ngày "+st.day+" · Đang bán";
+  function beginServe(){ phase="serve"; setMascot("idle"); $("dayState").textContent="Ngày "+st.day+" · Đang bán";
     resetSel(); markSel(); renderCup(); updatePour();
     var tc=Math.round(targetCust*(st.promoOn?1.4:1)); slots=[null,null,null]; clockMin=OPEN; closing=false; pendingSpawns=tc; spawnInt=DAYSEC/Math.max(1,tc); spawnAcc=spawnInt*0.35;
     $("clock").textContent=fmtClock(OPEN); renderSlots(); updateTop(); updateChips(); startDayLoop();
@@ -996,7 +994,7 @@
     var madeTea=sel.tea, madeTop=sel.top; consumeStock(sel.size,sel.tea,sel.top); dayServed++;
     var last=(s.served+1>=o.qty); s.served++;
     if(!okTea||!okSize||!pourOk){ st.combo=0; dayBad++;
-      flash("bad"); sBad(); popTxt("Sai ly! 💔","#e74c3c"); adjustRep(-0.3);
+      flash("bad"); sBad(); popTxt("Sai ly! 💔","#e74c3c"); adjustRep(-0.3); setMascot("sad",1400);
       if(last) finishCustomer(i,o,okTea&&okSize?2:1); else nextCup(o); return; }
     var allPerfect=okTop&&okSugar&&okIce&&pourPerfect;
     if(o.type==="picky"&&!allPerfect){ st.combo=0; var g0=Math.round(drinkPrice(o)*0.7);
@@ -1008,9 +1006,9 @@
     tip=Math.round(tip*st.tipMul*(todayEvent.tipMul||1));
     if(o.online)tip=0; var gain=price+tip; st.money+=gain; dayRev+=gain;
     var isSpecial=(o.tea===special.tea&&o.size===special.size&&o.top===special.top);
-    if(isSpecial&&!specialDone){ specialDone=true; st.money+=40; dayRev+=40; flash("star"); popTxt("⭐ ĐẶC BIỆT +40k","#c79400"); sPerfect(); }
-    else if(allPerfect){ flash("good"); sPerfect(); popTxt("+"+kstr(gain)+(st.combo>1?" 🔥x"+st.combo:""),"#2e9e4f"); }
-    else { flash("good"); sGood(); popTxt("+"+kstr(gain),"#2e9e4f"); }
+    if(isSpecial&&!specialDone){ specialDone=true; st.money+=40; dayRev+=40; flash("star"); popTxt("⭐ ĐẶC BIỆT +40k","#c79400"); sPerfect(); setMascot("celebrating",1700); }
+    else if(allPerfect){ flash("good"); sPerfect(); popTxt("+"+kstr(gain)+(st.combo>1?" 🔥x"+st.combo:""),"#2e9e4f"); setMascot(st.combo>2?"celebrating":"happy",1300); }
+    else { flash("good"); sGood(); popTxt("+"+kstr(gain),"#2e9e4f"); setMascot("happy",1200); }
     daySuccess++; daySales[o.tea]=(daySales[o.tea]||0)+1; dayTip+=tip; discoverCombo(madeTea,madeTop); adjustRep(allPerfect?0.06:0.02); updateTop();
     if(last) finishCustomer(i,o,allPerfect?5:4); else nextCup(o);
   }
@@ -1019,7 +1017,7 @@
   function afterServe(){ resetSel(); markSel(); renderCup(); updatePour(); renderSlots(); updateChips(); maybeEnd(); }
   function rejectSlot(i){ if(phase!=="serve")return; var s=slots[i]; if(!s)return;
     st.combo=0; dayServed++; dayReject++; addReview(s.o,2); adjustRep(-0.15); popTxt("Từ chối 🙇","#c07a2c"); slots[i]=null; renderSlots(); updateChips(); maybeEnd(); }
-  function slotLeave(i){ var s=slots[i]; if(!s)return; st.combo=0; dayLeft++; dayServed++; addReview(s.o,1);
+  function slotLeave(i){ var s=slots[i]; if(!s)return; st.combo=0; dayLeft++; dayServed++; addReview(s.o,1); setMascot("sad",1400);
     flash("bad"); beep(300,0.2,"sine",0.07); popTxt("Khách bỏ đi 😤","#e74c3c"); adjustRep(-0.4); slots[i]=null; renderSlots(); updateTop(); updateChips(); maybeEnd(); }
   function staffFailRate(){ return clamp(0.22-(st.staffXp||0)*0.012,0.04,0.22); }
   function staffLevel(){ return 1+Math.floor((st.staffXp||0)/8); }
@@ -1038,7 +1036,7 @@
     for(var i=0;i<ACHS.length;i++){ var a=ACHS[i]; if(!st.ach[a.k] && a.test()){ st.ach[a.k]=1; st.money+=a.rw; got.push(a.emo+" "+a.n); } }
     if(got.length){ updateTop(); flash("star"); warn("🏅 Mở thành tựu: "+got.join(" · ")); }
     return got.length; }
-  function checkTier(){ var ni=tierIdx(); if(ni>(st.tier||0)){ st.tier=ni; var t=TIERS[ni]; flash("star"); popTxt(t.emo+" Lên hạng: "+t.n,"#c79400"); sPerfect(); } }
+  function checkTier(){ var ni=tierIdx(); if(ni>(st.tier||0)){ st.tier=ni; var t=TIERS[ni]; flash("star"); popTxt(t.emo+" Lên hạng: "+t.n,"#c79400"); sPerfect(); setMascot("celebrating",1800); } }
   function discoverCombo(teaK,topK){ if(!teaK||!topK||topK==="none")return false; if(!st.col)st.col={};
     for(var i=0;i<COLLECTION.length;i++){ var c=COLLECTION[i]; if(c.tea===teaK&&c.top===topK&&!st.col[c.k]){ st.col[c.k]=1;
       st.money+=25; dayRev+=25; flash("star"); popTxt("🏆 Sưu tập mới +25k","#c79400"); sPerfect();
@@ -1095,6 +1093,8 @@
     $("chipCup").classList.toggle("low",st.stock.cup<=1); $("chipTea").classList.toggle("low",teaTotal()<0.6); $("chipTop").classList.toggle("low",totalTops()<=1);
     $("chipStaff").style.display=(st.staffN||0)>0?"inline-flex":"none"; $("chipStaff").innerHTML='🧑‍🍳'+((st.staffN||0)>1?' <b>×'+st.staffN+'</b>':'');
     $("queueLeft").textContent = phase==="serve" ? (closing?"🧹 Đang dọn quán":((todayEvent&&todayEvent.name?todayEvent.name+" · ":"")+"🕐 "+fmtClock(CLOSE))) : ""; }
+  var _mascotT=null;
+  function setMascot(name,hold){ var m=$("mascot"); if(!m)return; m.src="assets/pobo_"+name+".png"; m.style.transform="scale(1.07)"; setTimeout(function(){ var mm=$("mascot"); if(mm)mm.style.transform=""; },160); clearTimeout(_mascotT); if(hold){ _mascotT=setTimeout(function(){ var mm=$("mascot"); if(mm)mm.src="assets/pobo_idle.png"; },hold); } }
   function flash(k){ var f=$("flash"); f.className=""; void f.offsetWidth; f.className=k; }
   function popTxt(t,c){ var el=document.createElement("div"); el.className="pop"; el.textContent=t; el.style.color=c; el.style.left="50%"; el.style.top="40%"; el.style.transform="translate(-50%,0)"; document.body.appendChild(el); setTimeout(function(){if(el.parentNode)el.parentNode.removeChild(el);},1100); }
   var warnT=null;

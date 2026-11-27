@@ -459,19 +459,19 @@
   function buildServeUI(){
     var s=$("optSize"); s.innerHTML="";
     SIZES.forEach(function(z){ var b=document.createElement("div"); b.className="opt"; b.setAttribute("data-k",z.k);
-      b.innerHTML=cupSVG(z.k==="L"?26:21)+'<span>'+z.name+'</span>'+(z.extra?'<span class="px">+'+z.extra+'k</span>':'<span class="px">&nbsp;</span>');
+      b.innerHTML=cupStackSVG(z.k, z.k==="L")+'<span>'+z.k+'</span>'+(z.extra?'<span class="px">+'+z.extra+'k</span>':'<span class="px">&nbsp;</span>');
       b.onclick=function(){ if(phase!=="serve")return; sel.size=z.k; sel.fill=0; sel.poured=false; au(); sTap(); markSel(); renderCup(); updatePour(); }; s.appendChild(b); });
     renderTeaOpts(); renderTopOpts();
   }
-  function cupSVG(px){ px=px||22;
-    return '<svg class="ic2" viewBox="0 0 24 28" width="'+px+'" height="'+Math.round(px*1.12)+'" aria-hidden="true">'
-      +'<rect x="13.2" y="-0.5" width="2.2" height="6.5" rx="1.1" fill="#b85a6e" transform="rotate(12 14 3)"/>'
-      +'<rect x="4" y="4.4" width="16" height="3.4" rx="1.7" fill="#cf8291"/>'
-      +'<path d="M5.2 6.6 q6.8 2.2 13.6 0" fill="none"/>'
-      +'<ellipse cx="12" cy="5" rx="7.6" ry="1.7" fill="#e2a9b4"/>'
-      +'<path d="M5 8 h14 l-1.7 16.8 a1.5 1.5 0 0 1 -1.5 1.3 h-7.6 a1.5 1.5 0 0 1 -1.5 -1.3 Z" fill="#fffdf8" stroke="#d9c2a0" stroke-width="1.2"/>'
-      +'<rect x="6.6" y="12.5" width="10.8" height="5.4" rx="1" fill="#f3e3cf" opacity=".75"/>'
-      +'<circle cx="9.6" cy="15.2" r="1.1" fill="#caa36e"/><circle cx="12.4" cy="15.6" r="1.1" fill="#caa36e"/><circle cx="15" cy="15" r="1.1" fill="#caa36e"/></svg>';
+  function cupStackSVG(letter,big){
+    var W=big?32:27, H=40, topW=big?24:20, x0=(W-topW)/2, rimY=4, cupH=big?18:15, inset=4;
+    var S='<svg class="ic2" viewBox="0 0 '+W+' '+H+'" width="'+(big?30:25)+'" height="'+(big?38:33)+'" aria-hidden="true">';
+    var botY=rimY+cupH, rrx=(topW-2*inset)/2+1;
+    for(var i=0;i<6;i++){ var yy=botY+i*2.5; if(yy>H-2)break; S+='<ellipse cx="'+(W/2)+'" cy="'+yy+'" rx="'+rrx+'" ry="2" fill="#fffdf8" stroke="#cdbb98" stroke-width="1"/>'; }
+    S+='<path d="M'+x0+' '+rimY+' h'+topW+' l-'+inset+' '+cupH+' h-'+(topW-2*inset)+' Z" fill="#fffefb" stroke="#cdbb98" stroke-width="1.2"/>';
+    S+='<ellipse cx="'+(W/2)+'" cy="'+rimY+'" rx="'+(topW/2)+'" ry="2.3" fill="#efe3cf" stroke="#cdbb98" stroke-width="1"/>';
+    S+='<text x="'+(W/2)+'" y="'+(rimY+cupH*0.78)+'" font-size="'+(big?13:12)+'" text-anchor="middle" fill="#9a7a56" font-family="Baloo 2,sans-serif" font-weight="800">'+letter+'</text>';
+    return S+'</svg>';
   }
   function dispenserSVG(color){
     return '<svg class="ic2" viewBox="0 0 30 30" width="28" height="28" aria-hidden="true">'

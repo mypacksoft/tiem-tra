@@ -1182,6 +1182,7 @@
     return false; }
 
   function endDay(){
+    if(phase!=="serve")return;   // chặn gọi 2 lần trong cùng 1 tick (khách cuối bỏ đi/nhân viên pha xong lúc đóng cửa) -> tránh reset doanh thu = 0 và trừ phí 2 lần
     phase="summary"; stopSlotLoop(); clearInterval(staffTimer);
     var rent=rentOf(), util=20+Object.keys(st.upg).length*5, wage=(st.staffN||0)*STAFF.wage;
     var wasteTea=0, wasteTop=0;

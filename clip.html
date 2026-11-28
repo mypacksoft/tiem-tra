@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Clip — Hồng Trà Gia Gia</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;background:#05060a;font-family:"Baloo 2","Segoe UI",system-ui,sans-serif;overflow:hidden;}
+  #stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#000;}
+  /* khung dọc 9:16 */
+  #clip{position:relative;width:100%;height:100%;max-width:calc(100vh*9/16);max-height:100vh;aspect-ratio:9/16;overflow:hidden;background:#0b1020;}
+  .scene{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:9% 8%;text-align:center;opacity:0;transform:scale(1.06);transition:opacity .5s ease,transform .5s ease;pointer-events:none;}
+  .scene.on{opacity:1;transform:scale(1);pointer-events:auto;}
+  .big{font-weight:800;color:#fff;line-height:1.18;font-size:clamp(26px,7.4vw,46px);text-shadow:0 3px 18px rgba(0,0,0,.55);white-space:pre-line;letter-spacing:.3px;}
+  .sub{margin-top:18px;font-weight:600;color:#dbe6ff;font-size:clamp(14px,3.9vw,20px);opacity:.92;line-height:1.35;max-width:92%;}
+  .emo{font-size:clamp(66px,20vw,120px);line-height:1;filter:drop-shadow(0 8px 22px rgba(0,0,0,.5));}
+  .art{margin-bottom:22px;display:flex;align-items:center;justify-content:center;}
+  /* progress bar kiểu tiktok */
+  #bars{position:absolute;top:14px;left:12px;right:12px;display:flex;gap:5px;z-index:40;}
+  #bars .b{flex:1;height:3.5px;border-radius:3px;background:rgba(255,255,255,.28);overflow:hidden;}
+  #bars .b i{display:block;height:100%;width:0;background:#fff;border-radius:3px;}
+  /* backgrounds theo cảnh */
+  .bg-sad{background:radial-gradient(120% 90% at 50% 20%,#1b2436,#070a12);}
+  .bg-blue{background:radial-gradient(130% 100% at 50% 25%,#2a56d4,#102a86 70%,#0a1d60);}
+  .bg-code{background:#0a0e17;}
+  .bg-final{background:radial-gradient(130% 100% at 50% 20%,#3a6bff,#163a9e 70%,#0c245f);}
+  .bg-sad.flash,.flashwrap.flash{animation:flash .5s ease;}
+  @keyframes flash{0%{filter:brightness(3) saturate(0)}40%{filter:brightness(1.2)}100%{filter:none}}
+  /* điện thoại báo đóng cửa */
+  .phone{width:min(46vw,210px);aspect-ratio:9/19;background:#11151f;border:4px solid #222b3d;border-radius:26px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;box-shadow:0 14px 40px rgba(0,0,0,.6);}
+  .phone .x{font-size:52px;filter:grayscale(1);opacity:.65;}
+  .phone .ban{color:#c0485e;font-weight:800;font-size:15px;background:rgba(200,70,90,.14);padding:7px 12px;border-radius:9px;}
+  /* màn hình code */
+  .term{width:86%;max-width:420px;background:#0d1322;border:1px solid #1d2a4a;border-radius:14px;padding:16px 14px;text-align:left;font-family:ui-monospace,Menlo,Consolas,monospace;box-shadow:0 14px 40px rgba(0,0,0,.6);}
+  .term .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;}
+  .cl{font-size:clamp(12px,3vw,15px);line-height:1.7;white-space:nowrap;overflow:hidden;}
+  .k{color:#7aa2ff}.s{color:#6fd3a0}.c{color:#6b7694}.f{color:#e9c46a}.w{color:#e6ecff}
+  /* cốc trà sữa động */
+  .cup{position:relative;width:min(40vw,160px);aspect-ratio:3/4.4;}
+  .cup .body{position:absolute;inset:0;background:linear-gradient(#ffffff,#eef3fe);border:3px solid #cfe0ff;border-radius:12px 12px 20px 20px;overflow:hidden;box-shadow:0 14px 34px rgba(0,0,0,.4);}
+  .cup .liq{position:absolute;left:0;right:0;bottom:0;height:0;background:linear-gradient(#d8b183,#b07b45);animation:fill 1.6s ease forwards;}
+  @keyframes fill{to{height:78%}}
+  .cup .pearl{position:absolute;bottom:5%;width:11px;height:11px;border-radius:50%;background:#2a2017;animation:rise 1.6s ease forwards;opacity:0;}
+  @keyframes rise{0%{opacity:0;transform:translateY(20px)}60%{opacity:1}100%{opacity:1;transform:translateY(0)}}
+  .cup .straw{position:absolute;top:-16%;left:54%;width:12px;height:62%;background:#2a56d4;border-radius:6px;transform:rotate(12deg);transform-origin:bottom;box-shadow:0 2px 6px rgba(0,0,0,.3);}
+  .cup .lid{position:absolute;top:-6%;left:-6%;right:-6%;height:16%;background:#e7eefc;border:3px solid #cfe0ff;border-radius:10px;}
+  /* cta cuối */
+  .badge{width:92px;height:92px;border-radius:24px;background:linear-gradient(#2a56d4,#1838a8);display:flex;align-items:center;justify-content:center;font-size:52px;box-shadow:0 12px 32px rgba(20,40,120,.6);margin-bottom:16px;}
+  .link{margin-top:20px;background:#fff;color:#1838a8;font-weight:800;padding:12px 18px;border-radius:999px;font-size:clamp(14px,3.8vw,18px);box-shadow:0 10px 26px rgba(0,0,0,.4);}
+  .pill{margin-top:12px;color:#fff;font-weight:700;font-size:clamp(13px,3.5vw,17px);background:rgba(255,255,255,.16);padding:8px 14px;border-radius:999px;}
+  /* lớp start + nút */
+  #intro{position:absolute;inset:0;z-index:60;background:rgba(5,7,14,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:10%;text-align:center;}
+  #intro h1{color:#fff;font-size:clamp(22px,6vw,34px);font-weight:800;}
+  #intro p{color:#b9c6e6;font-size:clamp(13px,3.6vw,17px);line-height:1.5;}
+  .gobtn{margin-top:8px;background:#2a56d4;color:#fff;font-weight:800;font-size:19px;padding:14px 30px;border:none;border-radius:999px;box-shadow:0 10px 26px rgba(20,40,120,.5);cursor:pointer;}
+  #replay{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);z-index:50;background:rgba(255,255,255,.16);color:#fff;border:1.5px solid rgba(255,255,255,.3);font-weight:800;padding:11px 22px;border-radius:999px;font-size:16px;display:none;cursor:pointer;}
+  .confetti{position:absolute;top:-10%;font-size:22px;animation:fallc linear forwards;}
+  @keyframes fallc{to{transform:translateY(130vh) rotate(360deg);opacity:.2}}
+  .rec-hint{position:absolute;bottom:12px;left:0;right:0;text-align:center;color:#6b7694;font-size:11px;z-index:45;}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="clip">
+    <div id="bars"></div>
+
+    <div class="scene bg-sad" data-dur="4000">
+      <div class="art"><div class="phone"><div class="x">🧋</div><div class="ban">Ứng dụng không còn khả dụng</div></div></div>
+      <div class="big">Game Tiệm Trà Nhỏ tui ghiền…
+ĐÓNG CỬA 💔</div>
+      <div class="sub">Game pha trà sữa tui chơi mỗi ngày… đóng cửa thật hả 😭</div>
+    </div>
+
+    <div class="scene bg-sad" data-dur="5000">
+      <div class="emo">😮‍💨</div>
+      <div class="big" style="margin-top:20px">Hết chỗ pha trà sữa
+chữa lành lúc rảnh</div>
+      <div class="sub">Mất luôn cái game chill nhất quả đất…</div>
+    </div>
+
+    <div class="scene bg-code flashwrap" data-dur="5000">
+      <div class="art"><div class="term">
+        <div style="margin-bottom:8px"><span class="dot" style="background:#ff5f56"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#27c93f"></span></div>
+        <div class="cl"><span class="c">// thôi tự làm lại vậy</span></div>
+        <div class="cl"><span class="k">function</span> <span class="f">moQuanTraSua</span>() {</div>
+        <div class="cl">&nbsp;&nbsp;<span class="k">const</span> <span class="w">quan</span> = <span class="s">"của riêng tui"</span>;</div>
+        <div class="cl">&nbsp;&nbsp;<span class="k">return</span> <span class="s">"🧋🔥"</span>;</div>
+        <div class="cl">}</div>
+      </div></div>
+      <div class="big">Thôi…
+TỰ CODE LẠI LUÔN 💻🔥</div>
+      <div class="sub">Mà khoan — tui là dev mà ta!</div>
+    </div>
+
+    <div class="scene bg-code" data-dur="5000">
+      <div class="art"><div class="term">
+        <div class="cl"><span class="c">$ building…</span></div>
+        <div class="cl"><span class="s">✓</span> <span class="w">pha trà, topping, đường đá</span></div>
+        <div class="cl"><span class="s">✓</span> <span class="w">khách, nhân viên, nâng cấp</span></div>
+        <div class="cl"><span class="s">✓</span> <span class="w">deploy lần thứ 26…</span></div>
+        <div class="cl"><span class="f">★ done!</span></div>
+      </div></div>
+      <div class="big">Mấy đêm thức trắng sau…</div>
+      <div class="sub">Fix bug sấp mặt, deploy mấy chục lần…</div>
+    </div>
+
+    <div class="scene bg-blue" data-dur="6000">
+      <div class="art"><div class="cup">
+        <div class="straw"></div>
+        <div class="body"><div class="liq"></div>
+          <div class="pearl" style="left:22%;animation-delay:.1s"></div>
+          <div class="pearl" style="left:42%;animation-delay:.3s"></div>
+          <div class="pearl" style="left:62%;animation-delay:.2s"></div>
+          <div class="pearl" style="left:33%;animation-delay:.45s"></div>
+          <div class="pearl" style="left:54%;animation-delay:.38s"></div>
+        </div>
+        <div class="lid"></div>
+      </div></div>
+      <div class="big">Giờ tự code game
+tự chơi luôn 🥹🧋</div>
+      <div class="sub">Pha trà sữa, mở quán, lên đời thành chuỗi!</div>
+    </div>
+
+    <div class="scene bg-final" data-dur="5000">
+      <div class="badge">🧋</div>
+      <div class="big">Làm FREE cho mọi người
+vô mở quán với tui</div>
+      <div class="link">mypacksoft.github.io/tiem-tra</div>
+      <div class="pill">Link ở bình luận 👇🧋</div>
+    </div>
+
+    <div id="replay">↻ Xem lại</div>
+    <div class="rec-hint">🔴 Quay màn hình clip này để đăng TikTok</div>
+
+    <div id="intro">
+      <h1>🎬 Clip 30 giây</h1>
+      <p>Mở <b>toàn màn hình</b>, bật <b>quay màn hình</b> điện thoại rồi bấm nút dưới.<br>Clip tự chạy ~30s. Xong thì ghép nhạc + đăng TikTok nha!</p>
+      <button class="gobtn" id="go">▶ Chạy clip</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var scenes=[].slice.call(document.querySelectorAll('.scene'));
+  var barsWrap=document.getElementById('bars');
+  var bars=scenes.map(function(){ var b=document.createElement('div'); b.className='b'; var i=document.createElement('i'); b.appendChild(i); barsWrap.appendChild(b); return i; });
+  var idx=-1, timer=null, raf=null;
+  function clearAll(){ clearTimeout(timer); cancelAnimationFrame(raf); }
+  function fillBar(el,dur){ var t0=performance.now(); (function step(now){ var p=Math.min(1,(now-t0)/dur); el.style.width=(p*100)+'%'; if(p<1)raf=requestAnimationFrame(step); })(t0); }
+  function confetti(){ var c=document.querySelector('.bg-final'); for(var i=0;i<16;i++){ var e=document.createElement('div'); e.className='confetti'; e.textContent=['🎉','🧋','✨','🫧','⭐'][i%5]; e.style.left=(Math.random()*100)+'%'; e.style.animationDuration=(1.6+Math.random()*1.4)+'s'; e.style.animationDelay=(Math.random()*.6)+'s'; c.appendChild(e); setTimeout(function(x){return function(){x.remove();};}(e),3600); } }
+  function show(n){
+    if(n>=scenes.length){ document.getElementById('replay').style.display='block'; return; }
+    idx=n; var sc=scenes[n]; var dur=+sc.getAttribute('data-dur')||4000;
+    scenes.forEach(function(s,i){ s.classList.toggle('on',i===n); });
+    bars.forEach(function(b,i){ b.style.width = i<n?'100%':(i>n?'0%':'0%'); });
+    fillBar(bars[n],dur);
+    if(sc.classList.contains('flashwrap')){ sc.classList.remove('flash'); void sc.offsetWidth; sc.classList.add('flash'); }
+    if(sc.classList.contains('bg-final')) confetti();
+    timer=setTimeout(function(){ show(n+1); }, dur);
+  }
+  function play(){ clearAll(); document.getElementById('replay').style.display='none'; bars.forEach(function(b){b.style.width='0%';}); show(0); }
+  document.getElementById('go').onclick=function(){ document.getElementById('intro').style.display='none'; var el=document.getElementById('clip'); if(el.requestFullscreen){el.requestFullscreen().catch(function(){});} play(); };
+  document.getElementById('replay').onclick=play;
+})();
+</script>
+</body>
+</html>

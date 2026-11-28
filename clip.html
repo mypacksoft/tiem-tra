@@ -6,87 +6,107 @@
 <title>Clip — Hồng Trà Gia Gia</title>
 <style>
   *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-  html,body{height:100%;background:#05060a;font-family:"Baloo 2","Segoe UI",system-ui,sans-serif;overflow:hidden;}
+  html,body{height:100%;background:#05060a;font-family:-apple-system,"Segoe UI",system-ui,"Inter",sans-serif;overflow:hidden;}
   #stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#000;}
-  #clip{position:relative;width:100%;height:100%;max-width:calc(100vh*9/16);max-height:100vh;aspect-ratio:9/16;overflow:hidden;background:#0b1020;}
-  /* nền bong bóng trân châu bay */
-  #bg{position:absolute;inset:0;overflow:hidden;z-index:0;pointer-events:none;}
-  .boba{position:absolute;bottom:-12%;border-radius:50%;background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.5),rgba(70,50,30,.0) 60%),rgba(42,32,22,.5);animation:floatUp linear infinite;}
-  @keyframes floatUp{0%{transform:translateY(0) translateX(0);opacity:0}10%{opacity:.5}90%{opacity:.4}100%{transform:translateY(-120vh) translateX(16px);opacity:0}}
+  #clip{position:relative;width:100%;height:100%;max-width:calc(100vh*9/16);max-height:100vh;aspect-ratio:9/16;overflow:hidden;background:#0a0d16;}
+  #clip:after{content:"";position:absolute;inset:0;z-index:30;pointer-events:none;background:radial-gradient(130% 100% at 50% 40%,transparent 55%,rgba(0,0,0,.42));}
+  #bg{position:absolute;inset:0;overflow:hidden;z-index:0;pointer-events:none;opacity:.5;}
+  .boba{position:absolute;bottom:-12%;border-radius:50%;background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.4),rgba(60,45,30,0) 62%),rgba(40,30,22,.4);animation:floatUp linear infinite;filter:blur(.3px);}
+  @keyframes floatUp{0%{transform:translateY(0);opacity:0}12%{opacity:.4}90%{opacity:.3}100%{transform:translateY(-120vh) translateX(14px);opacity:0}}
   .scene{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:9% 7%;text-align:center;opacity:0;z-index:2;transition:opacity .45s ease;pointer-events:none;}
   .scene.on{opacity:1;pointer-events:auto;}
-  .scene.on .kb{animation:ken 7s ease-out both;}
-  @keyframes ken{0%{transform:scale(1.12)}100%{transform:scale(1)}}
+  .scene.on .kb{animation:ken 7.4s ease-out both;}
+  @keyframes ken{0%{transform:scale(1.1)}100%{transform:scale(1)}}
   .scene.on .slide{animation:slideUp .6s cubic-bezier(.2,.9,.25,1) both;}
-  @keyframes slideUp{0%{transform:translateY(26px);opacity:0}100%{transform:translateY(0);opacity:1}}
-  .big{font-weight:800;color:#fff;line-height:1.16;font-size:clamp(26px,7.4vw,46px);text-shadow:0 3px 18px rgba(0,0,0,.55);white-space:pre-line;letter-spacing:.3px;}
-  .sub{margin-top:16px;font-weight:600;color:#dbe6ff;font-size:clamp(14px,3.9vw,20px);opacity:.92;line-height:1.35;max-width:94%;}
-  .emo{font-size:clamp(66px,20vw,120px);line-height:1;filter:drop-shadow(0 8px 22px rgba(0,0,0,.5));}
-  .art{margin-bottom:22px;display:flex;align-items:center;justify-content:center;}
+  @keyframes slideUp{0%{transform:translateY(24px);opacity:0}100%{transform:translateY(0);opacity:1}}
+  .big{font-weight:800;color:#fff;line-height:1.14;font-size:clamp(25px,7vw,44px);letter-spacing:-.4px;text-shadow:0 2px 20px rgba(0,0,0,.5);white-space:pre-line;}
+  .sub{margin-top:14px;font-weight:500;color:#cfe;color:#d7e2f7;font-size:clamp(13px,3.7vw,19px);opacity:.9;line-height:1.4;max-width:92%;}
+  .art{margin-bottom:26px;display:flex;align-items:center;justify-content:center;}
   #bars{position:absolute;top:14px;left:12px;right:12px;display:flex;gap:5px;z-index:40;}
-  #bars .b{flex:1;height:3.5px;border-radius:3px;background:rgba(255,255,255,.28);overflow:hidden;}
+  #bars .b{flex:1;height:3px;border-radius:3px;background:rgba(255,255,255,.26);overflow:hidden;}
   #bars .b i{display:block;height:100%;width:0;background:#fff;border-radius:3px;}
-  .bg-sad{background:radial-gradient(120% 90% at 50% 18%,#1b2436,#070a12);}
-  .bg-code{background:radial-gradient(120% 90% at 50% 10%,#121a2e,#070a12);}
-  .bg-blue{background:radial-gradient(130% 100% at 50% 22%,#2a56d4,#102a86 70%,#0a1d60);}
-  .bg-final{background:radial-gradient(130% 100% at 50% 20%,#3a6bff,#163a9e 70%,#0c245f);}
-  .flashwrap.flash{animation:flash .55s ease;}
-  @keyframes flash{0%{filter:brightness(2.6) saturate(.2)}45%{filter:brightness(1.15)}100%{filter:none}}
-  /* điện thoại báo đóng cửa */
-  .phone{width:min(46vw,210px);aspect-ratio:9/19;background:#11151f;border:4px solid #222b3d;border-radius:26px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;box-shadow:0 14px 40px rgba(0,0,0,.6);}
-  .phone .x{font-size:52px;filter:grayscale(1);opacity:.62;}
-  .phone .ban{color:#c0485e;font-weight:800;font-size:15px;background:rgba(200,70,90,.14);padding:7px 12px;border-radius:9px;}
-  /* ===== cảnh ngồi code (bàn làm việc) ===== */
-  .desk{position:relative;width:min(80vw,360px);}
-  .monitor{position:relative;background:#0b1020;border:7px solid #1c2740;border-radius:12px;height:min(34vh,230px);overflow:hidden;box-shadow:0 16px 40px rgba(0,0,0,.6),0 0 0 2px #0a0f1c inset;}
-  .screen{position:absolute;inset:0;background:#0c1426;padding:10px 12px;font-family:ui-monospace,Consolas,monospace;text-align:left;}
-  .codeflow{animation:scrollc 6s linear infinite;}
-  @keyframes scrollc{0%{transform:translateY(8%)}100%{transform:translateY(-55%)}}
-  .cl{font-size:clamp(10px,2.6vw,13px);line-height:1.75;white-space:nowrap;}
-  .k{color:#7aa2ff}.s{color:#6fd3a0}.c{color:#6b7694}.f{color:#e9c46a}.w{color:#e6ecff}.p{color:#e78bd0}
-  .scan{position:absolute;left:0;right:0;height:40%;top:-40%;background:linear-gradient(rgba(120,160,255,.0),rgba(120,160,255,.12));animation:scan 3.2s linear infinite;}
-  @keyframes scan{0%{top:-40%}100%{top:100%}}
-  .stand{width:16px;height:22px;background:#1c2740;margin:0 auto;}
-  .base{width:120px;height:10px;background:#1c2740;border-radius:6px;margin:0 auto;}
-  .desktop{width:min(84vw,380px);height:16px;background:linear-gradient(#2a3142,#1a2030);border-radius:6px;margin:8px auto 0;box-shadow:0 10px 24px rgba(0,0,0,.5);}
-  .deskrow{display:flex;align-items:flex-end;justify-content:center;gap:16px;margin-top:6px;}
-  .keyboard{width:140px;height:26px;background:#222b3d;border-radius:7px;position:relative;box-shadow:0 6px 14px rgba(0,0,0,.4);}
-  .keyboard:before{content:"";position:absolute;inset:5px;border-radius:4px;background:repeating-linear-gradient(90deg,#2d384f 0 12px,#222b3d 12px 15px);}
-  .hands{position:absolute;top:-8px;left:50%;transform:translateX(-50%);display:flex;gap:26px;}
-  .hand{width:26px;height:16px;background:#f2c9a6;border-radius:10px 10px 7px 7px;animation:tap .36s ease-in-out infinite alternate;}
-  .hand.r{animation-delay:.18s;}
-  @keyframes tap{from{transform:translateY(0)}to{transform:translateY(4px)}}
-  .mug{width:30px;height:34px;position:relative;}
-  .mug .cupb{position:absolute;bottom:0;width:30px;height:26px;background:#2a56d4;border-radius:5px 5px 9px 9px;}
-  .mug .ear{position:absolute;right:-8px;bottom:6px;width:12px;height:14px;border:3px solid #2a56d4;border-left:none;border-radius:0 8px 8px 0;}
-  .steam{position:absolute;top:-10px;left:8px;width:4px;height:12px;background:rgba(255,255,255,.5);border-radius:3px;filter:blur(1px);animation:steam 1.6s ease-in-out infinite;}
-  .steam.b{left:16px;animation-delay:.5s;}
-  @keyframes steam{0%{opacity:0;transform:translateY(4px) scaleY(.6)}50%{opacity:.7}100%{opacity:0;transform:translateY(-8px) scaleY(1.2)}}
-  .lamp{position:absolute;top:-6px;right:6%;width:0;height:0;border-left:50px solid transparent;border-right:10px solid transparent;border-top:120px solid rgba(255,221,130,.10);filter:blur(2px);}
-  /* terminal deploy */
-  .term2{width:88%;max-width:420px;background:#0d1322;border:1px solid #1d2a4a;border-radius:14px;padding:14px;text-align:left;font-family:ui-monospace,Consolas,monospace;box-shadow:0 16px 40px rgba(0,0,0,.6);}
-  .term2 .cl{font-size:clamp(11px,2.9vw,14px);opacity:0;animation:lineIn .4s ease forwards;}
-  @keyframes lineIn{to{opacity:1}}
-  .bar{height:8px;background:#16233f;border-radius:5px;overflow:hidden;margin:8px 0 2px;}
-  .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#4e9f6a,#8be0a2);animation:grow 2.6s ease forwards;}
+  .bg-dark{background:radial-gradient(120% 90% at 50% 20%,#1a1f2e,#070a12);}
+  .bg-ide{background:radial-gradient(120% 90% at 50% 8%,#0e1426,#06080f);}
+  .bg-blue{background:radial-gradient(130% 100% at 50% 22%,#2f5be0,#13308f 68%,#0a1d60);}
+  .bg-final{background:radial-gradient(130% 100% at 50% 18%,#3f73ff,#173ca3 66%,#0c245f);}
+  .flashwrap.flash{animation:flash .5s ease;}
+  @keyframes flash{0%{filter:brightness(1.9)}45%{filter:brightness(1.1)}100%{filter:none}}
+
+  /* ===== điện thoại thật ===== */
+  .device{position:relative;width:min(52vw,228px);aspect-ratio:9/19.3;background:linear-gradient(145deg,#33363f,#0e1015);border-radius:40px;padding:8px;box-shadow:0 34px 60px rgba(0,0,0,.6),0 0 0 2px #04050a,inset 0 1px 2px rgba(255,255,255,.18);}
+  .device .screen{position:relative;width:100%;height:100%;border-radius:32px;overflow:hidden;background:#000;}
+  .device .island{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:34%;height:15px;background:#000;border-radius:12px;z-index:8;}
+  .device .glare{position:absolute;inset:0;z-index:9;pointer-events:none;background:linear-gradient(128deg,rgba(255,255,255,.16) 0%,rgba(255,255,255,0) 36%);}
+  .vbtn{position:absolute;width:3px;border-radius:3px;background:#17191f;z-index:1;}
+  /* màn iOS báo gỡ app */
+  .s-ios{position:absolute;inset:0;background:linear-gradient(170deg,#eef0f5,#d9dde6);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;}
+  .appicon{width:72px;height:72px;border-radius:19px;background:linear-gradient(#3f73ff,#1a3bb0);display:flex;align-items:center;justify-content:center;font-size:38px;box-shadow:0 8px 16px rgba(0,0,0,.22);filter:grayscale(.45) opacity(.8);}
+  .appname{font-size:12px;color:#5a5f6a;font-weight:600;}
+  .ios-alert{margin-top:6px;width:80%;background:rgba(249,249,251,.86);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-radius:15px;overflow:hidden;box-shadow:0 12px 30px rgba(0,0,0,.22);}
+  .ios-alert .al-t{font-weight:700;font-size:13px;color:#111;padding:12px 10px 3px;}
+  .ios-alert .al-m{font-size:11px;color:#3a3a3a;padding:0 12px 11px;line-height:1.35;}
+  .ios-alert .al-b{border-top:.5px solid #c7cad1;color:#2f7bff;font-weight:600;font-size:13px;padding:10px;}
+  /* màn home — app bị gỡ (jiggle + nút xoá) */
+  .s-home{position:absolute;inset:0;background:linear-gradient(165deg,#5566831f,#20263c),url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="4" height="4"><rect width="4" height="4" fill="%2328304a"/></svg>');background-blend-mode:overlay;padding:30px 18px 18px;}
+  .hgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px 14px;}
+  .ic{aspect-ratio:1;border-radius:13px;box-shadow:0 4px 8px rgba(0,0,0,.25);}
+  .ic.a{background:linear-gradient(#ff8a5c,#ff5e7e)}.ic.b{background:linear-gradient(#5ad1ff,#2b8cff)}.ic.c{background:linear-gradient(#8be06a,#36b06a)}.ic.d{background:linear-gradient(#ffd24a,#f5a623)}.ic.e{background:linear-gradient(#b48bff,#7a52e0)}.ic.f{background:linear-gradient(#ff9ec4,#ff5e9e)}.ic.g{background:linear-gradient(#9fb4d6,#5e7199)}
+  .delwrap{position:relative;}
+  .delwrap .jig{position:relative;border-radius:13px;width:100%;aspect-ratio:1;background:linear-gradient(#3f73ff,#1a3bb0);display:flex;align-items:center;justify-content:center;font-size:26px;box-shadow:0 4px 8px rgba(0,0,0,.3);animation:jig .32s ease-in-out infinite;}
+  .delwrap .xbadge{position:absolute;top:-7px;left:-7px;width:20px;height:20px;border-radius:50%;background:#e9e9ee;color:#333;font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center;z-index:3;box-shadow:0 1px 3px rgba(0,0,0,.3);}
+  @keyframes jig{0%{transform:rotate(-2.2deg)}50%{transform:rotate(2.2deg)}100%{transform:rotate(-2.2deg)}}
+  .homecap{position:absolute;bottom:26px;left:0;right:0;text-align:center;color:#eef2ff;font-size:12px;font-weight:600;opacity:.9;}
+
+  /* ===== VS Code thật ===== */
+  .ide{width:94%;max-width:450px;background:#1e1e1e;border-radius:9px;overflow:hidden;box-shadow:0 30px 60px rgba(0,0,0,.6);text-align:left;border:1px solid #2b2b2b;}
+  .ide .tbar{height:30px;background:#323233;display:flex;align-items:center;padding:0 11px;gap:8px;}
+  .ide .tl{width:11px;height:11px;border-radius:50%;}
+  .ide .tabn{margin-left:14px;background:#1e1e1e;color:#d4d4d4;font-size:11px;padding:5px 12px;border-radius:5px 5px 0 0;display:flex;gap:7px;align-items:center;}
+  .ide .tabn .dot{width:7px;height:7px;border-radius:50%;background:#e8c07a;}
+  .ide .body{display:flex;min-height:200px;}
+  .ide .act{width:32px;background:#333;padding:9px 0;display:flex;flex-direction:column;align-items:center;gap:15px;color:#8a8a8a;font-size:15px;}
+  .ide .act .on{color:#fff;box-shadow:inset 2px 0 0 #fff;width:100%;text-align:center;}
+  .ide .code{flex:1;padding:8px 0 10px;font-family:ui-monospace,Menlo,Consolas,monospace;}
+  .ide .ln{display:flex;font-size:clamp(10px,2.55vw,13px);line-height:1.72;}
+  .ide .g{width:30px;min-width:30px;text-align:right;color:#6e7681;padding-right:12px;user-select:none;}
+  .ide .c2{flex:1;white-space:pre;color:#d4d4d4;}
+  .ide .status{height:19px;background:#007acc;color:#fff;font-size:9.5px;display:flex;align-items:center;padding:0 10px;gap:14px;}
+  .kw{color:#569cd6}.st{color:#ce9178}.fn{color:#dcdcaa}.cm{color:#6a9955}.va{color:#9cdcfe}.nu{color:#b5cea8}.pu{color:#d4d4d4}.ky{color:#c586c0}
+  .cursor{display:inline-block;width:2px;height:1.05em;background:#aeafad;vertical-align:-3px;animation:blink 1s step-end infinite;}
+  @keyframes blink{50%{opacity:0}}
+  .ide .ln{opacity:0;animation:lnIn .25s ease forwards;}
+  @keyframes lnIn{to{opacity:1}}
+
+  /* terminal mac thật */
+  .term{width:92%;max-width:440px;background:#11131a;border-radius:10px;overflow:hidden;box-shadow:0 30px 60px rgba(0,0,0,.6);text-align:left;border:1px solid #262a33;}
+  .term .tbar{height:28px;background:#20232b;display:flex;align-items:center;padding:0 11px;gap:8px;}
+  .term .tt{margin-left:auto;margin-right:auto;color:#8a909c;font-size:10.5px;font-family:ui-monospace,monospace;}
+  .term .body{padding:12px 14px;font-family:ui-monospace,Menlo,Consolas,monospace;}
+  .term .l{font-size:clamp(10.5px,2.75vw,13.5px);line-height:1.75;color:#cdd3de;opacity:0;animation:lnIn .3s ease forwards;}
+  .gr{color:#6fd3a0}.cy{color:#56b6c2}.ye{color:#e8c07a}.gy{color:#6b7280}.mg{color:#c586c0}
+  .pbar{height:7px;background:#1a1f2b;border-radius:5px;overflow:hidden;margin:7px 0 3px;}
+  .pbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#3fae6a,#7fe0a2);animation:grow 2.6s ease .4s forwards;}
   @keyframes grow{to{width:100%}}
-  /* gameplay phone */
-  .pframe{position:relative;width:min(58vw,250px);aspect-ratio:430/920;background:#0b1020;border:7px solid #223049;border-radius:30px;overflow:hidden;box-shadow:0 18px 46px rgba(0,0,0,.6);}
-  .pframe video{width:100%;height:100%;object-fit:cover;display:block;background:#dde6fa;}
-  .pframe .notch{position:absolute;top:8px;left:50%;transform:translateX(-50%);width:70px;height:7px;background:#223049;border-radius:5px;z-index:2;}
-  .tag{position:absolute;top:10%;left:50%;transform:translateX(-50%) rotate(-5deg);background:#ffd24a;color:#7a4d00;font-weight:800;font-size:clamp(14px,3.8vw,19px);padding:7px 14px;border-radius:999px;box-shadow:0 8px 20px rgba(0,0,0,.4);white-space:nowrap;z-index:5;}
-  /* cta */
-  .badge{width:92px;height:92px;border-radius:24px;background:linear-gradient(#2a56d4,#1838a8);display:flex;align-items:center;justify-content:center;font-size:52px;box-shadow:0 12px 32px rgba(20,40,120,.6);margin-bottom:16px;}
-  .link{margin-top:18px;background:#fff;color:#1838a8;font-weight:800;padding:12px 18px;border-radius:999px;font-size:clamp(14px,3.8vw,18px);box-shadow:0 10px 26px rgba(0,0,0,.4);}
-  .pill{margin-top:12px;color:#fff;font-weight:700;font-size:clamp(13px,3.5vw,17px);background:rgba(255,255,255,.16);padding:8px 14px;border-radius:999px;}
-  .confetti{position:absolute;top:-10%;font-size:22px;animation:fallc linear forwards;z-index:3;}
+
+  /* gameplay trong device */
+  .device.gp{width:min(56vw,236px);}
+  .device.gp .screen{background:#dde6fa;}
+  .device.gp video{width:100%;height:100%;object-fit:cover;display:block;}
+  .tag{position:absolute;top:9%;left:50%;transform:translateX(-50%) rotate(-4deg);background:linear-gradient(#ffd767,#f5b73a);color:#6b4600;font-weight:800;font-size:clamp(14px,3.7vw,19px);padding:8px 15px;border-radius:999px;box-shadow:0 10px 24px rgba(0,0,0,.35);white-space:nowrap;z-index:12;}
+
+  /* CTA */
+  .ctaicon{width:94px;height:94px;border-radius:24px;background:linear-gradient(#3f73ff,#1a3bb0);display:flex;align-items:center;justify-content:center;font-size:50px;box-shadow:0 16px 36px rgba(20,40,120,.55),inset 0 1px 2px rgba(255,255,255,.3);margin-bottom:18px;}
+  .link{margin-top:18px;background:#fff;color:#163aa3;font-weight:800;padding:13px 20px;border-radius:999px;font-size:clamp(14px,3.7vw,18px);box-shadow:0 12px 26px rgba(0,0,0,.35);}
+  .pill{margin-top:12px;color:#fff;font-weight:600;font-size:clamp(13px,3.4vw,17px);background:rgba(255,255,255,.14);padding:8px 15px;border-radius:999px;}
+  .confetti{position:absolute;top:-10%;font-size:22px;animation:fallc linear forwards;z-index:5;}
   @keyframes fallc{to{transform:translateY(130vh) rotate(360deg);opacity:.2}}
-  #intro{position:absolute;inset:0;z-index:60;background:rgba(5,7,14,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:10%;text-align:center;}
+
+  #intro{position:absolute;inset:0;z-index:60;background:rgba(5,7,14,.93);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:10%;text-align:center;}
   #intro h1{color:#fff;font-size:clamp(22px,6vw,34px);font-weight:800;}
   #intro p{color:#b9c6e6;font-size:clamp(13px,3.6vw,17px);line-height:1.5;}
-  .gobtn{margin-top:8px;background:#2a56d4;color:#fff;font-weight:800;font-size:19px;padding:14px 30px;border:none;border-radius:999px;box-shadow:0 10px 26px rgba(20,40,120,.5);cursor:pointer;}
-  #replay{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);z-index:50;background:rgba(255,255,255,.16);color:#fff;border:1.5px solid rgba(255,255,255,.3);font-weight:800;padding:11px 22px;border-radius:999px;font-size:16px;display:none;cursor:pointer;}
-  .rec-hint{position:absolute;bottom:12px;left:0;right:0;text-align:center;color:#6b7694;font-size:11px;z-index:45;}
+  .gobtn{margin-top:8px;background:#2f5be0;color:#fff;font-weight:800;font-size:19px;padding:14px 30px;border:none;border-radius:999px;box-shadow:0 10px 26px rgba(20,40,120,.5);cursor:pointer;}
+  #replay{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);z-index:50;background:rgba(255,255,255,.15);color:#fff;border:1.5px solid rgba(255,255,255,.3);font-weight:800;padding:11px 22px;border-radius:999px;font-size:16px;display:none;cursor:pointer;}
+  .rec-hint{position:absolute;bottom:12px;left:0;right:0;text-align:center;color:#5a6474;font-size:11px;z-index:45;}
 </style>
 </head>
 <body>
@@ -95,78 +115,113 @@
     <div id="bg"></div>
     <div id="bars"></div>
 
-    <div class="scene bg-sad" data-dur="4000">
+    <!-- S1: app báo gỡ -->
+    <div class="scene bg-dark" data-dur="4000">
       <div class="kb" style="display:flex;flex-direction:column;align-items:center">
-        <div class="art"><div class="phone"><div class="x">🧋</div><div class="ban">Ứng dụng không còn khả dụng</div></div></div>
-        <div class="big slide">Game Tiệm Trà Nhỏ tui ghiền…
-ĐÓNG CỬA 💔</div>
-        <div class="sub slide">Game pha trà sữa tui chơi mỗi ngày… đóng cửa thật hả 😭</div>
-      </div>
-    </div>
-
-    <div class="scene bg-sad" data-dur="4000">
-      <div class="kb" style="display:flex;flex-direction:column;align-items:center">
-        <div class="emo">😮‍💨</div>
-        <div class="big slide" style="margin-top:18px">Hết chỗ pha trà sữa
-chữa lành lúc rảnh</div>
-        <div class="sub slide">Mất luôn cái game chill nhất quả đất…</div>
-      </div>
-    </div>
-
-    <div class="scene bg-code flashwrap" data-dur="5000">
-      <div class="kb" style="display:flex;flex-direction:column;align-items:center;width:100%">
-        <div class="art" style="width:100%"><div class="desk">
-          <div class="lamp"></div>
-          <div class="monitor"><div class="screen"><div class="scan"></div><div class="codeflow">
-            <div class="cl"><span class="c">// mất game rồi, tự làm lại vậy</span></div>
-            <div class="cl"><span class="k">function</span> <span class="f">moQuanTraSua</span>() {</div>
-            <div class="cl">&nbsp;&nbsp;<span class="k">const</span> <span class="w">quan</span> = <span class="s">"Hồng Trà Gia Gia"</span>;</div>
-            <div class="cl">&nbsp;&nbsp;<span class="w">pha</span>(<span class="s">"trà"</span>, <span class="s">"topping"</span>);</div>
-            <div class="cl">&nbsp;&nbsp;<span class="k">while</span>(<span class="p">khach</span>) <span class="w">phucVu</span>();</div>
-            <div class="cl">&nbsp;&nbsp;<span class="k">return</span> <span class="s">"🧋🔥"</span>;</div>
-            <div class="cl">}</div>
-            <div class="cl"><span class="c">// deploy… deploy… deploy…</span></div>
-            <div class="cl"><span class="f">★ it works!</span></div>
-          </div></div></div>
-          <div class="stand"></div><div class="base"></div>
-          <div class="deskrow">
-            <div class="mug"><div class="steam"></div><div class="steam b"></div><div class="cupb"></div><div class="ear"></div></div>
-            <div class="keyboard"><div class="hands"><div class="hand l"></div><div class="hand r"></div></div></div>
-          </div>
-          <div class="desktop"></div>
+        <div class="art"><div class="device">
+          <div class="island"></div><div class="glare"></div>
+          <span class="vbtn" style="right:-2px;top:30%;height:36px"></span>
+          <span class="vbtn" style="left:-2px;top:22%;height:18px"></span>
+          <span class="vbtn" style="left:-2px;top:30%;height:30px"></span>
+          <div class="screen"><div class="s-ios">
+            <div class="appicon">🧋</div><div class="appname">Tiệm Trà Nhỏ</div>
+            <div class="ios-alert"><div class="al-t">Không thể mở</div><div class="al-m">Ứng dụng này không còn khả dụng.</div><div class="al-b">OK</div></div>
+          </div></div>
         </div></div>
-        <div class="big slide">Thôi… tự code lại luôn 💻🔥</div>
-        <div class="sub slide">Mà khoan — tui là đép mà!</div>
+        <div class="big slide">Game Tiệm Trà Nhỏ tui ghiền…
+đóng cửa mất rồi 💔</div>
+        <div class="sub slide">Game pha trà sữa tui chơi mỗi ngày… biến mất thật hả 😭</div>
       </div>
     </div>
 
-    <div class="scene bg-code" data-dur="5000">
+    <!-- S2: home screen, app đang bị gỡ -->
+    <div class="scene bg-dark" data-dur="4000">
+      <div class="kb" style="display:flex;flex-direction:column;align-items:center">
+        <div class="art"><div class="device">
+          <div class="island"></div><div class="glare"></div>
+          <span class="vbtn" style="right:-2px;top:30%;height:36px"></span>
+          <span class="vbtn" style="left:-2px;top:22%;height:18px"></span>
+          <div class="screen"><div class="s-home">
+            <div class="hgrid">
+              <div class="ic a"></div><div class="ic b"></div><div class="ic c"></div><div class="ic d"></div>
+              <div class="delwrap"><div class="xbadge">−</div><div class="jig">🧋</div></div>
+              <div class="ic e"></div><div class="ic f"></div><div class="ic g"></div>
+            </div>
+            <div class="homecap">Gỡ cài đặt “Tiệm Trà Nhỏ”?</div>
+          </div></div>
+        </div></div>
+        <div class="big slide">Mất chỗ pha trà sữa
+chữa lành lúc rảnh 😮‍💨</div>
+        <div class="sub slide">Cái game chill nhất quả đất… đi luôn.</div>
+      </div>
+    </div>
+
+    <!-- S3: VS Code thật -->
+    <div class="scene bg-ide flashwrap" data-dur="5000">
       <div class="kb" style="display:flex;flex-direction:column;align-items:center;width:100%">
-        <div class="art" style="width:100%"><div class="term2">
-          <div class="cl" style="animation-delay:.1s"><span class="c">$ npm run build</span></div>
-          <div class="cl" style="animation-delay:.6s"><span class="s">✓</span> <span class="w">pha trà · topping · đường đá</span></div>
-          <div class="cl" style="animation-delay:1.1s"><span class="s">✓</span> <span class="w">khách · nhân viên · nâng cấp</span></div>
-          <div class="cl" style="animation-delay:1.6s"><span class="p">⟳</span> <span class="w">fix bug lần thứ 99…</span></div>
-          <div class="bar"><i></i></div>
-          <div class="cl" style="animation-delay:2.6s"><span class="f">★ deploy #26 — done!</span></div>
+        <div class="art" style="width:100%"><div class="ide">
+          <div class="tbar"><span class="tl" style="background:#ff5f56"></span><span class="tl" style="background:#ffbd2e"></span><span class="tl" style="background:#27c93f"></span>
+            <span class="tabn"><span class="dot"></span>tiemTra.js</span></div>
+          <div class="body">
+            <div class="act"><span class="on">▤</span><span>⌕</span><span>⎇</span><span>🐞</span><span>⬚</span></div>
+            <div class="code">
+              <div class="ln" style="animation-delay:.05s"><span class="g">1</span><span class="c2"><span class="cm">// Tiệm Trà Nhỏ đóng cửa rồi... tự làm lại!</span></span></div>
+              <div class="ln" style="animation-delay:.3s"><span class="g">2</span><span class="c2"><span class="kw">function</span> <span class="fn">moQuanTraSua</span><span class="pu">() {</span></span></div>
+              <div class="ln" style="animation-delay:.55s"><span class="g">3</span><span class="c2">  <span class="kw">const</span> <span class="va">quan</span> <span class="pu">=</span> <span class="st">"Hồng Trà Gia Gia"</span><span class="pu">;</span></span></div>
+              <div class="ln" style="animation-delay:.8s"><span class="g">4</span><span class="c2">  <span class="kw">const</span> <span class="va">menu</span> <span class="pu">= [</span><span class="st">"trà sữa"</span><span class="pu">, </span><span class="st">"trân châu"</span><span class="pu">];</span></span></div>
+              <div class="ln" style="animation-delay:1.05s"><span class="g">5</span><span class="c2">  <span class="ky">while</span> <span class="pu">(</span><span class="fn">coKhach</span><span class="pu">()) {</span></span></div>
+              <div class="ln" style="animation-delay:1.3s"><span class="g">6</span><span class="c2">    <span class="fn">phaTra</span><span class="pu">(</span><span class="va">menu</span><span class="pu">);</span> <span class="fn">phucVu</span><span class="pu">();</span></span></div>
+              <div class="ln" style="animation-delay:1.55s"><span class="g">7</span><span class="c2">  <span class="pu">}</span></span></div>
+              <div class="ln" style="animation-delay:1.8s"><span class="g">8</span><span class="c2">  <span class="ky">return</span> <span class="st">"🧋🔥"</span><span class="pu">;</span><span class="cursor"></span></span></div>
+              <div class="ln" style="animation-delay:2.05s"><span class="g">9</span><span class="c2"><span class="pu">}</span></span></div>
+            </div>
+          </div>
+          <div class="status"><span>⎇ main</span><span>JavaScript</span><span>UTF-8</span><span style="margin-left:auto">✓ Prettier</span></div>
+        </div></div>
+        <div class="big slide">Thôi… tự code lại luôn</div>
+        <div class="sub slide">Mà khoan — tui là đép mà! 💻🔥</div>
+      </div>
+    </div>
+
+    <!-- S4: terminal deploy thật -->
+    <div class="scene bg-ide" data-dur="5000">
+      <div class="kb" style="display:flex;flex-direction:column;align-items:center;width:100%">
+        <div class="art" style="width:100%"><div class="term">
+          <div class="tbar"><span class="tl" style="background:#ff5f56"></span><span class="tl" style="background:#ffbd2e"></span><span class="tl" style="background:#27c93f"></span><span class="tt">zsh — tiem-tra</span></div>
+          <div class="body">
+            <div class="l" style="animation-delay:.1s"><span class="gr">➜</span> <span class="cy">tiem-tra</span> <span class="mg">git:(main)</span> npm run deploy</div>
+            <div class="l" style="animation-delay:.7s"><span class="gr">✓</span> build — pha trà · topping · đường đá</div>
+            <div class="l" style="animation-delay:1.2s"><span class="gr">✓</span> build — khách · nhân viên · nâng cấp</div>
+            <div class="l" style="animation-delay:1.7s"><span class="ye">⠹</span> fixing bug #99 …</div>
+            <div class="pbar"><i></i></div>
+            <div class="l" style="animation-delay:3.1s"><span class="gr">✔</span> Deployed → <span class="cy">github.io/tiem-tra</span> <span class="gy">#26</span></div>
+          </div>
         </div></div>
         <div class="big slide">Mấy đêm thức trắng sau…</div>
         <div class="sub slide">Fix bug sấp mặt, deploy mấy chục lần…</div>
       </div>
     </div>
 
+    <!-- S5: gameplay thật trong device -->
     <div class="scene bg-blue" data-dur="7000" data-gp="1">
       <div class="tag">Game tui tự làm nè! 🧋</div>
       <div class="kb" style="display:flex;flex-direction:column;align-items:center">
-        <div class="art"><div class="pframe"><div class="notch"></div><video id="gpv" src="gameplay.mp4" muted playsinline loop preload="auto"></video></div></div>
-        <div class="big slide" style="font-size:clamp(22px,6.2vw,38px)">Pha trà, mở quán,
+        <div class="art"><div class="device gp">
+          <div class="island"></div><div class="glare"></div>
+          <span class="vbtn" style="right:-2px;top:30%;height:36px"></span>
+          <span class="vbtn" style="left:-2px;top:22%;height:18px"></span>
+          <span class="vbtn" style="left:-2px;top:30%;height:30px"></span>
+          <div class="screen"><video id="gpv" src="gameplay.mp4" muted playsinline loop preload="auto"></video></div>
+        </div></div>
+        <div class="big slide" style="font-size:clamp(22px,6vw,38px)">Pha trà, mở quán,
 lên đời thành chuỗi!</div>
       </div>
     </div>
 
+    <!-- S6: CTA -->
     <div class="scene bg-final" data-dur="6000">
       <div class="kb" style="display:flex;flex-direction:column;align-items:center">
-        <div class="badge">🧋</div>
+        <div class="ctaicon">🧋</div>
         <div class="big slide">Làm FREE cho mọi người
 vô mở quán với tui</div>
         <div class="link slide">mypacksoft.github.io/tiem-tra</div>
@@ -176,7 +231,6 @@ vô mở quán với tui</div>
 
     <div id="replay">↻ Xem lại</div>
     <div class="rec-hint">🔴 Quay màn hình clip này để đăng TikTok</div>
-
     <div id="intro">
       <h1>🎬 Clip ~31 giây</h1>
       <p>Mở <b>toàn màn hình</b>, bật <b>quay màn hình</b> điện thoại rồi bấm nút dưới.</p>
@@ -187,23 +241,21 @@ vô mở quán với tui</div>
 
 <script>
 (function(){
-  // nền bong bóng trân châu
   var bg=document.getElementById('bg');
-  for(var i=0;i<14;i++){ var d=document.createElement('div'); d.className='boba';
-    var sz=6+Math.random()*16; d.style.width=sz+'px'; d.style.height=sz+'px';
-    d.style.left=(Math.random()*100)+'%'; d.style.animationDuration=(7+Math.random()*7)+'s';
-    d.style.animationDelay=(-Math.random()*10)+'s'; bg.appendChild(d); }
-
+  for(var i=0;i<12;i++){ var d=document.createElement('div'); d.className='boba';
+    var sz=6+Math.random()*14; d.style.width=sz+'px'; d.style.height=sz+'px';
+    d.style.left=(Math.random()*100)+'%'; d.style.animationDuration=(8+Math.random()*7)+'s';
+    d.style.animationDelay=(-Math.random()*12)+'s'; bg.appendChild(d); }
   var scenes=[].slice.call(document.querySelectorAll('.scene'));
   var barsWrap=document.getElementById('bars');
   var bars=scenes.map(function(){ var b=document.createElement('div'); b.className='b'; var i=document.createElement('i'); b.appendChild(i); barsWrap.appendChild(b); return i; });
-  var idx=-1, timer=null, raf=null;
+  var timer=null, raf=null;
   function clearAll(){ clearTimeout(timer); cancelAnimationFrame(raf); }
   function fillBar(el,dur){ var t0=performance.now(); (function step(now){ var p=Math.min(1,(now-t0)/dur); el.style.width=(p*100)+'%'; if(p<1)raf=requestAnimationFrame(step); })(t0); }
   function confetti(sc){ for(var i=0;i<16;i++){ var e=document.createElement('div'); e.className='confetti'; e.textContent=['🎉','🧋','✨','🫧','⭐'][i%5]; e.style.left=(Math.random()*100)+'%'; e.style.animationDuration=(1.6+Math.random()*1.4)+'s'; e.style.animationDelay=(Math.random()*.6)+'s'; sc.appendChild(e); setTimeout(function(x){return function(){x.remove();};}(e),3600); } }
   function show(n){
     if(n>=scenes.length){ document.getElementById('replay').style.display='block'; return; }
-    idx=n; var sc=scenes[n]; var dur=+sc.getAttribute('data-dur')||4000;
+    var sc=scenes[n]; var dur=+sc.getAttribute('data-dur')||4000;
     scenes.forEach(function(s,i){ s.classList.toggle('on',i===n); });
     bars.forEach(function(b,i){ b.style.width = i<n?'100%':'0%'; });
     fillBar(bars[n],dur);
@@ -215,8 +267,7 @@ vô mở quán với tui</div>
   function play(){ clearAll(); document.getElementById('replay').style.display='none'; bars.forEach(function(b){b.style.width='0%';}); show(0); }
   document.getElementById('go').onclick=function(){ document.getElementById('intro').style.display='none'; var el=document.getElementById('clip'); if(el.requestFullscreen){el.requestFullscreen().catch(function(){});} play(); };
   document.getElementById('replay').onclick=play;
-  if(/auto/.test(location.search)){ var iv=document.getElementById('intro'); if(iv)iv.style.display='none';
-    var rh=document.querySelector('.rec-hint'); if(rh)rh.style.display='none'; play(); }
+  if(/auto/.test(location.search)){ var iv=document.getElementById('intro'); if(iv)iv.style.display='none'; var rh=document.querySelector('.rec-hint'); if(rh)rh.style.display='none'; play(); }
 })();
 </script>
 </body>

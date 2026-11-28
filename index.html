@@ -367,6 +367,25 @@
   ];
   var STAFF={name:"Nhân viên phụ quầy",emo:"🧑‍🍳",wage:80,desc:"Tự pha giúp khách đang chờ gấp nhất mỗi ~7 giây. Lương 80k/ngày."};
   var BUYER_WAGE=120;  // nhân viên thu mua: tự đặt hàng khi gần hết, lương/ngày
+  // ===== Nhân viên cá tính: mỗi người bốc ngẫu nhiên tên/mặt/tính cách (ảnh hưởng tốc độ, độ cẩn thận, tip, lương) =====
+  var TRAITS=[
+    {k:"fast",n:"Nhanh tay",emo:"⚡",desc:"Pha nhanh hơn",spd:0.18,fail:0,tip:0,wage:0},
+    {k:"careful",n:"Cẩn thận",emo:"🧐",desc:"Ít làm hư hẳn",spd:0,fail:-0.07,tip:0,wage:0},
+    {k:"charming",n:"Có duyên",emo:"😊",desc:"Khách ưng, tip thêm",spd:0,fail:0,tip:0.12,wage:5},
+    {k:"speedy",n:"Thần tốc mà ẩu",emo:"🌪️",desc:"Cực nhanh nhưng hay hư",spd:0.32,fail:0.05,tip:0,wage:0},
+    {k:"diligent",n:"Chăm chỉ",emo:"💪",desc:"Nhanh nhẹ, lương thấp",spd:0.12,fail:-0.01,tip:0,wage:-15},
+    {k:"skilled",n:"Khéo tay",emo:"✨",desc:"Ít hư & khách ưng",spd:0.06,fail:-0.04,tip:0.06,wage:12},
+    {k:"intro",n:"Hướng nội",emo:"🙈",desc:"Chậm nhưng lương rẻ",spd:-0.1,fail:-0.02,tip:0,wage:-25},
+    {k:"cheerful",n:"Vui tính",emo:"🥳",desc:"Khách vui, tip cao",spd:0,fail:0,tip:0.16,wage:8}
+  ];
+  function traitBy(k){ for(var i=0;i<TRAITS.length;i++) if(TRAITS[i].k===k) return TRAITS[i]; return TRAITS[0]; }
+  function rollStaff(){ return {name:pick(NAMES), ava:pick(AVATARS), trait:pick(TRAITS).k, fk:pick(FACE_KINDS), fb:pick(FACE_BGS)}; }
+  function ensureStaffList(){ if(!st.staffList)st.staffList=[]; var n=st.staffN||0;
+    while(st.staffList.length<n) st.staffList.push(rollStaff());
+    if(st.staffList.length>n) st.staffList=st.staffList.slice(0,n); }
+  function staffAgg(){ var L=st.staffList||[], n=L.length, spd=0,fail=0,tip=0,wage=0;
+    for(var i=0;i<n;i++){ var t=traitBy(L[i].trait); spd+=t.spd||0; fail+=t.fail||0; tip+=t.tip||0; wage+=STAFF.wage+(t.wage||0); }
+    return {spd:n?spd/n:0, fail:n?fail/n:0, tip:n?tip/n:0, wage:wage}; }
   // ===== Nghiên cứu (R&D): trả tiền trước, mất vài ngày mới xong, buff vĩnh viễn =====
   var RESEARCH=[
     {k:"recipe",name:"Công thức độc quyền",emo:"🔬",desc:"+10% giá trị mỗi ly bán ra",cost:1500,days:2,tier:1,apply:function(){st.revMul=(st.revMul||1)+0.10;}},
@@ -536,11 +555,11 @@
   var st={ shop:"Hồng Trà Gia Gia", day:1, money:400, rep:5.0, revCount:0, custTotal:0, combo:0,
     teaUn:{milk:1,matcha:1}, topUn:{none:1,black:1,white:1}, foodUn:{}, upg:{}, staffN:0,
     extraCust:0, patBonus:0, pourTol:0, tipMul:1.0, stock:{cup:0,teas:{},tops:{},foods:{}}, reviews:[], col:{}, colDone:0, loan:null, ach:{}, tier:0, best:0, everLoan:0, promo:"off", chal:null, totalRev:0, totalPerfect:0, lastBuy:null, staffXp:0,
-    revMul:1, shelfBonus:0, taxCut:0, brewFast:0, trainLvl:0, slotUp:0, staffBonus:0, franchise:0, research:{done:{},active:null}, branches:[], district:"", market:null, dayBuffs:{}, repDay:null, repFloor:2, trainedService:0, buyer:0, coop:0, buyerUnlocked:0 };
+    revMul:1, shelfBonus:0, taxCut:0, brewFast:0, trainLvl:0, slotUp:0, staffBonus:0, franchise:0, research:{done:{},active:null}, branches:[], district:"", market:null, dayBuffs:{}, repDay:null, repFloor:2, trainedService:0, buyer:0, coop:0, buyerUnlocked:0, staffList:[] };
   var SAVEKEY="tiemtra_save_v1";
   var CLOUD="https://script.google.com/macros/s/AKfycbzuJvFLb2gtBjogCiw0tRUNeZSSzeO7IuuReiDzPUyY346k_4rvJHEiKx7NoUDaXoxY/exec"; var _cbN=0, _cloudT=null;
   function saveBlob(){ return { v:1, code:st.code||"", shop:st.shop, day:st.day, money:st.money, rep:st.rep, revCount:st.revCount, custTotal:st.custTotal||0, teaUn:st.teaUn, topUn:st.topUn, foodUn:st.foodUn||{}, upg:st.upg, staffN:st.staffN||0, extraCust:st.extraCust, patBonus:st.patBonus, pourTol:st.pourTol, tipMul:st.tipMul, sell:st.sell, streak:st.streak, onlineOn:st.onlineOn, col:st.col||{}, colDone:st.colDone||0, loan:st.loan||null, ach:st.ach||{}, tier:st.tier||0, best:st.best||0, everLoan:st.everLoan||0, promo:st.promo||"off", chal:st.chal||null, totalRev:st.totalRev||0, totalPerfect:st.totalPerfect||0, stock:st.stock, lastBuy:st.lastBuy||null, staffXp:st.staffXp||0, starRescueUsed:st.starRescueUsed||0, kolDay:st.kolDay||0, giftDay:st.giftDay||null, revSeq:st.revSeq||0, fameLvl:st.fameLvl||0, badDay:!!st.badDay,
-    revMul:st.revMul||1, shelfBonus:st.shelfBonus||0, taxCut:st.taxCut||0, brewFast:st.brewFast||0, trainLvl:st.trainLvl||0, slotUp:st.slotUp||0, staffBonus:st.staffBonus||0, franchise:st.franchise||0, research:st.research||{done:{},active:null}, branches:st.branches||[], district:st.district||"", market:st.market||null, dayBuffs:st.dayBuffs||{}, repDay:st.repDay||null, repFloor:st.repFloor||2, trainedService:st.trainedService||0, buyer:st.buyer||0, coop:st.coop||0, buyerUnlocked:st.buyerUnlocked||0,
+    revMul:st.revMul||1, shelfBonus:st.shelfBonus||0, taxCut:st.taxCut||0, brewFast:st.brewFast||0, trainLvl:st.trainLvl||0, slotUp:st.slotUp||0, staffBonus:st.staffBonus||0, franchise:st.franchise||0, research:st.research||{done:{},active:null}, branches:st.branches||[], district:st.district||"", market:st.market||null, dayBuffs:st.dayBuffs||{}, repDay:st.repDay||null, repFloor:st.repFloor||2, trainedService:st.trainedService||0, buyer:st.buyer||0, coop:st.coop||0, buyerUnlocked:st.buyerUnlocked||0, staffList:st.staffList||[],
     reviews:(st.reviews||[]).slice(0,8) }; }
   function jsonp(url,tmo){ return new Promise(function(res,rej){ var cb='__tt'+(++_cbN); var s=document.createElement('script'); var done=false;
     window[cb]=function(data){ done=true; try{delete window[cb];}catch(e){window[cb]=undefined;} if(s.parentNode)s.parentNode.removeChild(s); res(data); };
@@ -566,7 +585,7 @@
   function clearSave(){ try{ localStorage.removeItem(SAVEKEY); }catch(e){} }
   function loadSave(){ try{ var raw=localStorage.getItem(SAVEKEY); if(!raw)return null; var d=JSON.parse(raw); if(!d||typeof d.day!=="number"||typeof d.money!=="number")return null; return d; }catch(e){ return null; } }
   function applySave(d){ st={ code:d.code||"", shop:d.shop||"Tiệm Trà Nhỏ", day:d.day||1, money:(typeof d.money==="number"?d.money:400), rep:(typeof d.rep==="number"?d.rep:5), revCount:d.revCount||0, custTotal:(typeof d.custTotal==="number"?d.custTotal:(d.revCount||0)), combo:0, teaUn:d.teaUn||{milk:1,matcha:1}, topUn:d.topUn||{none:1,black:1,white:1}, foodUn:d.foodUn||{}, upg:d.upg||{}, staffN:(typeof d.staffN==="number"?d.staffN:(d.staff?1:0)), extraCust:d.extraCust||0, patBonus:d.patBonus||0, pourTol:d.pourTol||0, tipMul:d.tipMul||1.0, sell:d.sell||{}, streak:d.streak||{n:0,last:""}, onlineOn:!!d.onlineOn, stock:normStock(d.stock), col:d.col||{}, colDone:d.colDone||0, loan:d.loan||null, ach:d.ach||{}, tier:d.tier||0, best:d.best||0, everLoan:d.everLoan||0, promo:d.promo||(d.promoOn?"sale15":"off"), chal:d.chal||null, totalRev:d.totalRev||0, totalPerfect:d.totalPerfect||0, lastBuy:d.lastBuy||null, staffXp:d.staffXp||0, starRescueUsed:d.starRescueUsed||0, kolDay:d.kolDay||0, giftDay:d.giftDay||null, revSeq:d.revSeq||0, fameLvl:d.fameLvl||0, badDay:!!d.badDay,
-      revMul:(typeof d.revMul==="number"?d.revMul:1), shelfBonus:d.shelfBonus||0, taxCut:d.taxCut||0, brewFast:d.brewFast||0, trainLvl:d.trainLvl||0, slotUp:d.slotUp||0, staffBonus:d.staffBonus||0, franchise:d.franchise||0, research:(d.research&&typeof d.research==="object")?{done:d.research.done||{},active:d.research.active||null}:{done:{},active:null}, branches:(d.branches&&d.branches.length)?d.branches:[], district:d.district||"", market:d.market||null, dayBuffs:d.dayBuffs||{}, repDay:d.repDay||null, repFloor:d.repFloor||2, trainedService:d.trainedService||0, buyer:d.buyer||0, coop:d.coop||0, buyerUnlocked:d.buyerUnlocked||0,
+      revMul:(typeof d.revMul==="number"?d.revMul:1), shelfBonus:d.shelfBonus||0, taxCut:d.taxCut||0, brewFast:d.brewFast||0, trainLvl:d.trainLvl||0, slotUp:d.slotUp||0, staffBonus:d.staffBonus||0, franchise:d.franchise||0, research:(d.research&&typeof d.research==="object")?{done:d.research.done||{},active:d.research.active||null}:{done:{},active:null}, branches:(d.branches&&d.branches.length)?d.branches:[], district:d.district||"", market:d.market||null, dayBuffs:d.dayBuffs||{}, repDay:d.repDay||null, repFloor:d.repFloor||2, trainedService:d.trainedService||0, buyer:d.buyer||0, coop:d.coop||0, buyerUnlocked:d.buyerUnlocked||0, staffList:(d.staffList&&d.staffList.length)?d.staffList:[],
       reviews:d.reviews||[] }; }
 
   // ---- sự kiện ngày, chuỗi điểm danh, giá bán ----
@@ -851,6 +870,7 @@
     var ut=unlockedTeas(), uo=unlockedTops().filter(function(t){return t.k!=="none";});
     special={tea:pick(ut).k, size:pick(SIZES).k, top:(uo.length?pick(uo).k:"none")}; specialDone=false;
     if(!st.district) st.district=pick(DISTRICTS).k;   // quán chưa có "tính cách" -> bốc 1 khu phố
+    ensureStaffList();   // đồng bộ danh sách nhân viên cá tính với số lượng đang thuê
     todayEvent=rollEvent(); var newLogin=streakUpdate();
     trendTea = todayEvent.trend ? (ut.length?pick(ut).k:null) : null;   // trend viral: 1 món hot hôm nay
     if(todayEvent.inst){ st.money+=todayEvent.inst; popTxt((todayEvent.inst>0?"🍀 +":"❄️ ")+kstr(todayEvent.inst),todayEvent.inst>0?"#2e9e4f":"#d1564e"); }
@@ -1053,14 +1073,20 @@
     return h;
   }
   function hubStaff(){
-    var h='<div class="intro">Thuê nhân viên tự pha phụ cho khách đang chờ gấp nhất. Nhân viên cần ~'+STAFF_DUR+'s để pha xong mỗi ly và <b>có thể làm hư</b> — càng làm nhiều càng lên tay (ít hư hơn). Lương '+STAFF.wage+'k/ngày.</div>';
-    var mx=maxStaff(), n=st.staffN||0;
-    h+='<div class="buyRow"><div class="bi">'+STAFF.emo+'</div><div class="bt"><div class="n">Nhân viên phụ quầy</div><div class="d">Đang thuê <b>'+n+'/'+mx+'</b> · lương '+(n*STAFF.wage)+'k/ngày</div></div>'
+    ensureStaffList();
+    var h='<div class="intro">Thuê nhân viên tự pha phụ cho khách đang chờ gấp nhất. Mỗi người thuê về có <b>tên &amp; tính cách riêng</b> (bốc ngẫu nhiên) — ảnh hưởng tốc độ, độ cẩn thận, tip &amp; lương. Không ưng thì cho nghỉ rồi thuê lại bốc người khác.</div>';
+    var mx=maxStaff(), n=st.staffN||0, agg=staffAgg();
+    h+='<div class="buyRow"><div class="bi">'+STAFF.emo+'</div><div class="bt"><div class="n">Nhân viên phụ quầy</div><div class="d">Đang thuê <b>'+n+'/'+mx+'</b> · tổng lương '+Math.round(agg.wage)+'k/ngày</div></div>'
       +'<div class="cnt"><button class="buyBtn" data-staff="fire" style="padding:7px 11px"'+(n<=0?' disabled':'')+'>−</button><button class="buyBtn" data-staff="hire" style="padding:7px 11px"'+(n>=mx?' disabled':'')+'>Thuê +</button></div></div>';
     if(n>=mx && mx<slotCap()){ h+='<div class="mini" style="color:#2546c0; margin-top:4px">🔒 Lên hạng hoặc nghiên cứu <b>👥 Phòng nhân sự</b> / <b>🏗️ Mở rộng quầy</b> để thuê thêm nhân viên.</div>'; }
-    if(n>0){ var fr=Math.round(staffFailRate()*100);
-      h+='<div class="sumRow"><span>🎓 Kinh nghiệm (chung)</span><span>Lv '+staffLevel()+' · '+(st.staffXp||0)+' ly</span></div>'
-       +'<div class="sumRow" style="border:none"><span>💢 Tỉ lệ làm hư</span><span style="color:'+(fr>15?'#d1564e':'#2e9e4f')+'">~'+fr+'%</span></div>';
+    // Danh sách nhân viên cá tính
+    if(n>0){ (st.staffList||[]).forEach(function(s,i){ var t=traitBy(s.trait); var tags=[];
+        if(t.spd)tags.push((t.spd>0?'+':'')+Math.round(t.spd*100)+'% tốc độ'); if(t.fail)tags.push((t.fail<0?'':'+')+Math.round(t.fail*100)+'% hư'); if(t.tip)tags.push('+'+Math.round(t.tip*100)+'% tip'); if(t.wage)tags.push((t.wage>0?'+':'')+t.wage+'k lương');
+        h+='<div class="buyRow" style="padding:6px 2px"><div class="bi">'+faceSVG(s.fk||"happy",s.fb||"#ffe0ea",30)+'</div><div class="bt"><div class="n">'+esc(s.name)+' <span style="color:#2a4fb8">'+t.emo+' '+t.n+'</span></div><div class="d">'+t.desc+' · <span style="color:#2a4fb8;font-weight:700">'+tags.join(' · ')+'</span></div></div><button class="buyBtn" data-fireone="'+i+'" style="background:#eef2ff;color:#2546c0;white-space:nowrap">Cho nghỉ</button></div>';
+      });
+      var fr=Math.round(staffFailRate()*100);
+      h+='<div class="sumRow" style="margin-top:4px"><span>🎓 Kinh nghiệm (chung)</span><span>Lv '+staffLevel()+' · '+(st.staffXp||0)+' ly</span></div>'
+       +'<div class="sumRow" style="border:none"><span>💢 Tỉ lệ làm hư (trung bình)</span><span style="color:'+(fr>15?'#d1564e':'#2e9e4f')+'">~'+fr+'%</span></div>';
     }
     var cm=coopMax();
     h+='<div class="mini" style="margin-top:10px">Nhân viên tự chọn khách gấp nhất để pha. Nghiên cứu ⚡/🎓 ở tab 🔬 để nhân viên nhanh &amp; ít hư hơn.</div>';
@@ -1267,8 +1293,9 @@
       sTap(); updateTop(); updateChips(); renderHubHead(); renderHubBody();
     }; });
     Array.prototype.forEach.call(el.querySelectorAll(".buyBtn"),function(b){ b.onclick=function(){
-      var sa=b.getAttribute("data-staff"); if(sa){ if(sa==="hire"){ if((st.staffN||0)<maxStaff())st.staffN=(st.staffN||0)+1; } else { st.staffN=Math.max(0,(st.staffN||0)-1); } checkAch(); }
+      var sa=b.getAttribute("data-staff"); if(sa){ if(!st.staffList)st.staffList=[]; if(sa==="hire"){ if((st.staffN||0)<maxStaff()){ st.staffN=(st.staffN||0)+1; var ns=rollStaff(); st.staffList.push(ns); flash("good"); popTxt("🧑‍🍳 "+ns.name+" ("+traitBy(ns.trait).n+")","#4e8f44"); } } else { st.staffN=Math.max(0,(st.staffN||0)-1); st.staffList.pop(); } ensureStaffList(); checkAch(); }
       var ba=b.getAttribute("data-buyer"); if(ba){ if(ba==="hire"){ if(st.buyerUnlocked)st.buyer=1; } else st.buyer=0; }
+      var fo=b.getAttribute("data-fireone"); if(fo){ var fi=parseInt(fo,10); if(st.staffList&&st.staffList.length>fi){ st.staffList.splice(fi,1); st.staffN=Math.max(0,(st.staffN||0)-1); ensureStaffList(); } }
       var tk=b.getAttribute("data-tea"); if(tk){ var te=teaBy(tk); if(st.money<te.cost)return; st.money-=te.cost; st.teaUn[tk]=1; renderTeaOpts(); }
       var pk=b.getAttribute("data-top"); if(pk){ var tp=topBy(pk); if(st.money<tp.cost)return; st.money-=tp.cost; st.topUn[pk]=1; renderTopOpts(); }
       var fk=b.getAttribute("data-food"); if(fk){ var fd=foodBy(fk); if(!fd||st.money<fd.cost)return; st.money-=fd.cost; if(!st.foodUn)st.foodUn={}; st.foodUn[fk]=1; }
@@ -1486,9 +1513,9 @@
     st.combo=0; dayServed++; dayReject++; addReview(s.o,2); adjustRep(-0.1); popTxt("Từ chối 🙇","#c07a2c"); slots[i]=null; renderSlots(); updateTop(); updateChips(); maybeEnd(); }
   function slotLeave(i){ var s=slots[i]; if(!s)return; st.combo=0; dayLeft++; dayServed++; addReview(s.o,1); setMascot("sad",1400);
     flash("bad"); beep(300,0.2,"sine",0.07); popTxt("Khách bỏ đi 😤","#e74c3c"); adjustRep(-0.25,true); slots[i]=null; renderSlots(); updateTop(); updateChips(); maybeEnd(); }
-  function staffFailRate(){ return clamp(0.22-(st.staffXp||0)*0.012-(st.trainLvl||0)*0.05,0.03,0.22); }
+  function staffFailRate(){ return clamp(0.22-(st.staffXp||0)*0.012-(st.trainLvl||0)*0.05+staffAgg().fail,0.02,0.3); }
   function staffLevel(){ return 1+Math.floor((st.staffXp||0)/8); }
-  function staffDur(){ return STAFF_DUR/(1+(st.brewFast||0)+dayBuff("brew")); }
+  function staffDur(){ return STAFF_DUR/(1+(st.brewFast||0)+dayBuff("brew")+staffAgg().spd); }
   function coopMax(){ return 1+(st.coop||0); }   // số NV tối đa pha chung 1 khách (mở dần qua nghiên cứu 🤝 Phối hợp)
   function maxStaff(){ return Math.min(slotCap(), 1+Math.floor(tierIdx()/2)+(st.staffBonus||0)); }
   function staffCompleteCup(i){ var s=slots[i]; if(!s)return; var o=s.o;
@@ -1497,7 +1524,7 @@
     consumeStock(o.size,o.tea,o.top); dayServed++; st.staffXp=(st.staffXp||0)+1;
     var last=(s.served+1>=o.qty); s.served++; var fail=Math.random()<staffFailRate();
     if(fail){ st.combo=0; dayBad++; flash("bad"); beep(200,0.22,"sawtooth",0.08); popTxt("🧑‍🍳 làm hư 💢","#e74c3c"); adjustRep(-0.08); if(last){ addReview(o,2); slots[i]=null; } }
-    else { var price=drinkPrice(o); st.money+=price; dayRev+=price; daySuccess++; daySales[o.tea]=(daySales[o.tea]||0)+1; serveFood(s); popTxt("🧑‍🍳 +"+kstr(price),"#4e8f44"); adjustRep(0.04); if(last){ addReview(o,4); slots[i]=null; } }
+    else { var price=drinkPrice(o); var stip=Math.round(price*staffAgg().tip); st.money+=price+stip; dayRev+=price+stip; if(stip)dayTip+=stip; daySuccess++; daySales[o.tea]=(daySales[o.tea]||0)+1; serveFood(s); popTxt("🧑‍🍳 +"+kstr(price+stip),"#4e8f44"); adjustRep(0.04); if(last){ addReview(o,4); slots[i]=null; } }
     updateTop(); updateChips(); maybeEnd(); }
   // Nhân viên thu mua: tự nhập thêm khi kho tụt thấp (giữ đủ hàng, khỏi phải restock tay giữa ca)
   function buyerAutoRestock(){ if(!st.buyer) return false; var spent=false, guard=0;
@@ -1552,7 +1579,7 @@
   function endDay(){
     if(phase!=="serve")return;   // chặn gọi 2 lần trong cùng 1 tick (khách cuối bỏ đi/nhân viên pha xong lúc đóng cửa) -> tránh reset doanh thu = 0 và trừ phí 2 lần
     phase="summary"; stopSlotLoop(); clearInterval(staffTimer);
-    var rent=rentOf(), util=20+Object.keys(st.upg).length*5, wage=(st.staffN||0)*STAFF.wage+(st.buyer?BUYER_WAGE:0);
+    var rent=rentOf(), util=20+Object.keys(st.upg).length*5, wage=Math.round(staffAgg().wage)+(st.buyer?BUYER_WAGE:0);
     var wasteTea=0, wasteTop=0, wasteFood=0;
     for(var _ck in st.stock.teas){ var _c=st.stock.teas[_ck]; _c.d=(_c.d||0)-1; if(_c.d<=0){ wasteTea+=_c.q; _c.q=0; _c.d=0; } }
     for(var _tk in st.stock.tops){ var _t=st.stock.tops[_tk]; _t.d=(_t.d||0)-1; if(_t.d<=0){ wasteTop+=_t.q; _t.q=0; _t.d=0; } }
@@ -1631,7 +1658,7 @@
   function initGame(){
     st={ shop:st.shop, day:1, money:400, rep:5.0, revCount:0, custTotal:0, combo:0, teaUn:{milk:1,matcha:1}, topUn:{none:1,black:1,white:1}, foodUn:{}, upg:{}, staffN:0,
       extraCust:0, patBonus:0, pourTol:0, tipMul:1.0, stock:freshStock(), reviews:[], col:{}, colDone:0, loan:null, ach:{}, tier:0, best:0, everLoan:0, promo:"off", chal:null, totalRev:0, totalPerfect:0, lastBuy:null, staffXp:0,
-      revMul:1, shelfBonus:0, taxCut:0, brewFast:0, trainLvl:0, slotUp:0, staffBonus:0, franchise:0, research:{done:{},active:null}, branches:[], district:"", market:null, dayBuffs:{}, repDay:null, repFloor:2, trainedService:0, buyer:0, coop:0, buyerUnlocked:0 };
+      revMul:1, shelfBonus:0, taxCut:0, brewFast:0, trainLvl:0, slotUp:0, staffBonus:0, franchise:0, research:{done:{},active:null}, branches:[], district:"", market:null, dayBuffs:{}, repDay:null, repFloor:2, trainedService:0, buyer:0, coop:0, buyerUnlocked:0, staffList:[] };
     lastRecap=null; clearSave(); $("shopName").textContent=st.shop;
     buildServeUI(); resetSel(); markSel(); renderCup(); updatePour(); updateTop(); updateChips(); enterMorning();
     if(CLOUD && !st.code) cloudNew(function(c){ if(c){ renderHubHead(); warn("🔑 Mã quán của bạn: "+c+" — ghi lại để đổi máy nhé!"); } });

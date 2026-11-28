@@ -50,9 +50,9 @@
   #queueLeft{flex:1; text-align:right; color:var(--dim); font-weight:700;}
 
   /* customer slots */
-  #slots{flex:none; display:flex; gap:7px; padding:0 12px 6px; height:162px; align-items:stretch;}
-  .slot{flex:1; min-width:0; overflow:hidden; background:linear-gradient(#ffffff,#eef6ff); border:1.5px solid #ccd9f2; border-radius:15px; padding:7px 7px 8px; display:flex; flex-direction:column; gap:3px; box-shadow:0 3px 10px rgba(50,90,140,.13), inset 0 1px 0 rgba(255,255,255,.7);}
-  .slot.empty{border:1.5px dashed #bcd6ee; align-items:center; justify-content:center; color:#8ba6c8; font-weight:800; font-size:10.5px; box-shadow:none; background:rgba(246,251,255,.5); gap:1px; padding:10px 6px;}
+  #slots{flex:none; display:grid; grid-template-columns:repeat(3,1fr); gap:7px; padding:0 12px 6px; max-height:300px; overflow-y:auto; align-content:start;}
+  .slot{min-width:0; min-height:150px; overflow:hidden; background:linear-gradient(#ffffff,#eef6ff); border:1.5px solid #ccd9f2; border-radius:15px; padding:7px 7px 8px; display:flex; flex-direction:column; gap:3px; box-shadow:0 3px 10px rgba(50,90,140,.13), inset 0 1px 0 rgba(255,255,255,.7);}
+  .slot.empty{min-height:150px; border:1.5px dashed #bcd6ee; align-items:center; justify-content:center; color:#8ba6c8; font-weight:800; font-size:10.5px; box-shadow:none; background:rgba(246,251,255,.5); gap:1px; padding:10px 6px;}
   .slot.empty .eghost{font-size:19px; opacity:.45; line-height:1;}
   .slot.active{border-color:var(--pink); box-shadow:0 2px 12px rgba(184,90,110,.18);}
   .slot .sh{display:flex; align-items:center; gap:6px;}
@@ -352,12 +352,14 @@
     {k:"loyalty",name:"App tích điểm khách quen",emo:"📲",desc:"Khách quay lại — +3 khách/ngày",cost:2000,days:2,tier:2,apply:function(){st.extraCust+=3;}},
     {k:"fastbrew",name:"Quy trình pha nhanh",emo:"⚡",desc:"Nhân viên pha nhanh hơn 25%",cost:1600,days:2,tier:2,apply:function(){st.brewFast=(st.brewFast||0)+0.25;}},
     {k:"training",name:"Giáo trình đào tạo",emo:"🎓",desc:"Nhân viên ít làm hư hơn hẳn",cost:1400,days:2,tier:2,apply:function(){st.trainLvl=(st.trainLvl||0)+1;}},
-    {k:"hr",name:"Phòng nhân sự",emo:"👥",desc:"Thuê được thêm 1 nhân viên",cost:2200,days:2,tier:3,apply:function(){st.staffBonus=(st.staffBonus||0)+1;}},
-    {k:"counter",name:"Mở rộng quầy pha",emo:"🏗️",desc:"Thêm 1 chỗ phục vụ khách cùng lúc",cost:3000,days:3,tier:3,max:2,apply:function(){st.slotUp=(st.slotUp||0)+1;}},
+    {k:"hr",name:"Phòng nhân sự",emo:"👥",desc:"Thuê được thêm 1 nhân viên",cost:2200,days:2,tier:3,endless:true,apply:function(){st.staffBonus=(st.staffBonus||0)+1;}},
+    {k:"counter",name:"Mở rộng quầy pha",emo:"🏗️",desc:"Thêm 1 chỗ phục vụ khách cùng lúc",cost:3000,days:2,tier:3,endless:true,apply:function(){st.slotUp=(st.slotUp||0)+1;}},
     {k:"franchise",name:"Giấy phép nhượng quyền",emo:"🏬",desc:"Mở khoá hệ thống Chi nhánh thu nhập thụ động",cost:2500,days:3,tier:3,apply:function(){st.franchise=1;}},
     {k:"brand",name:"Thương hiệu quốc dân",emo:"🌟",desc:"+15% giá trị mỗi ly & tip +10%",cost:4000,days:3,tier:4,apply:function(){st.revMul=(st.revMul||1)+0.15; st.tipMul+=0.1;}}
   ];
   function rbyK(k){ for(var i=0;i<RESEARCH.length;i++) if(RESEARCH[i].k===k) return RESEARCH[i]; return null; }
+  function resLvl(r){ return (st.research&&st.research.done&&st.research.done[r.k])||0; }
+  function researchCost(r){ return r.endless ? Math.round(r.cost*(1+resLvl(r)*0.8)/50)*50 : r.cost; }
   // ===== Chi nhánh: quán vệ tinh, thu nhập thụ động mỗi ngày =====
   var BR_YIELD=240, BR_MAXLVL=10, BR_MAX=6;
   var BR_AREAS=["Quận 1","Phú Nhuận","Thủ Đức","Gò Vấp","Tân Bình","Bình Thạnh","Hà Đông","Cầu Giấy","Hải Châu","Ninh Kiều","Quận 7","Tân Phú"];
@@ -413,7 +415,7 @@
     else { var sk=it.sk; if(sk==="cup")st.stock.cup+=it.qty; else if(sk.indexOf("tea:")===0){ var tk=sk.slice(4); if(!st.stock.teas[tk])st.stock.teas[tk]={q:0,d:0}; st.stock.teas[tk].q=Math.round((st.stock.teas[tk].q+it.qty)*10)/10; st.stock.teas[tk].d=shelfTea(); } else { var pk=sk.slice(4); if(!st.stock.tops[pk])st.stock.tops[pk]={q:0,d:0}; st.stock.tops[pk].q+=it.qty; st.stock.tops[pk].d=shelfTop(); } sGood(); popTxt("🛒 "+it.name,"#2e9e4f"); updateChips(); }
     updateTop(); renderHubHead(); renderHubBody(); saveGame(); }
   var PR={cup:3,tea:15,top:4}, MAXSLOTS=3;
-  function slotCap(){ return clamp(3+(st.slotUp||0),3,5); }
+  function slotCap(){ return Math.max(3,3+(st.slotUp||0)); }   // vô tận: quầy pha nâng không giới hạn
   function newSlots(){ MAXSLOTS=slotCap(); var a=[]; for(var i=0;i<MAXSLOTS;i++)a.push(null); return a; }
   function teaUse(size){ return size==="L"?0.45:0.3; }
   function freshStock(){ return {cup:0,teas:{},tops:{}}; }
@@ -934,10 +936,11 @@
       h+='<div class="buyRow" style="background:#eef4ff;border:1.5px solid #9cc0e8;border-radius:10px"><div class="bi">'+a.emo+'</div><div class="bt"><div class="n">Đang nghiên cứu: '+a.name+'</div><div class="d">Còn <b>'+R.active.left+'</b> ngày nữa xong</div><div class="sbar" style="margin-top:5px"><i style="width:'+pct+'%"></i></div></div></div>';
     }
     RESEARCH.forEach(function(r){ if(R.active&&R.active.k===r.k)return;
-      var cnt=(R.done&&R.done[r.k])||0, mx=r.max||1, done=cnt>=mx, locked=ti<(r.tier||0);
-      var lvlTxt=mx>1?(' · Lv '+cnt+'/'+mx):'', tname=TIERS[Math.min(TIERS.length-1,(r.tier||0))].n;
-      h+='<div class="buyRow"><div class="bi">'+(done?'✓':locked?'🔒':r.emo)+'</div><div class="bt"><div class="n">'+r.name+lvlTxt+'</div><div class="d">'+r.desc+' · ⏳ '+r.days+' ngày'+(locked?' <span style="color:#2546c0">· mở ở hạng '+tname+'</span>':'')+'</div></div>'
-       +(done?'<button class="buyBtn own">✓ Xong</button>':locked?'<span class="mini">🔒</span>':'<button class="buyBtn" data-research="'+r.k+'"'+((st.money<r.cost||R.active)?' disabled':'')+'>'+kstr(r.cost)+'</button>')+'</div>';
+      var cnt=(R.done&&R.done[r.k])||0, mx=r.max||1, done=!r.endless&&cnt>=mx, locked=ti<(r.tier||0), cost=researchCost(r);
+      var lvlTxt=r.endless?(' · <span style="color:#2a56d4">Lv '+cnt+' → '+(cnt+1)+'</span>'):(mx>1?(' · Lv '+cnt+'/'+mx):'');
+      var tname=TIERS[Math.min(TIERS.length-1,(r.tier||0))].n;
+      h+='<div class="buyRow"><div class="bi">'+(done?'✓':locked?'🔒':r.emo)+'</div><div class="bt"><div class="n">'+r.name+lvlTxt+(r.endless?' ♾️':'')+'</div><div class="d">'+r.desc+' · ⏳ '+r.days+' ngày'+(locked?' <span style="color:#2546c0">· mở ở hạng '+tname+'</span>':'')+'</div></div>'
+       +(done?'<button class="buyBtn own">✓ Xong</button>':locked?'<span class="mini">🔒</span>':'<button class="buyBtn" data-research="'+r.k+'"'+((st.money<cost||R.active)?' disabled':'')+'>'+kstr(cost)+'</button>')+'</div>';
     });
     if(R.active) h+='<div class="mini" style="margin-top:8px">Đang có dự án chạy — xong rồi mới làm cái mới nha.</div>';
     return h;
@@ -1198,9 +1201,9 @@
     Array.prototype.forEach.call(el.querySelectorAll(".buyBtn[data-research]"),function(b){ b.onclick=function(){
       if(!st.research)st.research={done:{},active:null}; if(st.research.active)return;
       var r=rbyK(b.getAttribute("data-research")); if(!r)return;
-      var cnt=(st.research.done&&st.research.done[r.k])||0, mx=r.max||1;
-      if(cnt>=mx || tierIdx()<(r.tier||0) || st.money<r.cost)return;
-      st.money-=r.cost; st.research.active={k:r.k,left:r.days,days:r.days};
+      var cnt=(st.research.done&&st.research.done[r.k])||0, mx=r.max||1, cost=researchCost(r);
+      if((!r.endless && cnt>=mx) || tierIdx()<(r.tier||0) || st.money<cost)return;
+      st.money-=cost; st.research.active={k:r.k,left:r.days,days:r.days};
       sGood(); popTxt("🔬 Bắt đầu nghiên cứu","#2a56d4"); warn("🔬 Đang nghiên cứu "+r.name+" — "+r.days+" ngày nữa xong."); updateTop(); renderHubHead(); renderHubBody();
     }; });
     Array.prototype.forEach.call(el.querySelectorAll(".buyBtn[data-brnew]"),function(b){ b.onclick=function(){

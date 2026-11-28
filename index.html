@@ -353,6 +353,8 @@
     {k:"loyalty",name:"App tích điểm khách quen",emo:"📲",desc:"Khách quay lại — +3 khách/ngày",cost:2000,days:2,tier:2,apply:function(){st.extraCust+=3;}},
     {k:"fastbrew",name:"Quy trình pha nhanh",emo:"⚡",desc:"Nhân viên pha nhanh hơn 25%",cost:1600,days:2,tier:2,apply:function(){st.brewFast=(st.brewFast||0)+0.25;}},
     {k:"training",name:"Giáo trình đào tạo",emo:"🎓",desc:"Nhân viên ít làm hư hơn hẳn",cost:1400,days:2,tier:2,apply:function(){st.trainLvl=(st.trainLvl||0)+1;}},
+    {k:"coop",name:"Phối hợp nhóm",emo:"🤝",desc:"Cho thêm 1 nhân viên pha chung 1 khách — đơn nhiều ly xong nhanh hơn",cost:1800,days:2,tier:2,endless:true,apply:function(){st.coop=(st.coop||0)+1;}},
+    {k:"procure",name:"Hệ thống thu mua",emo:"🚚",desc:"Mở khoá thuê Nhân viên thu mua (tự nhập hàng khi gần hết)",cost:1600,days:2,tier:2,apply:function(){st.buyerUnlocked=1;}},
     {k:"hr",name:"Phòng nhân sự",emo:"👥",desc:"Thuê được thêm 1 nhân viên",cost:2200,days:2,tier:3,endless:true,apply:function(){st.staffBonus=(st.staffBonus||0)+1;}},
     {k:"counter",name:"Mở rộng quầy pha",emo:"🏗️",desc:"Thêm 1 chỗ phục vụ khách cùng lúc",cost:3000,days:2,tier:3,endless:true,apply:function(){st.slotUp=(st.slotUp||0)+1;}},
     {k:"franchise",name:"Giấy phép nhượng quyền",emo:"🏬",desc:"Mở khoá hệ thống Chi nhánh thu nhập thụ động",cost:2500,days:3,tier:3,apply:function(){st.franchise=1;}},
@@ -498,11 +500,11 @@
   var st={ shop:"Hồng Trà Gia Gia", day:1, money:400, rep:5.0, revCount:0, custTotal:0, combo:0,
     teaUn:{milk:1,matcha:1}, topUn:{none:1,black:1,white:1}, upg:{}, staffN:0,
     extraCust:0, patBonus:0, pourTol:0, tipMul:1.0, stock:{cup:0,teas:{},tops:{}}, reviews:[], col:{}, colDone:0, loan:null, ach:{}, tier:0, best:0, everLoan:0, promo:"off", chal:null, totalRev:0, totalPerfect:0, lastBuy:null, staffXp:0,
-    revMul:1, shelfBonus:0, taxCut:0, brewFast:0, trainLvl:0, slotUp:0, staffBonus:0, franchise:0, research:{done:{},active:null}, branches:[], district:"", market:null, dayBuffs:{}, repDay:null, repFloor:2, trainedService:0, buyer:0 };
+    revMul:1, shelfBonus:0, taxCut:0, brewFast:0, trainLvl:0, slotUp:0, staffBonus:0, franchise:0, research:{done:{},active:null}, branches:[], district:"", market:null, dayBuffs:{}, repDay:null, repFloor:2, trainedService:0, buyer:0, coop:0, buyerUnlocked:0 };
   var SAVEKEY="tiemtra_save_v1";
   var CLOUD="https://script.google.com/macros/s/AKfycbzuJvFLb2gtBjogCiw0tRUNeZSSzeO7IuuReiDzPUyY346k_4rvJHEiKx7NoUDaXoxY/exec"; var _cbN=0, _cloudT=null;
   function saveBlob(){ return { v:1, code:st.code||"", shop:st.shop, day:st.day, money:st.money, rep:st.rep, revCount:st.revCount, custTotal:st.custTotal||0, teaUn:st.teaUn, topUn:st.topUn, upg:st.upg, staffN:st.staffN||0, extraCust:st.extraCust, patBonus:st.patBonus, pourTol:st.pourTol, tipMul:st.tipMul, sell:st.sell, streak:st.streak, onlineOn:st.onlineOn, col:st.col||{}, colDone:st.colDone||0, loan:st.loan||null, ach:st.ach||{}, tier:st.tier||0, best:st.best||0, everLoan:st.everLoan||0, promo:st.promo||"off", chal:st.chal||null, totalRev:st.totalRev||0, totalPerfect:st.totalPerfect||0, stock:st.stock, lastBuy:st.lastBuy||null, staffXp:st.staffXp||0, starRescueUsed:st.starRescueUsed||0, kolDay:st.kolDay||0, giftDay:st.giftDay||null, revSeq:st.revSeq||0, fameLvl:st.fameLvl||0, badDay:!!st.badDay,
-    revMul:st.revMul||1, shelfBonus:st.shelfBonus||0, taxCut:st.taxCut||0, brewFast:st.brewFast||0, trainLvl:st.trainLvl||0, slotUp:st.slotUp||0, staffBonus:st.staffBonus||0, franchise:st.franchise||0, research:st.research||{done:{},active:null}, branches:st.branches||[], district:st.district||"", market:st.market||null, dayBuffs:st.dayBuffs||{}, repDay:st.repDay||null, repFloor:st.repFloor||2, trainedService:st.trainedService||0, buyer:st.buyer||0,
+    revMul:st.revMul||1, shelfBonus:st.shelfBonus||0, taxCut:st.taxCut||0, brewFast:st.brewFast||0, trainLvl:st.trainLvl||0, slotUp:st.slotUp||0, staffBonus:st.staffBonus||0, franchise:st.franchise||0, research:st.research||{done:{},active:null}, branches:st.branches||[], district:st.district||"", market:st.market||null, dayBuffs:st.dayBuffs||{}, repDay:st.repDay||null, repFloor:st.repFloor||2, trainedService:st.trainedService||0, buyer:st.buyer||0, coop:st.coop||0, buyerUnlocked:st.buyerUnlocked||0,
     reviews:(st.reviews||[]).slice(0,8) }; }
   function jsonp(url,tmo){ return new Promise(function(res,rej){ var cb='__tt'+(++_cbN); var s=document.createElement('script'); var done=false;
     window[cb]=function(data){ done=true; try{delete window[cb];}catch(e){window[cb]=undefined;} if(s.parentNode)s.parentNode.removeChild(s); res(data); };
@@ -528,7 +530,7 @@
   function clearSave(){ try{ localStorage.removeItem(SAVEKEY); }catch(e){} }
   function loadSave(){ try{ var raw=localStorage.getItem(SAVEKEY); if(!raw)return null; var d=JSON.parse(raw); if(!d||typeof d.day!=="number"||typeof d.money!=="number")return null; return d; }catch(e){ return null; } }
   function applySave(d){ st={ code:d.code||"", shop:d.shop||"Tiệm Trà Nhỏ", day:d.day||1, money:(typeof d.money==="number"?d.money:400), rep:(typeof d.rep==="number"?d.rep:5), revCount:d.revCount||0, custTotal:(typeof d.custTotal==="number"?d.custTotal:(d.revCount||0)), combo:0, teaUn:d.teaUn||{milk:1,matcha:1}, topUn:d.topUn||{none:1,black:1,white:1}, upg:d.upg||{}, staffN:(typeof d.staffN==="number"?d.staffN:(d.staff?1:0)), extraCust:d.extraCust||0, patBonus:d.patBonus||0, pourTol:d.pourTol||0, tipMul:d.tipMul||1.0, sell:d.sell||{}, streak:d.streak||{n:0,last:""}, onlineOn:!!d.onlineOn, stock:normStock(d.stock), col:d.col||{}, colDone:d.colDone||0, loan:d.loan||null, ach:d.ach||{}, tier:d.tier||0, best:d.best||0, everLoan:d.everLoan||0, promo:d.promo||(d.promoOn?"sale15":"off"), chal:d.chal||null, totalRev:d.totalRev||0, totalPerfect:d.totalPerfect||0, lastBuy:d.lastBuy||null, staffXp:d.staffXp||0, starRescueUsed:d.starRescueUsed||0, kolDay:d.kolDay||0, giftDay:d.giftDay||null, revSeq:d.revSeq||0, fameLvl:d.fameLvl||0, badDay:!!d.badDay,
-      revMul:(typeof d.revMul==="number"?d.revMul:1), shelfBonus:d.shelfBonus||0, taxCut:d.taxCut||0, brewFast:d.brewFast||0, trainLvl:d.trainLvl||0, slotUp:d.slotUp||0, staffBonus:d.staffBonus||0, franchise:d.franchise||0, research:(d.research&&typeof d.research==="object")?{done:d.research.done||{},active:d.research.active||null}:{done:{},active:null}, branches:(d.branches&&d.branches.length)?d.branches:[], district:d.district||"", market:d.market||null, dayBuffs:d.dayBuffs||{}, repDay:d.repDay||null, repFloor:d.repFloor||2, trainedService:d.trainedService||0, buyer:d.buyer||0,
+      revMul:(typeof d.revMul==="number"?d.revMul:1), shelfBonus:d.shelfBonus||0, taxCut:d.taxCut||0, brewFast:d.brewFast||0, trainLvl:d.trainLvl||0, slotUp:d.slotUp||0, staffBonus:d.staffBonus||0, franchise:d.franchise||0, research:(d.research&&typeof d.research==="object")?{done:d.research.done||{},active:d.research.active||null}:{done:{},active:null}, branches:(d.branches&&d.branches.length)?d.branches:[], district:d.district||"", market:d.market||null, dayBuffs:d.dayBuffs||{}, repDay:d.repDay||null, repFloor:d.repFloor||2, trainedService:d.trainedService||0, buyer:d.buyer||0, coop:d.coop||0, buyerUnlocked:d.buyerUnlocked||0,
       reviews:d.reviews||[] }; }
 
   // ---- sự kiện ngày, chuỗi điểm danh, giá bán ----
@@ -1003,13 +1005,19 @@
       h+='<div class="sumRow"><span>🎓 Kinh nghiệm (chung)</span><span>Lv '+staffLevel()+' · '+(st.staffXp||0)+' ly</span></div>'
        +'<div class="sumRow" style="border:none"><span>💢 Tỉ lệ làm hư</span><span style="color:'+(fr>15?'#d1564e':'#2e9e4f')+'">~'+fr+'%</span></div>';
     }
-    h+='<div class="mini" style="margin-top:10px">Nhân viên tự chọn khách gấp nhất để pha. Khách gọi <b>nhiều ly</b> (×2/×3…) thì <b>nhiều nhân viên xúm vào pha cùng lúc</b> cho nhanh. Nghiên cứu ⚡/🎓 ở tab 🔬 để nhân viên nhanh &amp; ít hư hơn.</div>';
-    // Nhân viên thu mua: tự đặt hàng khi gần hết
-    h+='<div class="secTitle">📦 Nhân viên thu mua</div>';
-    var bOwn=!!st.buyer;
-    h+='<div class="buyRow"><div class="bi">🚚</div><div class="bt"><div class="n">Nhân viên thu mua'+(bOwn?' <span style="color:#2e9e4f">· đang thuê</span>':'')+'</div><div class="d">Tự động nhập thêm nguyên liệu khi kho gần hết — <b>khỏi phải dừng lại nhập tay giữa ca</b>. Lương '+BUYER_WAGE+'k/ngày.</div></div>'
-      +(bOwn?'<button class="buyBtn own" data-buyer="fire">Cho nghỉ</button>':'<button class="buyBtn" data-buyer="hire">Thuê</button>')+'</div>';
-    h+='<div class="mini" style="margin-top:4px">Lưu ý: tiền nhập hàng vẫn trừ như thường, thu mua chỉ lo <b>đặt hàng tự động</b> cho khỏi gián đoạn.</div>';
+    var cm=coopMax();
+    h+='<div class="mini" style="margin-top:10px">Nhân viên tự chọn khách gấp nhất để pha. Nghiên cứu ⚡/🎓 ở tab 🔬 để nhân viên nhanh &amp; ít hư hơn.</div>';
+    // 🤝 Phối hợp: nhiều NV pha chung 1 khách (mở dần qua nghiên cứu)
+    h+='<div class="secTitle">🤝 Phối hợp</div>';
+    if(cm>1) h+='<div class="mini" style="color:#2e9e4f">✓ Đang bật — tối đa <b>'+cm+' nhân viên</b> pha chung 1 khách (đơn nhiều ly xong nhanh hơn). Nâng cấp 🤝 Phối hợp nhóm ở tab 🔬 để thêm.</div>';
+    else h+='<div class="mini" style="color:#2546c0">🔒 Chưa mở — hiện mỗi khách chỉ 1 nhân viên lo. Nghiên cứu <b>🤝 Phối hợp nhóm</b> ở tab 🔬 để cho nhiều NV xúm vào pha chung đơn nhiều ly.</div>';
+    // 🚚 Nhân viên thu mua (cần nghiên cứu 🚚 Hệ thống thu mua)
+    h+='<div class="secTitle">🚚 Nhân viên thu mua</div>';
+    var bOwn=!!st.buyer, bUn=!!st.buyerUnlocked||bOwn;
+    if(!bUn){ h+='<div class="mini" style="color:#2546c0">🔒 Cần nghiên cứu <b>🚚 Hệ thống thu mua</b> ở tab 🔬 để mở khoá — thu mua sẽ tự nhập hàng khi gần hết, khỏi dừng giữa ca.</div>'; }
+    else { h+='<div class="buyRow"><div class="bi">🚚</div><div class="bt"><div class="n">Nhân viên thu mua'+(bOwn?' <span style="color:#2e9e4f">· đang thuê</span>':'')+'</div><div class="d">Tự động nhập thêm nguyên liệu khi kho gần hết — <b>khỏi phải dừng nhập tay giữa ca</b>. Lương '+BUYER_WAGE+'k/ngày.</div></div>'
+      +(bOwn?'<button class="buyBtn own" data-buyer="fire">Cho nghỉ</button>':'<button class="buyBtn" data-buyer="hire">Thuê</button>')+'</div>'
+      +'<div class="mini" style="margin-top:4px">Lưu ý: tiền nhập hàng vẫn trừ như thường, thu mua chỉ lo <b>đặt hàng tự động</b> cho khỏi gián đoạn.</div>'; }
     return h;
   }
   function hubPromo(){
@@ -1203,7 +1211,7 @@
     }; });
     Array.prototype.forEach.call(el.querySelectorAll(".buyBtn"),function(b){ b.onclick=function(){
       var sa=b.getAttribute("data-staff"); if(sa){ if(sa==="hire"){ if((st.staffN||0)<maxStaff())st.staffN=(st.staffN||0)+1; } else { st.staffN=Math.max(0,(st.staffN||0)-1); } checkAch(); }
-      var ba=b.getAttribute("data-buyer"); if(ba){ st.buyer=(ba==="hire")?1:0; }
+      var ba=b.getAttribute("data-buyer"); if(ba){ if(ba==="hire"){ if(st.buyerUnlocked)st.buyer=1; } else st.buyer=0; }
       var tk=b.getAttribute("data-tea"); if(tk){ var te=teaBy(tk); if(st.money<te.cost)return; st.money-=te.cost; st.teaUn[tk]=1; renderTeaOpts(); }
       var pk=b.getAttribute("data-top"); if(pk){ var tp=topBy(pk); if(st.money<tp.cost)return; st.money-=tp.cost; st.topUn[pk]=1; renderTopOpts(); }
       var uk=b.getAttribute("data-upg"); if(uk){ var u=null; for(var i=0;i<UPGRADES.length;i++)if(UPGRADES[i].k===uk)u=UPGRADES[i]; if(!u||st.money<u.cost||((u.tier||0)>tierIdx()))return; st.money-=u.cost; st.upg[uk]=1; u.apply(); }
@@ -1365,7 +1373,7 @@
         while(totalW<(st.staffN||0) && guard++<60){ var best=-1, bestPat=1e9;
           for(si2=0;si2<MAXSLOTS;si2++){ var s4=slots[si2]; if(!s4||!s4.workers)continue;
             var rem=s4.o.qty - s4.served - s4.workers.length;
-            if(rem>0 && haveStockFor(s4.o.size,s4.o.tea,s4.o.top) && s4.patLeft<bestPat){ best=si2; bestPat=s4.patLeft; } }
+            if(rem>0 && s4.workers.length<coopMax() && haveStockFor(s4.o.size,s4.o.tea,s4.o.top) && s4.patLeft<bestPat){ best=si2; bestPat=s4.patLeft; } }
           if(best<0)break; slots[best].workers.push(0.001); totalW++; needRender=true;
         }
         if(sel.size===null && sel.fill===0 && totalW>0){ var ph=$("pourHint"); if(ph)ph.textContent="🧑‍🍳 Nhân viên đang pha giúp…"; }
@@ -1423,6 +1431,7 @@
   function staffFailRate(){ return clamp(0.22-(st.staffXp||0)*0.012-(st.trainLvl||0)*0.05,0.03,0.22); }
   function staffLevel(){ return 1+Math.floor((st.staffXp||0)/8); }
   function staffDur(){ return STAFF_DUR/(1+(st.brewFast||0)+dayBuff("brew")); }
+  function coopMax(){ return 1+(st.coop||0); }   // số NV tối đa pha chung 1 khách (mở dần qua nghiên cứu 🤝 Phối hợp)
   function maxStaff(){ return Math.min(slotCap(), 1+Math.floor(tierIdx()/2)+(st.staffBonus||0)); }
   function staffCompleteCup(i){ var s=slots[i]; if(!s)return; var o=s.o;
     if(s.served>=o.qty) return;                     // khách đã đủ ly (player/NV khác xong) -> NV này khỏi pha thêm
@@ -1560,7 +1569,7 @@
   function initGame(){
     st={ shop:st.shop, day:1, money:400, rep:5.0, revCount:0, custTotal:0, combo:0, teaUn:{milk:1,matcha:1}, topUn:{none:1,black:1,white:1}, upg:{}, staffN:0,
       extraCust:0, patBonus:0, pourTol:0, tipMul:1.0, stock:freshStock(), reviews:[], col:{}, colDone:0, loan:null, ach:{}, tier:0, best:0, everLoan:0, promo:"off", chal:null, totalRev:0, totalPerfect:0, lastBuy:null, staffXp:0,
-      revMul:1, shelfBonus:0, taxCut:0, brewFast:0, trainLvl:0, slotUp:0, staffBonus:0, franchise:0, research:{done:{},active:null}, branches:[], district:"", market:null, dayBuffs:{}, repDay:null, repFloor:2, trainedService:0, buyer:0 };
+      revMul:1, shelfBonus:0, taxCut:0, brewFast:0, trainLvl:0, slotUp:0, staffBonus:0, franchise:0, research:{done:{},active:null}, branches:[], district:"", market:null, dayBuffs:{}, repDay:null, repFloor:2, trainedService:0, buyer:0, coop:0, buyerUnlocked:0 };
     lastRecap=null; clearSave(); $("shopName").textContent=st.shop;
     buildServeUI(); resetSel(); markSel(); renderCup(); updatePour(); updateTop(); updateChips(); enterMorning();
     if(CLOUD && !st.code) cloudNew(function(c){ if(c){ renderHubHead(); warn("🔑 Mã quán của bạn: "+c+" — ghi lại để đổi máy nhé!"); } });

@@ -321,12 +321,20 @@
   var TEAS=[
     {k:"milk",name:"Hồng trà sữa",color:"#cdaa7e",base:25,cost:0},{k:"matcha",name:"Hồng trà đào",color:"#ec9f54",base:30,cost:0},
     {k:"black",name:"Hồng trà",color:"#b5603a",base:28,cost:150},{k:"thai",name:"Trà Thái",color:"#e8853c",base:32,cost:300},
-    {k:"green",name:"Hồng trà vải",color:"#e6a0b4",base:28,cost:150},{k:"olong",name:"Hồng trà chanh",color:"#e4cf74",base:28,cost:250}
+    {k:"green",name:"Hồng trà vải",color:"#e6a0b4",base:28,cost:150},{k:"olong",name:"Hồng trà chanh",color:"#e4cf74",base:28,cost:250},
+    {k:"straw",name:"Hồng trà dâu",color:"#e0677e",base:33,cost:220},{k:"jasmine",name:"Trà nhài sữa",color:"#dcd089",base:30,cost:200},
+    {k:"taro",name:"Trà sữa khoai môn",color:"#b9a3d6",base:34,cost:320},{k:"mint",name:"Hồng trà bạc hà",color:"#86c9a6",base:32,cost:280},
+    {k:"orange",name:"Hồng trà cam đào",color:"#f0a24d",base:32,cost:260},{k:"choco",name:"Trà sữa socola",color:"#8a5a3c",base:35,cost:360},
+    {k:"coffee",name:"Trà sữa cà phê",color:"#6f4b32",base:34,cost:340},{k:"peach",name:"Trà xanh vải",color:"#cfe08a",base:33,cost:300}
   ];
   var TOPS=[
     {k:"none",name:"Không",color:null,price:0,cost:0},{k:"black",name:"Trân châu đen",color:"#2d2620",price:6,cost:0},
     {k:"white",name:"Trân châu 3Q trắng",color:"#efe6d2",price:5,cost:0},{k:"gold",name:"Trân châu hoàng kim",color:"#e2a500",price:10,cost:120},
-    {k:"pop",name:"Thạch trái cây",color:"#ff6f9a",price:9,cost:120},{k:"jelly",name:"Thạch thủy tinh",color:"#ff6b6b",price:7,cost:100}
+    {k:"pop",name:"Thạch trái cây",color:"#ff6f9a",price:9,cost:120},{k:"jelly",name:"Thạch thủy tinh",color:"#ff6b6b",price:7,cost:100},
+    {k:"pudding",name:"Pudding trứng",color:"#f4d58a",price:9,cost:150},{k:"cheese",name:"Kem phô mai",color:"#f7efcf",price:12,cost:220},
+    {k:"redbean",name:"Đậu đỏ",color:"#9a3f44",price:8,cost:150},{k:"coconut",name:"Thạch dừa",color:"#dfe7df",price:7,cost:130},
+    {k:"coffeejelly",name:"Thạch cà phê",color:"#4a3b2f",price:8,cost:160},{k:"crystal",name:"Trân châu sương mai",color:"#cfe0f0",price:8,cost:180},
+    {k:"grass",name:"Sương sáo",color:"#3a3330",price:7,cost:140},{k:"aloe",name:"Nha đam",color:"#cfe6b8",price:8,cost:160}
   ];
   var SUGAR=[{v:0,l:"0%"},{v:30,l:"30%"},{v:50,l:"50%"},{v:70,l:"70%"},{v:100,l:"100%"}];
   var ICE=[{l:"Không đá",s:"Ko đá"},{l:"Ít đá",s:"Ít đá"},{l:"Đá vừa",s:"Vừa"},{l:"Nhiều đá",s:"Nhiều"}];
@@ -464,7 +472,17 @@
     {k:"c13",name:"Hồng trà vải thạch thủy tinh",tea:"green",top:"jelly",emo:"🧋"},
     {k:"c14",name:"Hồng trà chanh popping",tea:"olong",top:"pop",emo:"🧋"},
     {k:"c15",name:"Hồng trà hoàng kim",tea:"black",top:"gold",emo:"🧋"},
-    {k:"c16",name:"Trà Thái thạch mát",tea:"thai",top:"jelly",emo:"🧋"}
+    {k:"c16",name:"Trà Thái thạch mát",tea:"thai",top:"jelly",emo:"🧋"},
+    {k:"c17",name:"Hồng trà dâu kem phô mai",tea:"straw",top:"cheese",emo:"🧋"},
+    {k:"c18",name:"Trà sữa khoai môn trân châu",tea:"taro",top:"black",emo:"🧋"},
+    {k:"c19",name:"Trà sữa socola pudding",tea:"choco",top:"pudding",emo:"🧋"},
+    {k:"c20",name:"Hồng trà bạc hà thạch dừa",tea:"mint",top:"coconut",emo:"🧋"},
+    {k:"c21",name:"Trà sữa cà phê thạch cà phê",tea:"coffee",top:"coffeejelly",emo:"🧋"},
+    {k:"c22",name:"Trà nhài sữa nha đam",tea:"jasmine",top:"aloe",emo:"🧋"},
+    {k:"c23",name:"Hồng trà cam đào đậu đỏ",tea:"orange",top:"redbean",emo:"🧋"},
+    {k:"c24",name:"Trà xanh vải sương sáo",tea:"peach",top:"grass",emo:"🧋"},
+    {k:"c25",name:"Trà sữa khoai môn sương mai",tea:"taro",top:"crystal",emo:"🧋"},
+    {k:"c26",name:"Hồng trà dâu hoàng kim",tea:"straw",top:"gold",emo:"🧋"}
   ];
   // Cấp độ quán theo tổng lượt khách đã phục vụ
   var TIERS=[
@@ -700,8 +718,8 @@
   function renderTopOpts(){ var p=$("optTop"); p.innerHTML="";
     var cells=[];
     TOPS.filter(function(t){return t.k!=="none";}).forEach(function(tp){ cells.push({t:"top",tp:tp,locked:!st.topUn[tp.k]}); });
-    while(cells.length<12) cells.push({t:"empty"});
-    cells=cells.slice(0,12);
+    var target=Math.max(12, Math.ceil(cells.length/4)*4);
+    while(cells.length<target) cells.push({t:"empty"});
     cells.forEach(function(c){ var b=document.createElement("div"); b.className="opt tray";
       if(c.t==="empty" || (c.t==="top"&&c.locked)){ b.className+=" trayEmpty"; b.innerHTML=emptyTraySVG(); p.appendChild(b); return; }
       var tp=c.tp; b.setAttribute("data-k",tp.k);

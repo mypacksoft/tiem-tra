@@ -436,7 +436,7 @@
   function saveGame(){ try{ localStorage.setItem(SAVEKEY,JSON.stringify(saveBlob())); }catch(e){} cloudSave(); }
   function clearSave(){ try{ localStorage.removeItem(SAVEKEY); }catch(e){} }
   function loadSave(){ try{ var raw=localStorage.getItem(SAVEKEY); if(!raw)return null; var d=JSON.parse(raw); if(!d||typeof d.day!=="number"||typeof d.money!=="number")return null; return d; }catch(e){ return null; } }
-  function applySave(d){ st={ code:d.code||"", shop:d.shop||"Tiệm Trà Nhỏ", day:d.day||1, money:(typeof d.money==="number"?d.money:400), rep:(typeof d.rep==="number"?d.rep:5), revCount:d.revCount||0, custTotal:(typeof d.custTotal==="number"?d.custTotal:(d.revCount||0)), combo:0, teaUn:d.teaUn||{milk:1,matcha:1}, topUn:d.topUn||{none:1,black:1,white:1}, upg:d.upg||{}, staffN:(typeof d.staffN==="number"?d.staffN:(d.staff?1:0)), extraCust:d.extraCust||0, patBonus:d.patBonus||0, pourTol:d.pourTol||0, tipMul:d.tipMul||1.0, sell:d.sell||{}, streak:d.streak||{n:0,last:""}, onlineOn:!!d.onlineOn, stock:normStock(d.stock), col:d.col||{}, colDone:d.colDone||0, loan:d.loan||null, ach:d.ach||{}, tier:d.tier||0, best:d.best||0, everLoan:d.everLoan||0, promoOn:!!d.promoOn, chal:d.chal||null, totalRev:d.totalRev||0, totalPerfect:d.totalPerfect||0, lastBuy:d.lastBuy||null, staffXp:d.staffXp||0, starRescueUsed:d.starRescueUsed||0, kolDay:d.kolDay||0, giftDay:d.giftDay||null, revSeq:d.revSeq||0, reviews:d.reviews||[] }; }
+  function applySave(d){ st={ code:d.code||"", shop:d.shop||"Tiệm Trà Nhỏ", day:d.day||1, money:(typeof d.money==="number"?d.money:400), rep:(typeof d.rep==="number"?(d.rep<2?2.5:d.rep):5), revCount:d.revCount||0, custTotal:(typeof d.custTotal==="number"?d.custTotal:(d.revCount||0)), combo:0, teaUn:d.teaUn||{milk:1,matcha:1}, topUn:d.topUn||{none:1,black:1,white:1}, upg:d.upg||{}, staffN:(typeof d.staffN==="number"?d.staffN:(d.staff?1:0)), extraCust:d.extraCust||0, patBonus:d.patBonus||0, pourTol:d.pourTol||0, tipMul:d.tipMul||1.0, sell:d.sell||{}, streak:d.streak||{n:0,last:""}, onlineOn:!!d.onlineOn, stock:normStock(d.stock), col:d.col||{}, colDone:d.colDone||0, loan:d.loan||null, ach:d.ach||{}, tier:d.tier||0, best:d.best||0, everLoan:d.everLoan||0, promoOn:!!d.promoOn, chal:d.chal||null, totalRev:d.totalRev||0, totalPerfect:d.totalPerfect||0, lastBuy:d.lastBuy||null, staffXp:d.staffXp||0, starRescueUsed:d.starRescueUsed||0, kolDay:d.kolDay||0, giftDay:d.giftDay||null, revSeq:d.revSeq||0, reviews:d.reviews||[] }; }
 
   // ---- sự kiện ngày, chuỗi điểm danh, giá bán ----
   var EVENTS=[
@@ -1179,14 +1179,19 @@
     if(st.rep<2.0){ gameOver("Uy tín quá thấp, khách không tới nữa 😢"); return; }
     st.day++; enterMorning();
   }
-  function gameOver(msg){ phase="over"; clearSave(); stopSlotLoop(); clearInterval(staffTimer); $("hubOv").classList.add("hidden");
+  function gameOver(msg){ phase="over"; stopSlotLoop(); clearInterval(staffTimer); $("hubOv").classList.add("hidden");
     $("overCard").innerHTML='<div class="emo">😢</div><h1 class="display" style="font-size:23px">Quán đóng cửa…</h1><p>'+msg+'</p>'
       +'<div class="sumRow"><span>Trụ được</span><span>'+st.day+' ngày</span></div>'
       +'<div class="sumRow" style="border:none"><span>Uy tín cuối</span><span style="color:#e0a53a">'+st.rep.toFixed(1)+' ⭐ · '+st.revCount+' đánh giá</span></div>'
-      +'<button class="bigbtn" id="againBtn">🔁 Mở quán lại</button>';
-    $("overCard").querySelector("#againBtn").onclick=function(){ $("overOv").classList.add("hidden"); initGame(); };
+      +'<button class="bigbtn" id="reviveBtn">🔁 Mở lại quán — chơi tiếp</button>'
+      +'<button class="buyBtn" id="freshBtn" style="width:100%; margin-top:8px; background:#eef2ff; color:#2546c0">Hoặc chơi mới từ đầu</button>';
+    $("overCard").querySelector("#reviveBtn").onclick=function(){ $("overOv").classList.add("hidden"); reviveShop(); };
+    $("overCard").querySelector("#freshBtn").onclick=function(){ if(!window.confirm("Bỏ quán hiện tại, chơi mới từ đầu?"))return; $("overOv").classList.add("hidden"); clearSave(); initGame(); };
     $("overOv").classList.remove("hidden");
   }
+  function reviveShop(){ st.rep=Math.max(st.rep,2.8); if(st.money<120)st.money=120; st.starRescueUsed=0;
+    st.day++; lastRecap=null; enterMorning(); updateTop(); updateChips(); saveGame();
+    warn("Quán mở lại! Uy tín gây dựng lại từ 2.8 ⭐ — giữ chất lượng để leo lên nha."); }
 
   function repStars(r){ var full=Math.round(r); return "★★★★★".slice(0,full)+"☆☆☆☆☆".slice(0,5-full); }
   function updateTop(){ $("moneyV").textContent=kstr(st.money);
